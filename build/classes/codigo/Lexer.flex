@@ -29,7 +29,7 @@ Bool        {lexeme=yytext(); return Bool;}
 Car         {lexeme=yytext(); return Car;}
 Vibrar      {lexeme=yytext(); return Vibrar;}
 Ir          {lexeme=yytext(); return Ir;}
-Funcion     {lexeme=yytext(); return Funciont;}
+Funcion     {lexeme=yytext(); return Funcion;}
 Girar_Iz    {lexeme=yytext(); return Girar_Iz;}
 Girar_De    {lexeme=yytext(); return Girar_De;}
 Avanza      {lexeme=yytext(); return Avanza;}
@@ -41,22 +41,22 @@ Alto        {lexeme=yytext(); return Alto;}
 
 "\n" {lexeme=yytext(); return saltoLinea;}
 "=" {lexeme=yytext(); return Igual;}
-"<=" {lexeme=yytext(); return MenorIgual;}
-">=" {lexeme=yytext(); return MayorIgual;}
-"!=" {lexeme=yytext(); return Diferente;}
+
+"<" {lexeme=yytext();return Menor;}
+
+">" {lexeme=yytext(); return Mayor}
+
 "+" {lexeme=yytext(); return Mas;}
 "-" {lexeme=yytext(); return Resta;}
 "*" {lexeme=yytext(); return Multiplicacion;}
 "/" {lexeme=yytext(); return Division;}
 "^" {lexeme=yytext(); return Potencia;}
-"Mod" {lexeme=yytext(); return Modulo;}
 ";" {lexeme=yytext(); return PuntoComa;}
 "{" {lexeme=yytext(); return llaveApertura;}
 "}" {lexeme=yytext(); return llaveCierre;}
 "(" {lexeme=yytext(); return ParentesisApertura;}
 ")" {lexeme=yytext(); return ParentesisCierre;}
-"[" {lexeme=yytext(); return CorcheteApertura;}
-"]" {lexeme=yytext(); return CorcheteCierre;}
+
 
 
 {L}({L}|{D})* {lexeme=yytext(); return Identificador;}
