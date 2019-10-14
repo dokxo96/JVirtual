@@ -9,9 +9,15 @@ import java.nio.file.Paths;
 public class principal {
 
     public static void main(String[] args) throws Exception {                
+        /*  Agregen sus propias rutas
+        esta ruta es de david
         String ruta1 = "C:/proyectosNeatBeans/JVirtualLocal/src/codigo/Lexer.flex";
         String ruta2 = "C:/proyectosNeatBeans/JVirtualLocal/src/codigo/LexerCup.flex";
-        String[] rutaS = {"-parser", "Sintax", "C:/proyectosNeatBeans/JVirtualLocal/src/codigo/Sintax.cup"};        
+        String[] rutaS = {"-parser", "Sintax", "C:/proyectosNeatBeans/JVirtualLocal/src/codigo/Sintax.cup"};  */
+        //esta ruta es de daniel
+        String ruta1 = "C:\\Users\\dokxo\\Documents\\NetBeansProjects\\JVirtual\\src\\codigo\\Lexer.flex";
+        String ruta2 = "C:\\Users\\dokxo\\Documents\\NetBeansProjects\\JVirtual\\src\\codigo\\LexerCup.flex";
+        String[] rutaS = {"-parser", "Sintax", "C:\\Users\\dokxo\\Documents\\NetBeansProjects\\JVirtual\\src\\codigo\\Sintax.cup"};   
         generar(ruta1, ruta2, rutaS );   
     }
 
