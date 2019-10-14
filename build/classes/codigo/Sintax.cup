@@ -15,17 +15,21 @@ parser code
 }
 :};
 
-terminal Y_si, Text, Inicio_App, Bool, saltoLinea, Igual, Mas, Resta, Multiplicacion,
-         Division, PuntoComa, llaveApertura, llaveCierre, Identificador, Numero, ERROR;
+terminal Inicio_App, Tarea, Durante, Repite , Y_si, Imprime, Ingresa, Text, Inc, Dec, Publica, Ent, Real, RealExt, Bool, 
+         Car, Vibrar, Ir, Funcion, Girar_Iz, Girar_De, Avanza, Alto,        
+         Igual, Menor, Mayor, Mas, Resta, Multiplicacion, Division, Potencia, PuntoComa,
+         llaveApertura, llaveCierre, ParentesisApertura, ParentesisCierre, Identificador,
+         Numero, ERROR;
+
 
 non terminal INICIO, SENTENCIA, DECLARACION;
 
 start with INICIO;
 
 INICIO ::= 
-    Inicio_App llaveApertura DECLARACION llaveCierre
+    Inicio_App Identificador llaveApertura DECLARACION llaveCierre
     |
-    Inicio_App llaveApertura llaveCierre
+    Inicio_App Identificador llaveApertura llaveCierre
 ;
 DECLARACION ::=
     Text Identificador PuntoComa
