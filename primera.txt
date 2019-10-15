@@ -1,0 +1,4 @@
+Inicio_App primerApp {
+	Bool a ;
+
+}
