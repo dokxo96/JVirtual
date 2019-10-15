@@ -7,7 +7,9 @@
 package codigo;
 
 import com.sun.glass.events.KeyEvent;
+import java.awt.Color;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Files;
@@ -16,7 +18,9 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java_cup.runtime.Symbol;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -29,9 +33,20 @@ public class Vista extends javax.swing.JFrame {
     /**
      * Creates new form Vista
      */
+    JFileChooser seleccionado = new JFileChooser();
+    File archivo;
+    byte[] bytesImg;
+    GestionArc gestion = new GestionArc();
+    TextLineNumber lineas;
     public Vista() {
         initComponents();
         this.setLocationRelativeTo(null);
+        lineas = new TextLineNumber(txtEntrada);
+        lineas.setCurrentLineForeground(new Color(255,0,0));//current line
+        lineas.setForeground(new Color(76, 175, 80));//color linea
+
+        jScrollPane4.setRowHeaderView(lineas);
+        jScrollPane4.setViewportView(txtEntrada); 
     }
 
     private void analizarLexico() throws IOException {
@@ -280,14 +295,17 @@ public class Vista extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         btnLexico = new javax.swing.JButton();
         btnSintactico = new javax.swing.JButton();
-        txtEntradaNo = new javax.swing.JTextField();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        txtEntrada = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
         tablaSimbolos = new javax.swing.JTable();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        txtEntrada = new javax.swing.JTextArea();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuArchivo = new javax.swing.JMenu();
+        jMenuItem4 = new javax.swing.JMenuItem();
         menuItemAbrir = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
         jMenuItem1.setText("jMenuItem1");
@@ -309,7 +327,7 @@ public class Vista extends javax.swing.JFrame {
 
         btnLexico.setBackground(new java.awt.Color(103, 70, 195));
         btnLexico.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        btnLexico.setForeground(new java.awt.Color(103, 70, 195));
+        btnLexico.setForeground(new java.awt.Color(255, 255, 255));
         btnLexico.setText("Lexico");
         btnLexico.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         btnLexico.setBorderPainted(false);
@@ -321,7 +339,7 @@ public class Vista extends javax.swing.JFrame {
 
         btnSintactico.setBackground(new java.awt.Color(103, 70, 195));
         btnSintactico.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        btnSintactico.setForeground(new java.awt.Color(103, 70, 195));
+        btnSintactico.setForeground(new java.awt.Color(255, 255, 255));
         btnSintactico.setText("Sintactico");
         btnSintactico.setBorderPainted(false);
         btnSintactico.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -333,8 +351,6 @@ public class Vista extends javax.swing.JFrame {
             }
         });
 
-        txtEntradaNo.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -344,9 +360,7 @@ public class Vista extends javax.swing.JFrame {
                 .addComponent(btnLexico, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnSintactico, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(51, 51, 51)
-                .addComponent(txtEntradaNo, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(209, Short.MAX_VALUE))
+                .addContainerGap(479, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -354,20 +368,9 @@ public class Vista extends javax.swing.JFrame {
                 .addGap(26, 26, 26)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnLexico, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSintactico, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtEntradaNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnSintactico, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(34, Short.MAX_VALUE))
         );
-
-        txtEntrada.setBackground(new java.awt.Color(222, 227, 255));
-        txtEntrada.setColumns(20);
-        txtEntrada.setRows(5);
-        txtEntrada.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtEntradaKeyPressed(evt);
-            }
-        });
-        jScrollPane2.setViewportView(txtEntrada);
 
         tablaSimbolos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -393,6 +396,18 @@ public class Vista extends javax.swing.JFrame {
             tablaSimbolos.getColumnModel().getColumn(3).setResizable(false);
         }
 
+        txtEntrada.setBackground(new java.awt.Color(222, 227, 255));
+        txtEntrada.setColumns(20);
+        txtEntrada.setRows(5);
+        txtEntrada.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtEntradaKeyPressed(evt);
+            }
+        });
+        jScrollPane2.setViewportView(txtEntrada);
+
+        jScrollPane4.setViewportView(jScrollPane2);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -403,9 +418,9 @@ public class Vista extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1147, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 733, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 725, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -414,15 +429,23 @@ public class Vista extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
+                    .addComponent(jScrollPane4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
         menuArchivo.setText("Archivo");
+
+        jMenuItem4.setText("Nuevo");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        menuArchivo.add(jMenuItem4);
 
         menuItemAbrir.setText("Abrir");
         menuItemAbrir.addActionListener(new java.awt.event.ActionListener() {
@@ -431,6 +454,22 @@ public class Vista extends javax.swing.JFrame {
             }
         });
         menuArchivo.add(menuItemAbrir);
+
+        jMenuItem2.setText("Guardar");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        menuArchivo.add(jMenuItem2);
+
+        jMenuItem3.setText("Salir");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        menuArchivo.add(jMenuItem3);
 
         jMenuBar1.add(menuArchivo);
 
@@ -474,7 +513,7 @@ public class Vista extends javax.swing.JFrame {
             txaResultado.setText("Correcto");
         } catch (Exception ex) {
             Symbol sym = s.getS();
-            txaResultado.setText("Error linea " + sym.right + 1 + " " + sym.value);
+            txaResultado.setText("Error linea " + (sym.right + 1) + " " + sym.value);
         }
     }//GEN-LAST:event_btnSintacticoActionPerformed
 
@@ -484,18 +523,76 @@ public class Vista extends javax.swing.JFrame {
     }//GEN-LAST:event_txtEntradaKeyPressed
 
     private void menuItemAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAbrirActionPerformed
-        JFileChooser chooser = new JFileChooser();
-        chooser.showOpenDialog(null);
-
-        File archivo = new File(chooser.getSelectedFile().getAbsolutePath());
-
-        try {
-            String tmp = new String(Files.readAllBytes(archivo.toPath()));
-            txtEntrada.setText(tmp);
-        } catch (IOException ex) {
-            Logger.getLogger(Vista.class.getName()).log(Level.SEVERE, null, ex);
-        }        // TODO add your handling code here:
+        if(seleccionado.showDialog(null, "ABRIR ARCHIVO") == JFileChooser.APPROVE_OPTION){
+            archivo = seleccionado.getSelectedFile();
+            if(archivo.canRead()){
+                if(archivo.getName().endsWith("txt")){
+                    String contenido = gestion.AbrirATexto(archivo);
+                    txtEntrada.setText(contenido);
+                }else{               
+                        JOptionPane.showMessageDialog(null, "Por favor seleccione un archivo de texto.");
+                    }
+            }
+        }
     }//GEN-LAST:event_menuItemAbrirActionPerformed
+    private String fileName="";
+    private boolean g=false;
+    private void guardar(){
+        try {
+            java.io.FileOutputStream fs = new java.io.FileOutputStream(fileName,true); //fs = Flujo de Salida
+            byte b[]=txtEntrada.getText().getBytes();
+            fs.write(b);
+        } catch (FileNotFoundException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage());
+        } catch (IOException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+    }
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+     if(!txtEntrada.getText().equals("")&&!g)
+        if(javax.swing.JOptionPane.showConfirmDialog(this, "¿Desea Guardar los Cambios?")==0){
+            
+            /////////////////////
+             if(seleccionado.showDialog(null, "GUARDAR TEXTO") == JFileChooser.APPROVE_OPTION){
+            archivo = seleccionado.getSelectedFile();
+            if(archivo.getName().endsWith("txt")){
+                String contenido = txtEntrada.getText();
+                String respuesta = gestion.GuardarATexto(archivo, contenido);
+                if(respuesta!=null){
+                    JOptionPane.showMessageDialog(null, respuesta);
+                }else{
+                    JOptionPane.showMessageDialog(null, "Error al guardar texto.");
+                }
+            }else{
+                JOptionPane.showMessageDialog(null, "El texto se debe guardar en un formato de texto.");
+            }
+        } 
+            /////////////////////
+            
+        }//Guardar = si
+        txtEntrada.setText(""); fileName=""; g=false;        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+      if(seleccionado.showDialog(null, "GUARDAR TEXTO") == JFileChooser.APPROVE_OPTION){
+            archivo = seleccionado.getSelectedFile();
+            if(archivo.getName().endsWith("txt")){
+                String contenido = txtEntrada.getText();
+                String respuesta = gestion.GuardarATexto(archivo, contenido);
+                if(respuesta!=null){
+                    JOptionPane.showMessageDialog(null, respuesta);
+                }else{
+                    JOptionPane.showMessageDialog(null, "Error al guardar texto.");
+                }
+            }else{
+                JOptionPane.showMessageDialog(null, "El texto se debe guardar en un formato de texto.");
+            }
+        }    // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+    System.exit(0);        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -538,17 +635,20 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JMenu menuArchivo;
     private javax.swing.JMenuItem menuItemAbrir;
     private javax.swing.JTable tablaSimbolos;
     private javax.swing.JTextArea txaResultado;
     private javax.swing.JTextArea txtEntrada;
-    private javax.swing.JTextField txtEntradaNo;
     // End of variables declaration//GEN-END:variables
 }
 
