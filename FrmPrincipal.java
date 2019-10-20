@@ -72,10 +72,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
                 
                 case Op_atribucion:
                     resultado += "  <Operador atribucion>\t" + lexer.lexeme + "\n";
-                    break;
-                case Op_booleano:
-                    resultado += "  <Operador booleano>\t" + lexer.lexeme + "\n";
-                    break;
+                    break;                
                 case Parentesis_a:
                     resultado += "  <Parentesis de apertura>\t" + lexer.lexeme + "\n";
                     break;

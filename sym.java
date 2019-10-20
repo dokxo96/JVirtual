@@ -8,39 +8,39 @@ package codigo;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int Inicio_App = 21;
-  public static final int Llave_c = 14;
-  public static final int Op_booleano = 10;
-  public static final int Llave_a = 13;
-  public static final int Real = 26;
-  public static final int operadorIncrementoDecremento = 29;
-  public static final int operadorRelacional = 32;
-  public static final int Corchete_c = 16;
-  public static final int Corchete_a = 15;
-  public static final int Car = 31;
-  public static final int Text = 22;
+  public static final int Inicio_App = 20;
+  public static final int Llave_c = 13;
+  public static final int Llave_a = 12;
+  public static final int Real = 25;
+  public static final int operadorIncrementoDecremento = 28;
+  public static final int operadorRelacional = 31;
+  public static final int Corchete_c = 15;
+  public static final int Corchete_a = 14;
+  public static final int Car = 30;
+  public static final int Text = 21;
   public static final int Division = 8;
-  public static final int Parentesis_c = 12;
-  public static final int Parentesis_a = 11;
+  public static final int Parentesis_c = 11;
+  public static final int Parentesis_a = 10;
   public static final int EOF = 0;
-  public static final int P_coma = 17;
+  public static final int P_coma = 16;
   public static final int error = 1;
   public static final int Linea = 2;
   public static final int Op_atribucion = 9;
-  public static final int punto = 25;
-  public static final int operadorBooleano = 28;
-  public static final int ERROR = 20;
-  public static final int Tarea = 33;
-  public static final int Identificador = 18;
+  public static final int punto = 24;
+  public static final int operadorBooleano = 27;
+  public static final int ERROR = 19;
+  public static final int Tarea = 32;
+  public static final int Imprime = 35;
+  public static final int Identificador = 17;
   public static final int Resta = 6;
-  public static final int Mientras = 35;
-  public static final int Bool = 27;
-  public static final int operadorLogico = 30;
+  public static final int Mientras = 34;
+  public static final int Bool = 26;
+  public static final int operadorLogico = 29;
   public static final int Multiplicacion = 7;
-  public static final int Ent = 23;
-  public static final int Y_si = 34;
-  public static final int Numero = 19;
-  public static final int asignacion = 24;
+  public static final int Ent = 22;
+  public static final int Y_si = 33;
+  public static final int Numero = 18;
+  public static final int asignacion = 23;
   public static final int Suma = 5;
   public static final int Igual = 4;
   public static final int Comillas = 3;
@@ -55,7 +55,6 @@ public class sym {
   "Multiplicacion",
   "Division",
   "Op_atribucion",
-  "Op_booleano",
   "Parentesis_a",
   "Parentesis_c",
   "Llave_a",
@@ -80,7 +79,8 @@ public class sym {
   "operadorRelacional",
   "Tarea",
   "Y_si",
-  "Mientras"
+  "Mientras",
+  "Imprime"
   };
 }
 

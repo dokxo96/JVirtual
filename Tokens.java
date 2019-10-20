@@ -17,8 +17,7 @@ public enum Tokens {
     Resta,
     Multiplicacion,
     Division,    
-    Op_atribucion,
-    Op_booleano,
+    Op_atribucion,    
     Parentesis_a,
     Parentesis_c,
     Llave_a,
@@ -43,6 +42,7 @@ public enum Tokens {
     operadorRelacional,
     Tarea,
     Y_si,
-    Mientras
+    Mientras,
+    Imprime
 
 }

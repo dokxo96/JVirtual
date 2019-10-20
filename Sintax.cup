@@ -16,13 +16,13 @@ parser code
 :};
 
 terminal 
-        Linea, Comillas, Igual, Suma, Resta, Multiplicacion, Division, Op_atribucion, Op_booleano, Parentesis_a, 
+        Linea, Comillas, Igual, Suma, Resta, Multiplicacion, Division, Op_atribucion, Parentesis_a, 
         Parentesis_c,  Llave_a, Llave_c, Corchete_a, Corchete_c, P_coma, Identificador, Numero, ERROR, Inicio_App, 
         Text, Ent, asignacion, punto, Real, Bool, operadorBooleano, operadorIncrementoDecremento, operadorLogico,
-        Car ,operadorRelacional, Tarea, Y_si, Mientras
+        Car ,operadorRelacional, Tarea, Y_si, Mientras, Imprime
 ;
 non terminal 
-            INICIO, SENTENCIA, DECLARACION, IF, SENTENCIA_BOOLEANA, TAREA, MIENTRAS
+            INICIO, SENTENCIA, DECLARACION, IF, SENTENCIA_BOOLEANA, TAREA, MIENTRAS, IMPRIME
 ;
 
 start with INICIO;
@@ -50,6 +50,10 @@ SENTENCIA ::=
     SENTENCIA MIENTRAS
     |
     MIENTRAS
+    |
+    SENTENCIA IMPRIME
+    |
+    IMPRIME
 ;
 
 
@@ -114,4 +118,11 @@ SENTENCIA_BOOLEANA ::=
 	Identificador operadorRelacional Identificador
         |
         Numero operadorRelacional Identificador              
+;
+
+
+IMPRIME ::=
+    Imprime Parentesis_a Parentesis_c P_coma
+    |
+    Imprime Parentesis_a Comillas Identificador Comillas Parentesis_c P_coma
 ;

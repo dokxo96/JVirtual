@@ -41,9 +41,6 @@ espacio=[ ,\t,\r]+
 /* Operadores Atribucion */
 ( "+=" | "-="  | "*=" | "/=" | "%=" ) {lexeme = yytext(); return Op_atribucion;}
 
-/*Operadores Booleanos*/
-(true | false)      {lexeme = yytext(); return Op_booleano;}
-
 /* Parentesis de apertura */
 ( "(" ) {lexeme=yytext(); return Parentesis_a;}
 
@@ -86,6 +83,7 @@ espacio=[ ,\t,\r]+
 (Y_si) {lexeme=yytext(); return Y_si;}
 (Tarea) {lexeme=yytext(); return Tarea;}
 (Mientras) {lexeme=yytext(); return Mientras;}
+(Imprime) {lexeme=yytext(); return Imprime;}
 
 
 /* Identificador */

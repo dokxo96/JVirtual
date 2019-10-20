@@ -7,6 +7,7 @@ import java_cup.runtime.Symbol;
 %full
 %line
 %char
+%column
 L=[a-zA-Z_]+
 D=[0-9]+
 espacio=[ ,\t,\r,\n]+
@@ -16,7 +17,8 @@ espacio=[ ,\t,\r,\n]+
     }
     private Symbol symbol(int type){
         return new Symbol(type, yyline, yycolumn);
-    }
+    }        
+
 %}
 %%
 
@@ -46,9 +48,6 @@ espacio=[ ,\t,\r,\n]+
 
 /* Operadores Atribucion */
 ( "+=" | "-="  | "*=" | "/=" | "%=" | "=" ) {return new Symbol(sym.Op_atribucion, yychar, yyline, yytext());}
-
-/*Operadores Booleanos*/
-( true | false ) {return new Symbol(sym.Op_booleano, yychar, yyline, yytext());}
 
 /* Parentesis de apertura */
 ( "(" ) {return new Symbol(sym.Parentesis_a, yychar, yyline, yytext());}
@@ -89,6 +88,7 @@ espacio=[ ,\t,\r,\n]+
 (Y_si) {return new Symbol (sym.Y_si, yychar, yyline, yytext());}
 (Tarea) {return new Symbol (sym.Tarea, yychar, yyline, yytext());}
 (Mientras) {return new Symbol (sym.Mientras, yychar, yyline, yytext());}
+(Imprime) {return new Symbol (sym.Imprime, yychar, yyline, yytext());}
 
 
 /* Identificador */
@@ -98,4 +98,4 @@ espacio=[ ,\t,\r,\n]+
 ("(-"{D}+")")|{D}+ {return new Symbol(sym.Numero, yychar, yyline, yytext());}
 
 /* Error de analisis */
- . {return new Symbol(sym.ERROR, yychar, yyline, yytext());}
+ . {return new Symbol(sym.ERROR, yycolumn, yyline, yytext());}
