@@ -11,22 +11,12 @@ package codigo;
  */
 public enum Tokens {
     Linea,
-    Comillas,
-    T_dato,
-    Cadena,
-    If,
-    Else,
-    Do,
-    While,
-    For,
+    Comillas, 
     Igual,
     Suma,
     Resta,
     Multiplicacion,
-    Division,
-    Op_logico,
-    Op_incremento,
-    Op_relacional,
+    Division,    
     Op_atribucion,
     Op_booleano,
     Parentesis_a,
@@ -34,19 +24,25 @@ public enum Tokens {
     Llave_a,
     Llave_c,
     Corchete_a,
-    Corchete_c,
-    Main,
+    Corchete_c,    
     P_coma,
     Identificador,
     Numero,
     ERROR,
-    
-    
     Inicio_App,
     Text,
     Ent,
     asignacion,
     punto,
-    Real
-    
+    Real,
+    Bool,
+    operadorBooleano,
+    operadorIncrementoDecremento,
+    operadorLogico,
+    Car,
+    operadorRelacional,
+    Tarea,
+    Y_si,
+    Mientras
+
 }

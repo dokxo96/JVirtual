@@ -49,28 +49,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
                     break;
                 case Comillas:
                     resultado += "  <Comillas>\t\t" + lexer.lexeme + "\n";
-                    break;
-                case Cadena:
-                    resultado += "  <Tipo de dato>\t" + lexer.lexeme + "\n";
-                    break;
-                case T_dato:
-                    resultado += "  <Tipo de dato>\t" + lexer.lexeme + "\n";
-                    break;
-                case If:
-                    resultado += "  <Reservada if>\t" + lexer.lexeme + "\n";
-                    break;
-                case Else:
-                    resultado += "  <Reservada else>\t" + lexer.lexeme + "\n";
-                    break;
-                case Do:
-                    resultado += "  <Reservada do>\t" + lexer.lexeme + "\n";
-                    break;
-                case While:
-                    resultado += "  <Reservada while>\t" + lexer.lexeme + "\n";
-                    break;
-                case For:
-                    resultado += "  <Reservada while>\t" + lexer.lexeme + "\n";
-                    break;
+                
                 case Igual:
                     resultado += "  <Operador igual>\t" + lexer.lexeme + "\n";
                     break;
@@ -86,15 +65,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
                 case Division:
                     resultado += "  <Operador division>\t" + lexer.lexeme + "\n";
                     break;
-                case Op_logico:
-                    resultado += "  <Operador logico>\t" + lexer.lexeme + "\n";
-                    break;
-                case Op_incremento:
+                
+                case operadorIncrementoDecremento:
                     resultado += "  <Operador incremento>\t" + lexer.lexeme + "\n";
                     break;
-                case Op_relacional:
-                    resultado += "  <Operador relacional>\t" + lexer.lexeme + "\n";
-                    break;
+                
                 case Op_atribucion:
                     resultado += "  <Operador atribucion>\t" + lexer.lexeme + "\n";
                     break;
@@ -119,9 +94,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
                 case Corchete_c:
                     resultado += "  <Corchete de cierre>\t" + lexer.lexeme + "\n";
                     break;
-                case Main:
-                    resultado += "  <Reservada main>\t" + lexer.lexeme + "\n";
-                    break;
+               
                 case P_coma:
                     resultado += "  <Punto y coma>\t" + lexer.lexeme + "\n";
                     break;

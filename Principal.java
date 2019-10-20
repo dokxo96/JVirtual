@@ -11,10 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/**
- *
- * @author Charly Ponce
- */
+
 public class Principal {
     public static void main(String[] args) throws Exception {
         String ruta1 = "C:/AnalizadorLexicoPrueba/src/codigo/Lexer.flex";

@@ -29,30 +29,6 @@ espacio=[ ,\t,\r,\n]+
 /* Comillas */
 ( "\"" ) {return new Symbol(sym.Comillas, yychar, yyline, yytext());}
 
-/* Tipos de datos */
-( byte | char | long | float | double ) {return new Symbol(sym.T_dato, yychar, yyline, yytext());}
-
-/* Tipo de dato Int (Para el main) */
-( "int" ) {return new Symbol(sym.Int, yychar, yyline, yytext());}
-
-/* Tipo de dato String */
-( String ) {return new Symbol(sym.Cadena, yychar, yyline, yytext());}
-
-/* Palabra reservada If */
-( if ) {return new Symbol(sym.If, yychar, yyline, yytext());}
-
-/* Palabra reservada Else */
-( else ) {return new Symbol(sym.Else, yychar, yyline, yytext());}
-
-/* Palabra reservada Do */
-( do ) {return new Symbol(sym.Do, yychar, yyline, yytext());}
-
-/* Palabra reservada While */
-( while ) {return new Symbol(sym.While, yychar, yyline, yytext());}
-
-/* Palabra reservada For */
-( for ) {return new Symbol(sym.For, yychar, yyline, yytext());}
-
 /* Operador Igual */
 ( "=" ) {return new Symbol(sym.Igual, yychar, yyline, yytext());}
 
@@ -68,17 +44,8 @@ espacio=[ ,\t,\r,\n]+
 /* Operador Division */
 ( "/" ) {return new Symbol(sym.Division, yychar, yyline, yytext());}
 
-/* Operadores logicos */
-( "&&" | "||" | "!" | "&" | "|" ) {return new Symbol(sym.Op_logico, yychar, yyline, yytext());}
-
-/*Operadores Relacionales */
-( ">" | "<" | "==" | "!=" | ">=" | "<=" | "<<" | ">>" ) {return new Symbol(sym.Op_relacional, yychar, yyline, yytext());}
-
 /* Operadores Atribucion */
 ( "+=" | "-="  | "*=" | "/=" | "%=" | "=" ) {return new Symbol(sym.Op_atribucion, yychar, yyline, yytext());}
-
-/* Operadores Incremento y decremento */
-( "++" | "--" ) {return new Symbol(sym.Op_incremento, yychar, yyline, yytext());}
 
 /*Operadores Booleanos*/
 ( true | false ) {return new Symbol(sym.Op_booleano, yychar, yyline, yytext());}
@@ -101,9 +68,6 @@ espacio=[ ,\t,\r,\n]+
 /* Corchete de cierre */
 ( "]" ) {return new Symbol(sym.Corchete_c, yychar, yyline, yytext());}
 
-/* Marcador de inicio de algoritmo */
-( "main" ) {return new Symbol(sym.Main, yychar, yyline, yytext());}
-
 /* Punto y coma */
 ( ";" ) {return new Symbol(sym.P_coma, yychar, yyline, yytext());}
 
@@ -115,6 +79,16 @@ espacio=[ ,\t,\r,\n]+
 ("<-")       {return new Symbol (sym.asignacion, yychar, yyline, yytext());}
 (".")        {return new Symbol (sym.punto,      yychar, yyline, yytext());}
 (Real)       {return new Symbol (sym.Real,       yychar, yyline, yytext());}
+
+(Bool)       {return new Symbol (sym.Bool, yychar, yyline, yytext());}
+(Car)        {return new Symbol (sym.Car, yychar, yyline, yytext());}
+(Verdad|Falso)  {return new Symbol(sym.operadorBooleano, yychar, yyline, yytext());}
+( "++" | "--" ) {return new Symbol(sym.operadorIncrementoDecremento, yychar, yyline, yytext());}
+("&&"|"||"|"!") {return new Symbol(sym.operadorLogico, yychar, yyline, yytext());}
+(">"|"<"|"=="|"!="|">=") {return new Symbol (sym.operadorRelacional, yychar, yyline, yytext());}
+(Y_si) {return new Symbol (sym.Y_si, yychar, yyline, yytext());}
+(Tarea) {return new Symbol (sym.Tarea, yychar, yyline, yytext());}
+(Mientras) {return new Symbol (sym.Mientras, yychar, yyline, yytext());}
 
 
 /* Identificador */
