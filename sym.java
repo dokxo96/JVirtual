@@ -8,89 +8,79 @@ package codigo;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int Inicio_App = 2;
-  public static final int PuntoComa = 33;
-  public static final int Dec = 11;
-  public static final int Alto = 24;
-  public static final int Real = 14;
-  public static final int Potencia = 32;
-  public static final int Mas = 28;
-  public static final int Menor = 26;
-  public static final int llaveCierre = 35;
-  public static final int Ingresa = 8;
-  public static final int Mayor = 27;
-  public static final int ParentesisCierre = 37;
-  public static final int Car = 17;
-  public static final int Text = 9;
-  public static final int Division = 31;
-  public static final int Avanza = 23;
+  public static final int Inicio_App = 20;
+  public static final int Llave_c = 13;
+  public static final int Llave_a = 12;
+  public static final int Real = 25;
+  public static final int operadorIncrementoDecremento = 28;
+  public static final int operadorRelacional = 31;
+  public static final int Corchete_c = 15;
+  public static final int Corchete_a = 14;
+  public static final int Car = 30;
+  public static final int Text = 21;
+  public static final int Division = 8;
+  public static final int Parentesis_c = 11;
+  public static final int Parentesis_a = 10;
   public static final int EOF = 0;
-  public static final int Durante = 4;
+  public static final int P_coma = 16;
   public static final int error = 1;
-  public static final int Funcion = 20;
-  public static final int Repite = 5;
-  public static final int Publica = 12;
-  public static final int Inc = 10;
-  public static final int ERROR = 40;
-  public static final int Tarea = 3;
-  public static final int Girar_De = 22;
-  public static final int RealExt = 15;
-  public static final int Imprime = 7;
-  public static final int Identificador = 38;
-  public static final int Girar_Iz = 21;
-  public static final int Resta = 29;
-  public static final int Vibrar = 18;
-  public static final int Bool = 16;
-  public static final int Multiplicacion = 30;
-  public static final int Ent = 13;
-  public static final int Y_si = 6;
-  public static final int Numero = 39;
-  public static final int ParentesisApertura = 36;
-  public static final int llaveApertura = 34;
-  public static final int Igual = 25;
-  public static final int Ir = 19;
+  public static final int Linea = 2;
+  public static final int Op_atribucion = 9;
+  public static final int punto = 24;
+  public static final int operadorBooleano = 27;
+  public static final int ERROR = 19;
+  public static final int Tarea = 32;
+  public static final int Imprime = 35;
+  public static final int Identificador = 17;
+  public static final int Resta = 6;
+  public static final int Mientras = 34;
+  public static final int Bool = 26;
+  public static final int operadorLogico = 29;
+  public static final int Multiplicacion = 7;
+  public static final int Ent = 22;
+  public static final int Y_si = 33;
+  public static final int Numero = 18;
+  public static final int asignacion = 23;
+  public static final int Suma = 5;
+  public static final int Igual = 4;
+  public static final int Comillas = 3;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
-  "Inicio_App",
-  "Tarea",
-  "Durante",
-  "Repite",
-  "Y_si",
-  "Imprime",
-  "Ingresa",
-  "Text",
-  "Inc",
-  "Dec",
-  "Publica",
-  "Ent",
-  "Real",
-  "RealExt",
-  "Bool",
-  "Car",
-  "Vibrar",
-  "Ir",
-  "Funcion",
-  "Girar_Iz",
-  "Girar_De",
-  "Avanza",
-  "Alto",
+  "Linea",
+  "Comillas",
   "Igual",
-  "Menor",
-  "Mayor",
-  "Mas",
+  "Suma",
   "Resta",
   "Multiplicacion",
   "Division",
-  "Potencia",
-  "PuntoComa",
-  "llaveApertura",
-  "llaveCierre",
-  "ParentesisApertura",
-  "ParentesisCierre",
+  "Op_atribucion",
+  "Parentesis_a",
+  "Parentesis_c",
+  "Llave_a",
+  "Llave_c",
+  "Corchete_a",
+  "Corchete_c",
+  "P_coma",
   "Identificador",
   "Numero",
-  "ERROR"
+  "ERROR",
+  "Inicio_App",
+  "Text",
+  "Ent",
+  "asignacion",
+  "punto",
+  "Real",
+  "Bool",
+  "operadorBooleano",
+  "operadorIncrementoDecremento",
+  "operadorLogico",
+  "Car",
+  "operadorRelacional",
+  "Tarea",
+  "Y_si",
+  "Mientras",
+  "Imprime"
   };
 }
 
