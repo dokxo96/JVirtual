@@ -45,8 +45,8 @@ public class Vista extends javax.swing.JFrame {
         lineas.setCurrentLineForeground(new Color(255,0,0));//current line
         lineas.setForeground(new Color(76, 175, 80));//color linea
 
-        jScrollPane4.setRowHeaderView(lineas);
-        jScrollPane4.setViewportView(txtEntrada); 
+        jScrollPane2.setRowHeaderView(lineas);
+        jScrollPane2.setViewportView(txtEntrada); 
     }
 
     private void analizarLexico() throws IOException {
