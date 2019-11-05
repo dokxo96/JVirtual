@@ -5,18 +5,17 @@
  */
 package codigo;
 
-import com.sun.glass.events.KeyEvent;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Files;
-import java.security.Key;
-import java.util.Set;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java_cup.runtime.Symbol;
 import javax.swing.JFileChooser;
-import javax.swing.JTable;
+
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -32,10 +31,10 @@ public class Vista extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
     }
-
+        
     private void analizarLexico() throws IOException {
+        
         int contLinea = 1;
-
         String expr = (String) txtEntrada.getText();
 
         Lexer lexer = new Lexer(new StringReader(expr));
@@ -55,137 +54,213 @@ public class Vista extends javax.swing.JFrame {
             String funcion = "Funcion";
             String operadorMat = "Operador matematico/relacional";
             String agrupacion = "Operador de agrupacion";
-
+            
             //resultado+="Reservada Inicio_App\t\t"+lexer.lexeme+"\n"; --> Para que salga por un textArea
-            switch (token) {
+            switch (token) {                
                 case Linea:
                     contLinea++;
                     break;
-
-                case Inicio_App:
-                    Object filaInicioApp[] = {contLinea, lexer.lexeme, reservada};
-                    modelo.addRow(filaInicioApp);
-                    break;
-
-                case Tarea:
-                    Object filaTarea[] = {contLinea, lexer.lexeme, reservada};
-                    modelo.addRow(filaTarea);
-                    break;
-
-                case Mientras:
-                    Object filaDurante[] = {contLinea, lexer.lexeme, reservada};
-                    modelo.addRow(filaDurante);
+                    
+                case Comillas:
+                    Object filaComillas[] = {contLinea, lexer.lexeme, "Caracter"};
+                    modelo.addRow(filaComillas);
                     break;
                 
-                case Y_si:
-                    Object filaYsi[] = {contLinea, lexer.lexeme, reservada};
-                    modelo.addRow(filaYsi);
-                    break;
-
-                case Imprime:
-                    Object filaImprime[] = {contLinea, lexer.lexeme, reservada};
-                    modelo.addRow(filaImprime);
-                    break;               
-
-                case Text:
-                    Object filaText[] = {contLinea, lexer.lexeme, tipoDato};
-                    modelo.addRow(filaText);
-                    break;
-
-                case operadorIncrementoDecremento:
-                    Object filaInc[] = {contLinea, lexer.lexeme, funcion};
-                    modelo.addRow(filaInc);
-                    break;                               
-
-                case Ent:
-                    Object filaEnt[] = {contLinea, lexer.lexeme, tipoDato};
-                    modelo.addRow(filaEnt);
-                    break;
-
-                case Real:
-                    Object filaReal[] = {contLinea, lexer.lexeme, tipoDato};
-                    modelo.addRow(filaReal);
-                    break;               
-
-                case Bool:
-                    Object filaBool[] = {contLinea, lexer.lexeme, tipoDato};
-                    modelo.addRow(filaBool);
-                    break;
-
-                case Car:
-                    Object filaCar[] = {contLinea, lexer.lexeme, tipoDato};
-                    modelo.addRow(filaCar);
-                    break;                                 
-                                       
                 case Igual:
-                    Object filaIgual [] = {contLinea, lexer.lexeme, operadorMat};
+                    Object filaIgual[] = {contLinea, lexer.lexeme, operadorMat};
                     modelo.addRow(filaIgual);
                     break;
-                      
-                case operadorRelacional:
-                    Object filaMenor [] = {contLinea, lexer.lexeme, operadorMat};
-                    modelo.addRow(filaMenor);
-                    break;               
+    
+                case Suma:
+                    Object filaSuma [] = {contLinea, lexer.lexeme, operadorMat};
+                    modelo.addRow(filaSuma);
+                    break;
     
                 case Resta:
                     Object filaResta [] = {contLinea, lexer.lexeme, operadorMat};
                     modelo.addRow(filaResta);
                     break;
-                    
+    
                 case Multiplicacion:
                     Object filaMultiplicacion [] = {contLinea, lexer.lexeme, operadorMat};
                     modelo.addRow(filaMultiplicacion);
                     break;
-                    
+    
                 case Division:
                     Object filaDivision [] = {contLinea, lexer.lexeme, operadorMat};
-                    modelo.addRow(filaDivision);                    
-                    break;               
-
-                case P_coma:
-                    Object filaPuntoComa []={contLinea, lexer.lexeme, "Fin de Setenica"};
-                    modelo.addRow(filaPuntoComa);
-                    break;
-
-                case Llave_a:
-                    Object filaLlaveAp []={contLinea, lexer.lexeme, agrupacion};
-                    modelo.addRow(filaLlaveAp);
-                    break;
-                    
-                case Llave_c:
-                    Object filaLlaveCi [] = {contLinea, lexer.lexeme, agrupacion};
-                    modelo.addRow(filaLlaveCi);
+                    modelo.addRow(filaDivision);
                     break;
                     
                 case Parentesis_a:
-                    Object filaParentesisAp [] = {contLinea, lexer.lexeme, agrupacion};
-                    modelo.addRow(filaParentesisAp);
+                    Object filaParentesisA [] = {contLinea, lexer.lexeme, agrupacion};
+                    modelo.addRow(filaParentesisA);
                     break;
     
                 case Parentesis_c:
-                    Object filaParentesisCi []= {contLinea, lexer.lexeme, agrupacion};
-                    modelo.addRow(filaParentesisCi);
+                    Object filaParentesisC [] = {contLinea, lexer.lexeme, agrupacion};
+                    modelo.addRow(filaParentesisC);
                     break;
-                   
+    
+                case Llave_a:
+                    Object filaLlaveA [] = {contLinea, lexer.lexeme, agrupacion};
+                    modelo.addRow(filaLlaveA);
+                    break;
+                    
+                case Llave_c:
+                    Object filaLlaveC [] = {contLinea, lexer.lexeme, agrupacion};
+                    modelo.addRow(filaLlaveC);
+                    break;
+                    
+                case Corchete_a:
+                    Object filaCorcheteA [] = {contLinea, lexer.lexeme, agrupacion};
+                    modelo.addRow(filaCorcheteA);
+                    break;
+    
+                case Corchete_c:
+                    Object filaCorcheteC [] = {contLinea, lexer.lexeme, agrupacion};
+                    modelo.addRow(filaCorcheteC);
+                    break;
+                           
+                case P_coma:
+                    Object filaPuntoComa [] = {contLinea, lexer.lexeme, "Caracter"};
+                    modelo.addRow(filaPuntoComa);
+                    break;
+    
                 case Identificador:
                     Object filaIdentificador [] = {contLinea, lexer.lexeme, "Identificador"};
                     modelo.addRow(filaIdentificador);
                     break;
-
+            
                 case Numero:
-                    Object filaNum [] = {contLinea, lexer.lexeme, "Numero"};
-                    modelo.addRow(filaNum);
+                    Object filaNumero [] = {contLinea, lexer.lexeme, "Numero"};
+                    modelo.addRow(filaNumero);
                     break;
             
                 case ERROR:
-                    Object filaError []={contLinea, lexer.lexeme, "Simbolo no definido"};
+                    Object filaError [] = {contLinea, lexer.lexeme, "Caracter no definido"};
                     modelo.addRow(filaError);
                     break;
-                
+    
+                case Inicio_App:
+                    Object filaInicioApp [] = {contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaInicioApp);
+                    break;
+
+                case Text:
+                    Object filaText [] = {contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaText);
+                    break;
+    
+                case Ent:
+                    Object filaEnt [] = {contLinea, lexer.lexeme, tipoDato};
+                    modelo.addRow(filaEnt);
+                    break;
+                    
                 case asignacion:
-                    Object filaAsignacion []={contLinea, lexer.lexeme, "Asignacion"};
+                    Object filaAsignacion [] = {contLinea, lexer.lexeme, "caracter reservado"};
                     modelo.addRow(filaAsignacion);
                     break;
+    
+                case punto:
+                    Object filaPunto [] = {contLinea, lexer.lexeme, "caracter"};
+                    modelo.addRow(filaPunto);
+                    break;
+    
+                case Real:
+                    Object filaReal [] = {contLinea, lexer.lexeme, tipoDato};
+                    modelo.addRow(filaReal);
+                    break;
+    
+                case Bool:
+                    Object filaBool [] = {contLinea, lexer.lexeme, tipoDato};
+                    modelo.addRow(filaBool);
+                    break;
+    
+                case operadorBooleano:
+                    Object filaOperadorBooleano [] = {contLinea, lexer.lexeme, tipoDato};
+                    modelo.addRow(filaOperadorBooleano); 
+                    break;
+                    
+                case operadorIncrementoDecremento:
+                    Object filaOperadorIncDec [] = {contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaOperadorIncDec);
+                    break;
+
+                case operadorLogico:
+                    Object filaOpLogico [] = {contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaOpLogico);
+                    break;
+    
+                case Car:
+                    Object filaCar [] = {contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaCar);
+                    break;
+    
+                case operadorRelacional:
+                    Object filaOpRel [] = {contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaOpRel);
+                    break;
+                    
+                case Tarea:
+                    Object filaTarea [] = {contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaTarea);
+                    break;
+    
+                case Y_si:
+                    Object filaYsi [] ={contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaYsi);
+                    break;
+    
+                case Mientras:
+                    Object filaMientras [] = {contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaMientras);
+                    break;
+                        
+                case Imprime:
+                    Object filaImprime [] = {contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaImprime);
+                    break;
+                    
+                case Gira_izq:
+                    Object filaGiraIzq [] = {contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaGiraIzq);
+                    break;
+    
+                case Gira_der:
+                    Object filaGiraDer [] ={contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaGiraDer);
+                    break;
+    
+                case Avanza:
+                    Object filaAvanza [] = {contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaAvanza);
+                    break;
+    
+                case Retroceder:
+                    Object filaRetroceder [] = {contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaRetroceder);
+                    break;
+    
+                case Detener:
+                    Object filaDetener [] = {contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaDetener);
+                    break;
+    
+                case Aviso:
+                    Object filaAviso [] = {contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaAviso);
+                    break;
+    
+                case Advertencia:
+                    Object filaAdvertencia [] = {contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaAdvertencia);
+                    break;
+    
+                case VerificarBateria:
+                    Object filaVerificaBateria [] = {contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaVerificaBateria);
+                    break;
+
                     
                 default:
                     resultado += "< " + lexer.lexeme + " >\n";
@@ -418,13 +493,13 @@ public class Vista extends javax.swing.JFrame {
     private void btnSintacticoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSintacticoActionPerformed
         String tmp = txtEntrada.getText();
         Sintax s = new Sintax(new codigo.LexerCup(new StringReader(tmp)));
-
+        
         try {
             s.parse();
             txaResultado.setText("Correcto");
         } catch (Exception ex) {
             Symbol sym = s.getS();
-            txaResultado.setText("Error linea " + (sym.right) +"y"+ (sym.left)+"x" + sym.value);
+            txaResultado.setText("Error linea:" + (sym.right+1) +" Columna: "+ (sym.left+"")+sym.value);            
         }
     }//GEN-LAST:event_btnSintacticoActionPerformed
 
