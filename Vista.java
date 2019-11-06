@@ -6,13 +6,19 @@
 package codigo;
 
 
+import java.awt.List;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java_cup.runtime.Symbol;
 import javax.swing.JFileChooser;
 
@@ -219,47 +225,7 @@ public class Vista extends javax.swing.JFrame {
                 case Imprime:
                     Object filaImprime [] = {contLinea, lexer.lexeme, reservada};
                     modelo.addRow(filaImprime);
-                    break;
-                    
-                case Gira_izq:
-                    Object filaGiraIzq [] = {contLinea, lexer.lexeme, reservada};
-                    modelo.addRow(filaGiraIzq);
-                    break;
-    
-                case Gira_der:
-                    Object filaGiraDer [] ={contLinea, lexer.lexeme, reservada};
-                    modelo.addRow(filaGiraDer);
-                    break;
-    
-                case Avanza:
-                    Object filaAvanza [] = {contLinea, lexer.lexeme, reservada};
-                    modelo.addRow(filaAvanza);
-                    break;
-    
-                case Retroceder:
-                    Object filaRetroceder [] = {contLinea, lexer.lexeme, reservada};
-                    modelo.addRow(filaRetroceder);
-                    break;
-    
-                case Detener:
-                    Object filaDetener [] = {contLinea, lexer.lexeme, reservada};
-                    modelo.addRow(filaDetener);
-                    break;
-    
-                case Aviso:
-                    Object filaAviso [] = {contLinea, lexer.lexeme, reservada};
-                    modelo.addRow(filaAviso);
-                    break;
-    
-                case Advertencia:
-                    Object filaAdvertencia [] = {contLinea, lexer.lexeme, reservada};
-                    modelo.addRow(filaAdvertencia);
-                    break;
-    
-                case VerificarBateria:
-                    Object filaVerificaBateria [] = {contLinea, lexer.lexeme, reservada};
-                    modelo.addRow(filaVerificaBateria);
-                    break;
+                    break;                
 
                     
                 default:
@@ -287,6 +253,7 @@ public class Vista extends javax.swing.JFrame {
         btnSintactico = new javax.swing.JButton();
         txtEntradaNo = new javax.swing.JTextField();
         btnLimpiar = new javax.swing.JButton();
+        btnSemantico = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtEntrada = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -355,6 +322,20 @@ public class Vista extends javax.swing.JFrame {
             }
         });
 
+        btnSemantico.setBackground(new java.awt.Color(103, 70, 195));
+        btnSemantico.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        btnSemantico.setForeground(new java.awt.Color(103, 70, 195));
+        btnSemantico.setText("Semantico");
+        btnSemantico.setBorderPainted(false);
+        btnSemantico.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnSemantico.setDebugGraphicsOptions(javax.swing.DebugGraphics.BUFFERED_OPTION);
+        btnSemantico.setPreferredSize(new java.awt.Dimension(90, 40));
+        btnSemantico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSemanticoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -364,9 +345,11 @@ public class Vista extends javax.swing.JFrame {
                 .addComponent(btnLexico, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnSintactico, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(46, 46, 46)
-                .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnSemantico, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addComponent(txtEntradaNo, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -377,7 +360,8 @@ public class Vista extends javax.swing.JFrame {
                     .addComponent(btnLexico, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSintactico, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtEntradaNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSemantico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(34, Short.MAX_VALUE))
         );
 
@@ -528,6 +512,16 @@ public class Vista extends javax.swing.JFrame {
         modelo.setRowCount(0);        
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
+    private void btnSemanticoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSemanticoActionPerformed
+        String codigo = txtEntrada.getText();
+             
+        
+        
+            
+        
+             
+    }//GEN-LAST:event_btnSemanticoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -567,6 +561,7 @@ public class Vista extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLexico;
     private javax.swing.JButton btnLimpiar;
+    private javax.swing.JButton btnSemantico;
     private javax.swing.JButton btnSintactico;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
