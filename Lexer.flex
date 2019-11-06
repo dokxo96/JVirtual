@@ -23,20 +23,48 @@ espacio=[ ,\t,\r]+
 /* Comillas */
 ( "\"" ) {lexeme=yytext(); return Comillas;}
 
-
-
+/* Operador Igual */
 ( "=" ) {lexeme=yytext(); return Igual;}
+
+/* Operador Suma */
 ( "+" ) {lexeme=yytext(); return Suma;}
+
+/* Operador Resta */
 ( "-" ) {lexeme=yytext(); return Resta;}
+
+/* Operador Multiplicacion */
 ( "*" ) {lexeme=yytext(); return Multiplicacion;}
+
+/* Operador Division */
 ( "/" ) {lexeme=yytext(); return Division;}
+
+/* Operadores Atribucion */
+( "+=" | "-="  | "*=" | "/=" | "%=" ) {lexeme = yytext(); return Op_atribucion;}
+
+/* Parentesis de apertura */
 ( "(" ) {lexeme=yytext(); return Parentesis_a;}
+
+/* Parentesis de cierre */
 ( ")" ) {lexeme=yytext(); return Parentesis_c;}
+
+/* Llave de apertura */
 ( "{" ) {lexeme=yytext(); return Llave_a;}
+
+/* Llave de cierre */
 ( "}" ) {lexeme=yytext(); return Llave_c;}
+
+/* Corchete de apertura */
 ( "[" ) {lexeme = yytext(); return Corchete_a;}
+
+/* Corchete de cierre */
 ( "]" ) {lexeme = yytext(); return Corchete_c;}
+
+
+/* Punto y coma */
 ( ";" ) {lexeme=yytext(); return P_coma;}
+
+
+
 
 
 (Inicio_App) {lexeme=yytext(); return Inicio_App;}
@@ -45,29 +73,17 @@ espacio=[ ,\t,\r]+
 ("<-")       {lexeme=yytext(); return asignacion;}
 (".")        {lexeme=yytext(); return punto;}
 (Real)       {lexeme=yytext(); return Real;}
-(Y_si)       {lexeme=yytext(); return Y_si;}
-(Tarea)      {lexeme=yytext(); return Tarea;}
-(Mientras)   {lexeme=yytext(); return Mientras;}
-(Imprime)    {lexeme=yytext(); return Imprime;}
-(Bool)       {lexeme=yytext(); return Bool;}
-(Car)        {lexeme=yytext(); return Car;}
-(Gira_izq)   {lexeme=yytext(); return Gira_izq;}
-(Gira_der)   {lexeme=yytext(); return Gira_der;}
-(Avanza)     {lexeme=yytext(); return Avanza;}
-(Retroceder) {lexeme=yytext(); return Retroceder;}
-(Detener)    {lexeme=yytext(); return Detener;}
-(Aviso)      {lexeme=yytext(); return Aviso;}
-(Advertencia) {lexeme=yytext(); return Advertencia;}
-(VerificarBateria) {lexeme=yytext(); return VerificarBateria;}
 
-
+(Bool)          {lexeme=yytext(); return Bool;}
+(Car)           {lexeme=yytext(); return Car;}
 (Verdad|Falso)  {lexeme=yytext(); return operadorBooleano;}
 ("++"|"--")     {lexeme = yytext(); return operadorIncrementoDecremento;}
 ("&&"|"||"|"!") {lexeme=yytext(); return operadorLogico;}
-
-
 (">"|"<"|"=="|"!="|">="|"<=") {lexeme = yytext(); return operadorRelacional ;}
-
+(Y_si) {lexeme=yytext(); return Y_si;}
+(Tarea) {lexeme=yytext(); return Tarea;}
+(Mientras) {lexeme=yytext(); return Mientras;}
+(Imprime) {lexeme=yytext(); return Imprime;}
 
 
 /* Identificador */

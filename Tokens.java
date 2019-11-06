@@ -16,7 +16,8 @@ public enum Tokens {
     Suma,
     Resta,
     Multiplicacion,
-    Division,        
+    Division,    
+    Op_atribucion,    
     Parentesis_a,
     Parentesis_c,
     Llave_a,
@@ -42,15 +43,6 @@ public enum Tokens {
     Tarea,
     Y_si,
     Mientras,
-    Imprime,
-    
-    Gira_izq,
-    Gira_der,
-    Avanza,     
-    Retroceder,
-    Detener,
-    Aviso,   
-    Advertencia,
-    VerificarBateria
+    Imprime
 
 }
