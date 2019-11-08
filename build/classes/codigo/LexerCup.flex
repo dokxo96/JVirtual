@@ -21,50 +21,59 @@ espacio=[ ,\t,\r, \n]+
 %}
 %%
 
-Inicio_App  {return new Symbol (sym.Inicio_App, yychar, yyline,yytext());}
-Tarea       {return new Symbol (sym.Tarea, yychar, yyline, yytext());}
-Durante     {return new Symbol (sym.Durante, yychar, yyline, yytext());}
-Repite      {return new Symbol (sym.Repite, yychar, yyline, yytext());}
-Y_si        {return new Symbol (sym.Y_si, yychar, yyline, yytext());}
-Imprime     {return new Symbol (sym.Imprime, yychar, yyline, yytext());}
-Ingresa     {return new Symbol (sym.Ingresa, yychar, yyline, yytext());}
-Text        {return new Symbol (sym.Text, yychar, yyline, yytext())}
-Inc         {return new Symbol (sym.Inc, yychar, yyline, yytext());}
-Dec         {return new Symbol (sym.Dec, yychar, yyline, yytext());}
-Publica     {return new Symbol (sym.Publica, yychar, yyline, yytext());}
-Ent         {return new Symbol (sym.Ent, yychar, yyline, yytext());}
-Real        {return new Symbol (sym.Real, yychar, yyline, yytext());}
-RealExt     {return new Symbol (sym.RealExt, yychar, yyline, yytext());}
-Bool        {return new Symbol (sym.Bool, yychar, yyline, yytext());}
-Car         {return new Symbol (sym.Car, yychar, yyline, yytext());}
-Vibrar      {return new Symbol (sym.Vibrar, yychar, yyline, yytext())}
-Ir          {return new Symbol (sym.Ir, yychar, yyline, yytext());}
-Funcion     {return new Symbol (sym.Funcion, yychar, yyline, yytext());}
-Girar_Iz    {return new Symbol (sym.Girar_Iz, yychar, yyline, yytext());}
-Girar_De    {return new Symbol (sym.Girar_De, yychar, yyline, yytext());}
-Avanza      {return new Symbol (sym.Avanza, yychar, yyline, yytext());}
-Alto        {return new Symbol (sym.Alto, yychar, yyline, yytext());}
-
+/* Espacios en blanco */
 {espacio} {/*Ignore*/}
 
-"//".* {/*Ignore*/}
+/* Comentarios */
+( "//"(.)* ) {/*Ignore*/}
 
-"=" {return new Symbol (sym.Igual, yychar, yyline, yytext());}
+/* Comillas */
+( "\"" ) {return new Symbol(sym.Comillas, yychar, yyline, yytext());}
 
-"<" {return new Symbol (sym.Menor, yychar, yyline, yytext());}
 
-">" {return new Symbol (sym.Mayor, yychar, yyline, yytext());}
+( "=" ) {return new Symbol(sym.Igual, yychar, yyline, yytext());}
+( "+" ) {return new Symbol(sym.Suma, yychar, yyline, yytext());}
+( "-" ) {return new Symbol(sym.Resta, yychar, yyline, yytext());}
+( "*" ) {return new Symbol(sym.Multiplicacion, yychar, yyline, yytext());}
+( "/" ) {return new Symbol(sym.Division, yychar, yyline, yytext());}
+( "(" ) {return new Symbol(sym.Parentesis_a, yychar, yyline, yytext());}
+( ")" ) {return new Symbol(sym.Parentesis_c, yychar, yyline, yytext());}
+( "{" ) {return new Symbol(sym.Llave_a, yychar, yyline, yytext());}
+( "}" ) {return new Symbol(sym.Llave_c, yychar, yyline, yytext());}
+( "[" ) {return new Symbol(sym.Corchete_a, yychar, yyline, yytext());}
+( "]" ) {return new Symbol(sym.Corchete_c, yychar, yyline, yytext());}
+( ";" ) {return new Symbol(sym.P_coma, yychar, yyline, yytext());}
 
-"+" {return new Symbol (sym.Mas, yychar, yyline, yytext());}
-"-" {return new Symbol (sym.Resta, yychar, yyline, yytext());}
-"*" {return new Symbol (sym.Multiplicacion, yychar, yyline, yytext());}
-"/" {return new Symbol (sym.Division, yychar, yyline, yytext());}
-"^" {return new Symbol (sym.Potencia, yychar, yyline, yytext());}
-";" {return new Symbol (sym.PuntoComa, yychar, yyline, yytext());}
-"{" {return new Symbol (sym.llaveApertura, yychar, yyline, yytext());}
-"}" {return new Symbol (sym.llaveCierre, yychar, yyline, yytext());}
-"(" {return new Symbol (sym.ParentesisApertura, yychar, yyline, yytext());}
-")" {return new Symbol (sym.ParentesisCierre, yychar, yyline, yytext());}
+
+(Inicio_App) {return new Symbol (sym.Inicio_App, yychar, yyline, yytext());}
+(Text)       {return new Symbol (sym.Text,       yychar, yyline, yytext());}
+(Ent)        {return new Symbol (sym.Ent,        yychar, yyline, yytext());}
+("<-")       {return new Symbol (sym.asignacion, yychar, yyline, yytext());}
+(".")        {return new Symbol (sym.punto,      yychar, yyline, yytext());}
+(Real)       {return new Symbol (sym.Real,       yychar, yyline, yytext());}
+(Y_si)       {return new Symbol (sym.Y_si, yychar, yyline, yytext());}
+(Tarea)      {return new Symbol (sym.Tarea, yychar, yyline, yytext());}
+(Mientras)   {return new Symbol (sym.Mientras, yychar, yyline, yytext());}
+(Imprime)    {return new Symbol (sym.Imprime, yychar, yyline, yytext());}
+(Bool)       {return new Symbol (sym.Bool, yychar, yyline, yytext());}
+(Car)        {return new Symbol (sym.Car, yychar, yyline, yytext());}
+
+(Gira_izq)   {return new Symbol (sym.Gira_izq, yychar, yyline, yytext());}
+(Gira_der)   {return new Symbol (sym.Gira_der, yychar, yyline, yytext());}
+(Avanza)     {return new Symbol (sym.Avanza, yychar, yyline, yytext());}
+(Retroceder) {return new Symbol (sym.Retroceder, yychar, yyline, yytext());}
+(Detener)    {return new Symbol (sym.Detener, yychar, yyline, yytext());}
+(Aviso)      {return new Symbol (sym.Aviso, yychar, yyline, yytext());}
+(Advertencia) {return new Symbol (sym.Advertencia, yychar, yyline, yytext());}
+(VerificarBateria) {return new Symbol (sym. VerificarBateria, yychar, yyline, yytext());}
+
+
+(Verdad|Falso)  {return new Symbol(sym.operadorBooleano, yychar, yyline, yytext());}
+( "++" | "--" ) {return new Symbol(sym.operadorIncrementoDecremento, yychar, yyline, yytext());}
+("&&"|"||"|"!") {return new Symbol(sym.operadorLogico, yychar, yyline, yytext());}
+
+
+(">"|"<"|"=="|"!="|">=") {return new Symbol (sym.operadorRelacional, yychar, yyline, yytext());}
 
 
 {L}({L}|{D})*      {return new Symbol (sym.Identificador, yychar, yyline, yytext());}

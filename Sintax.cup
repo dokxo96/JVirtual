@@ -15,17 +15,75 @@ parser code
 }
 :};
 
-terminal 
-        Linea, Comillas, Igual, Suma, Resta, Multiplicacion, Division, Op_atribucion, Parentesis_a, 
-        Parentesis_c,  Llave_a, Llave_c, Corchete_a, Corchete_c, P_coma, Identificador, Numero, ERROR, Inicio_App, 
-        Text, Ent, asignacion, punto, Real, Bool, operadorBooleano, operadorIncrementoDecremento, operadorLogico,
-        Car ,operadorRelacional, Tarea, Y_si, Mientras, Imprime
+terminal
+    Linea                         ,
+    Comillas                      , 
+    Igual                         , 
+    Suma                          , 
+    Resta                         , 
+    Multiplicacion                , 
+    Division                      , 
+    Parentesis_a                  ,
+    Parentesis_c                  ,  
+    Llave_a                       , 
+    Llave_c                       , 
+    Corchete_a                    , 
+    Corchete_c                    , 
+    P_coma                        , 
+    Identificador                 , 
+    Numero                        , 
+    ERROR                         , 
+    Inicio_App                    , 
+    Text                          , 
+    Ent                           ,
+    asignacion                    , 
+    punto                         , 
+    Real                          , 
+    Bool                          , 
+    operadorBooleano              ,            
+    operadorIncrementoDecremento  , 
+    operadorLogico                ,
+    Car                           ,
+    operadorRelacional            , 
+    Tarea                         , 
+    Y_si                          , 
+    Mientras                      , 
+    Imprime                       ,
+  
+    Gira_izq                      ,
+    Gira_der                      ,   
+    Avanza                        ,     
+    Retroceder                    ,
+    Detener                       ,
+    Aviso                         ,
+    Advertencia                   ,
+    VerificarBateria    
 ;
 non terminal 
-            INICIO, SENTENCIA, DECLARACION, IF, SENTENCIA_BOOLEANA, TAREA, MIENTRAS, IMPRIME
+        INICIO, 
+        SENTENCIA, 
+        DECLARACION, 
+        IF, 
+        SENTENCIA_BOOLEANA, 
+        TAREA, 
+        MIENTRAS, 
+        IMPRIME,
+
+        SENTENCIA_GIRA_IZQ,
+        SENTENCIA_GIRA_DER,
+        SENTENCIA_AVANZA,
+        SENTENCIA_RETROCEDE,
+        SENTENCIA_DETENER,
+        SENTENCIA_AVISO,
+        SENTENCIA_ADVERTENCIA,
+        SENTENCIA_VERIFICA_BATERIA           
 ;
 
+
+
 start with INICIO;
+
+
 
 INICIO ::= 
     Inicio_App Identificador Llave_a Llave_c 
@@ -54,6 +112,39 @@ SENTENCIA ::=
     SENTENCIA IMPRIME
     |
     IMPRIME
+    |
+    SENTENCIA SENTENCIA_GIRA_IZQ 
+    |
+    SENTENCIA_GIRA_IZQ 
+    |   
+    SENTENCIA SENTENCIA_GIRA_DER
+    |   
+    SENTENCIA_GIRA_DER
+    |
+    SENTENCIA SENTENCIA_AVANZA
+    |
+    SENTENCIA_AVANZA
+    |
+    SENTENCIA SENTENCIA_RETROCEDE
+    |
+    SENTENCIA_RETROCEDE
+    |
+    SENTENCIA SENTENCIA_DETENER
+    |
+    SENTENCIA_DETENER
+    |
+    SENTENCIA SENTENCIA_AVISO
+    |
+    SENTENCIA_AVISO
+    |
+    SENTENCIA SENTENCIA_ADVERTENCIA
+    |
+    SENTENCIA_ADVERTENCIA
+    |
+    SENTENCIA SENTENCIA_VERIFICA_BATERIA
+    |
+    SENTENCIA_VERIFICA_BATERIA
+
 ;
 
 
@@ -125,4 +216,44 @@ IMPRIME ::=
     Imprime Parentesis_a Parentesis_c P_coma
     |
     Imprime Parentesis_a Comillas Identificador Comillas Parentesis_c P_coma
+;
+
+
+SENTENCIA_GIRA_IZQ ::=
+    Gira_izq Parentesis_a Numero Parentesis_c P_coma
+;
+
+
+SENTENCIA_GIRA_DER ::=
+    Gira_der Parentesis_a Numero Parentesis_c P_coma
+;
+
+
+SENTENCIA_AVANZA ::=
+    Avanza Parentesis_a Numero Parentesis_c P_coma
+;
+
+
+SENTENCIA_RETROCEDE ::=
+    Retroceder Parentesis_a Numero Parentesis_c P_coma
+;
+
+
+SENTENCIA_DETENER ::=
+    Detener Parentesis_a Parentesis_c P_coma
+;
+
+
+SENTENCIA_AVISO ::=
+    Aviso Parentesis_a Comillas Identificador Comillas Parentesis_c P_coma
+;
+
+
+SENTENCIA_ADVERTENCIA ::=
+    Advertencia Parentesis_a Comillas Identificador Comillas Parentesis_c P_coma
+;
+
+
+SENTENCIA_VERIFICA_BATERIA ::=
+    VerificarBateria Parentesis_a Parentesis_c P_coma
 ;
