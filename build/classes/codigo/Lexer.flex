@@ -11,52 +11,62 @@ espacio=[ ,\t,\r]+
 %}
 %%
 
-Inicio_App  {lexeme=yytext(); return Inicio_App;}
-Tarea       {lexeme=yytext(); return Tarea;}
-Durante     {lexeme=yytext(); return Durante;}
-Repite      {lexeme=yytext(); return Repite;}
-Y_si        {lexeme=yytext(); return Y_si;}
-Imprime     {lexeme=yytext(); return Imprime;}
-Ingresa     {lexeme=yytext(); return Ingresa;}
-Text        {lexeme=yytext(); return Text;}
-Inc         {lexeme=yytext(); return Inc;}
-Dec         {lexeme=yytext(); return Dec;}
-Publica     {lexeme=yytext(); return Publica;}
-Ent         {lexeme=yytext(); return Ent;}
-Real        {lexeme=yytext(); return Real;}
-RealExt     {lexeme=yytext(); return RealExt;}
-Bool        {lexeme=yytext(); return Bool;}
-Car         {lexeme=yytext(); return Car;}
-Vibrar      {lexeme=yytext(); return Vibrar;}
-Ir          {lexeme=yytext(); return Ir;}
-Funcion     {lexeme=yytext(); return Funcion;}
-Girar_Iz    {lexeme=yytext(); return Girar_Iz;}
-Girar_De    {lexeme=yytext(); return Girar_De;}
-Avanza      {lexeme=yytext(); return Avanza;}
-Alto        {lexeme=yytext(); return Alto;}
-
+/* Espacios en blanco */
 {espacio} {/*Ignore*/}
 
-"//".* {/*Ignore*/}
+/* Comentarios */
+( "//"(.)* ) {/*Ignore*/}
 
-"\n" {lexeme=yytext(); return saltoLinea;}
-"=" {lexeme=yytext(); return Igual;}
+/* Salto de linea */
+( "\n" ) {return Linea;}
 
-"<" {lexeme=yytext();return Menor;}
+/* Comillas */
+( "\"" ) {lexeme=yytext(); return Comillas;}
 
-">" {lexeme=yytext(); return Mayor}
 
-"+" {lexeme=yytext(); return Mas;}
-"-" {lexeme=yytext(); return Resta;}
-"*" {lexeme=yytext(); return Multiplicacion;}
-"/" {lexeme=yytext(); return Division;}
-"^" {lexeme=yytext(); return Potencia;}
-";" {lexeme=yytext(); return PuntoComa;}
-"{" {lexeme=yytext(); return llaveApertura;}
-"}" {lexeme=yytext(); return llaveCierre;}
-"(" {lexeme=yytext(); return ParentesisApertura;}
-")" {lexeme=yytext(); return ParentesisCierre;}
 
+( "=" ) {lexeme=yytext(); return Igual;}
+( "+" ) {lexeme=yytext(); return Suma;}
+( "-" ) {lexeme=yytext(); return Resta;}
+( "*" ) {lexeme=yytext(); return Multiplicacion;}
+( "/" ) {lexeme=yytext(); return Division;}
+( "(" ) {lexeme=yytext(); return Parentesis_a;}
+( ")" ) {lexeme=yytext(); return Parentesis_c;}
+( "{" ) {lexeme=yytext(); return Llave_a;}
+( "}" ) {lexeme=yytext(); return Llave_c;}
+( "[" ) {lexeme = yytext(); return Corchete_a;}
+( "]" ) {lexeme = yytext(); return Corchete_c;}
+( ";" ) {lexeme=yytext(); return P_coma;}
+
+
+(Inicio_App) {lexeme=yytext(); return Inicio_App;}
+(Text)       {lexeme=yytext(); return Text;}
+(Ent)        {lexeme=yytext(); return Ent;}
+("<-")       {lexeme=yytext(); return asignacion;}
+(".")        {lexeme=yytext(); return punto;}
+(Real)       {lexeme=yytext(); return Real;}
+(Y_si)       {lexeme=yytext(); return Y_si;}
+(Tarea)      {lexeme=yytext(); return Tarea;}
+(Mientras)   {lexeme=yytext(); return Mientras;}
+(Imprime)    {lexeme=yytext(); return Imprime;}
+(Bool)       {lexeme=yytext(); return Bool;}
+(Car)        {lexeme=yytext(); return Car;}
+(Gira_izq)   {lexeme=yytext(); return Gira_izq;}
+(Gira_der)   {lexeme=yytext(); return Gira_der;}
+(Avanza)     {lexeme=yytext(); return Avanza;}
+(Retroceder) {lexeme=yytext(); return Retroceder;}
+(Detener)    {lexeme=yytext(); return Detener;}
+(Aviso)      {lexeme=yytext(); return Aviso;}
+(Advertencia) {lexeme=yytext(); return Advertencia;}
+(VerificarBateria) {lexeme=yytext(); return VerificarBateria;}
+
+
+(Verdad|Falso)  {lexeme=yytext(); return operadorBooleano;}
+("++"|"--")     {lexeme = yytext(); return operadorIncrementoDecremento;}
+("&&"|"||"|"!") {lexeme=yytext(); return operadorLogico;}
+
+
+(">"|"<"|"=="|"!="|">="|"<=") {lexeme = yytext(); return operadorRelacional ;}
 
 
 {L}({L}|{D})* {lexeme=yytext(); return Identificador;}

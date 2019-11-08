@@ -49,9 +49,9 @@ public class Vista extends javax.swing.JFrame {
         jScrollPane2.setViewportView(txtEntrada); 
     }
 
-    private void analizarLexico() throws IOException {
+     private void analizarLexico() throws IOException {
+        
         int contLinea = 1;
-
         String expr = (String) txtEntrada.getText();
 
         Lexer lexer = new Lexer(new StringReader(expr));
@@ -61,217 +61,184 @@ public class Vista extends javax.swing.JFrame {
             Tokens token = lexer.yylex();
 
             if (token == null) {
-                txaResultado.setText(resultado + "\n Terminado");
+                //txaResultado.setText(resultado + "\n Terminado");
+                txaResultado.setText("");
                 return;
             }
             DefaultTableModel modelo = (DefaultTableModel) tablaSimbolos.getModel();
             String reservada = "Palabra reservada";
             String tipoDato = "Tipo de dato";
             String funcion = "Funcion";
-            String operadorMat = "Operador matematico";
+            String operadorMat = "Operador matematico/relacional";
             String agrupacion = "Operador de agrupacion";
-
+            
             //resultado+="Reservada Inicio_App\t\t"+lexer.lexeme+"\n"; --> Para que salga por un textArea
-            switch (token) {
-                case saltoLinea:
+            switch (token) {                
+                case Linea:
                     contLinea++;
                     break;
-
-                case Inicio_App:
-                    Object filaInicioApp[] = {contLinea, lexer.lexeme, reservada};
-                    modelo.addRow(filaInicioApp);
-                    break;
-
-                case Tarea:
-                    Object filaTarea[] = {contLinea, lexer.lexeme, reservada};
-                    modelo.addRow(filaTarea);
-                    break;
-
-                case Durante:
-                    Object filaDurante[] = {contLinea, lexer.lexeme, reservada};
-                    modelo.addRow(filaDurante);
-                    break;
-
-                case Repite:
-                    Object filaRepite[] = {contLinea, lexer.lexeme, reservada};
-                    modelo.addRow(filaRepite);
-                    break;
-
-                case Y_si:
-                    Object filaYsi[] = {contLinea, lexer.lexeme, reservada};
-                    modelo.addRow(filaYsi);
-                    break;
-
-                case Imprime:
-                    Object filaImprime[] = {contLinea, lexer.lexeme, reservada};
-                    modelo.addRow(filaImprime);
-                    break;
-
-                case Ingresa:
-                    Object filaIngresa[] = {contLinea, lexer.lexeme, reservada};
-                    modelo.addRow(filaIngresa);
-                    break;
-
-                case Text:
-                    Object filaText[] = {contLinea, lexer.lexeme, tipoDato};
-                    modelo.addRow(filaText);
-                    break;
-
-                case Inc:
-                    Object filaInc[] = {contLinea, lexer.lexeme, funcion};
-                    modelo.addRow(filaInc);
-                    break;
-
-                case Dec:
-                    Object filaDec[] = {contLinea, lexer.lexeme, funcion};
-                    modelo.addRow(filaDec);
-                    break;
-
-                case Publica:
-                    Object filaPublica[] = {contLinea, lexer.lexeme, "Tipo de ocultacion"};
-                    modelo.addRow(filaPublica);
-                    break;
-
-                case Ent:
-                    Object filaEnt[] = {contLinea, lexer.lexeme, tipoDato};
-                    modelo.addRow(filaEnt);
-                    break;
-
-                case Real:
-                    Object filaReal[] = {contLinea, lexer.lexeme, tipoDato};
-                    modelo.addRow(filaReal);
-                    break;
-
-                case RealExt:
-                    Object filaRealExt[] = {contLinea, lexer.lexeme, tipoDato};
-                    modelo.addRow(filaRealExt);
-                    break;
-
-                case Bool:
-                    Object filaBool[] = {contLinea, lexer.lexeme, tipoDato};
-                    modelo.addRow(filaBool);
-                    break;
-
-                case Car:
-                    Object filaCar[] = {contLinea, lexer.lexeme, tipoDato};
-                    modelo.addRow(filaCar);
-                    break;
-
-                case Vibrar:
-                    Object filaVibrar[] = {contLinea, lexer.lexeme, funcion};
-                    modelo.addRow(filaVibrar);
-                    break;
-
-                case Ir:
-                    Object filaIr[] = {contLinea, lexer.lexeme, funcion};
-                    modelo.addRow(filaIr);
-                    break;
-
-                case Funcion:
-                    Object filaFuncion[] = {contLinea, lexer.lexeme, reservada};
-                    modelo.addRow(filaFuncion);
-                    break;
-
-                case Girar_Iz:
-                    Object filaGiraIz[] = {contLinea, lexer.lexeme, funcion};
-                    modelo.addRow(filaGiraIz);
-                    break;
-
-                case Girar_De:
-                    Object filaGiraDe[] = {contLinea, lexer.lexeme, funcion};
-                    modelo.addRow(filaGiraDe);
-                    break;
-
-                case Avanza:
-                    Object filaAvanza[] = {contLinea, lexer.lexeme, funcion};
-                    modelo.addRow(filaAvanza);
-                    break;
                     
-                case Alto:
-                    Object filaAlto [] = {contLinea, lexer.lexeme, funcion};
-                    modelo.addRow(filaAlto);
-                    break;                      
-                                       
+                case Comillas:
+                    Object filaComillas[] = {contLinea, lexer.lexeme, "Caracter"};
+                    modelo.addRow(filaComillas);
+                    break;
+                
                 case Igual:
-                    Object filaIgual [] = {contLinea, lexer.lexeme, operadorMat};
+                    Object filaIgual[] = {contLinea, lexer.lexeme, operadorMat};
                     modelo.addRow(filaIgual);
                     break;
-                      
-                case Menor:
-                    Object filaMenor [] = {contLinea, lexer.lexeme, operadorMat};
-                    modelo.addRow(filaMenor);
-                    break;
-
-                case Mayor:
-                    Object filaMayor [] = {contLinea, lexer.lexeme, operadorMat};
-                    modelo.addRow(filaMayor);
-                    break;
-                        
-                case Mas:
-                    Object filaMas [] = {contLinea, lexer.lexeme, operadorMat};
-                    modelo.addRow(filaMas);
+    
+                case Suma:
+                    Object filaSuma [] = {contLinea, lexer.lexeme, operadorMat};
+                    modelo.addRow(filaSuma);
                     break;
     
                 case Resta:
                     Object filaResta [] = {contLinea, lexer.lexeme, operadorMat};
                     modelo.addRow(filaResta);
                     break;
-                    
+    
                 case Multiplicacion:
                     Object filaMultiplicacion [] = {contLinea, lexer.lexeme, operadorMat};
                     modelo.addRow(filaMultiplicacion);
                     break;
-                    
+    
                 case Division:
                     Object filaDivision [] = {contLinea, lexer.lexeme, operadorMat};
-                    modelo.addRow(filaDivision);                    
-                    break;
-
-                case Potencia:
-                    Object filaPotencia [] = {contLinea, lexer.lexeme, operadorMat};
-                    modelo.addRow(filaPotencia);
-                    break;
-
-                case PuntoComa:
-                    Object filaPuntoComa []={contLinea, lexer.lexeme, "Fin de Setenica"};
-                    modelo.addRow(filaPuntoComa);
-                    break;
-
-                case llaveApertura:
-                    Object filaLlaveAp []={contLinea, lexer.lexeme, agrupacion};
-                    modelo.addRow(filaLlaveAp);
+                    modelo.addRow(filaDivision);
                     break;
                     
-                case llaveCierre:
-                    Object filaLlaveCi [] = {contLinea, lexer.lexeme, agrupacion};
-                    modelo.addRow(filaLlaveCi);
-                    break;
-                    
-                case ParentesisApertura:
-                    Object filaParentesisAp [] = {contLinea, lexer.lexeme, agrupacion};
-                    modelo.addRow(filaParentesisAp);
+                case Parentesis_a:
+                    Object filaParentesisA [] = {contLinea, lexer.lexeme, agrupacion};
+                    modelo.addRow(filaParentesisA);
                     break;
     
-                case ParentesisCierre:
-                    Object filaParentesisCi []= {contLinea, lexer.lexeme, agrupacion};
-                    modelo.addRow(filaParentesisCi);
+                case Parentesis_c:
+                    Object filaParentesisC [] = {contLinea, lexer.lexeme, agrupacion};
+                    modelo.addRow(filaParentesisC);
                     break;
-                   
+    
+                case Llave_a:
+                    Object filaLlaveA [] = {contLinea, lexer.lexeme, agrupacion};
+                    modelo.addRow(filaLlaveA);
+                    break;
+                    
+                case Llave_c:
+                    Object filaLlaveC [] = {contLinea, lexer.lexeme, agrupacion};
+                    modelo.addRow(filaLlaveC);
+                    break;
+                    
+                case Corchete_a:
+                    Object filaCorcheteA [] = {contLinea, lexer.lexeme, agrupacion};
+                    modelo.addRow(filaCorcheteA);
+                    break;
+    
+                case Corchete_c:
+                    Object filaCorcheteC [] = {contLinea, lexer.lexeme, agrupacion};
+                    modelo.addRow(filaCorcheteC);
+                    break;
+                           
+                case P_coma:
+                    Object filaPuntoComa [] = {contLinea, lexer.lexeme, "Caracter"};
+                    modelo.addRow(filaPuntoComa);
+                    break;
+    
                 case Identificador:
                     Object filaIdentificador [] = {contLinea, lexer.lexeme, "Identificador"};
                     modelo.addRow(filaIdentificador);
                     break;
-
+            
                 case Numero:
-                    Object filaNum [] = {contLinea, lexer.lexeme, "Numero"};
-                    modelo.addRow(filaNum);
+                    Object filaNumero [] = {contLinea, lexer.lexeme, "Numero"};
+                    modelo.addRow(filaNumero);
                     break;
             
                 case ERROR:
-                    Object filaError []={contLinea, lexer.lexeme, "Simbolo no definido"};
+                    Object filaError [] = {contLinea, lexer.lexeme, "Caracter no definido"};
                     modelo.addRow(filaError);
                     break;
-                                  
+    
+                case Inicio_App:
+                    Object filaInicioApp [] = {contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaInicioApp);
+                    break;
+
+                case Text:
+                    Object filaText [] = {contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaText);
+                    break;
+    
+                case Ent:
+                    Object filaEnt [] = {contLinea, lexer.lexeme, tipoDato};
+                    modelo.addRow(filaEnt);
+                    break;
+                    
+                case asignacion:
+                    Object filaAsignacion [] = {contLinea, lexer.lexeme, "caracter reservado"};
+                    modelo.addRow(filaAsignacion);
+                    break;
+    
+                case punto:
+                    Object filaPunto [] = {contLinea, lexer.lexeme, "caracter"};
+                    modelo.addRow(filaPunto);
+                    break;
+    
+                case Real:
+                    Object filaReal [] = {contLinea, lexer.lexeme, tipoDato};
+                    modelo.addRow(filaReal);
+                    break;
+    
+                case Bool:
+                    Object filaBool [] = {contLinea, lexer.lexeme, tipoDato};
+                    modelo.addRow(filaBool);
+                    break;
+    
+                case operadorBooleano:
+                    Object filaOperadorBooleano [] = {contLinea, lexer.lexeme, tipoDato};
+                    modelo.addRow(filaOperadorBooleano); 
+                    break;
+                    
+                case operadorIncrementoDecremento:
+                    Object filaOperadorIncDec [] = {contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaOperadorIncDec);
+                    break;
+
+                case operadorLogico:
+                    Object filaOpLogico [] = {contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaOpLogico);
+                    break;
+    
+                case Car:
+                    Object filaCar [] = {contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaCar);
+                    break;
+    
+                case operadorRelacional:
+                    Object filaOpRel [] = {contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaOpRel);
+                    break;
+                    
+                case Tarea:
+                    Object filaTarea [] = {contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaTarea);
+                    break;
+    
+                case Y_si:
+                    Object filaYsi [] ={contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaYsi);
+                    break;
+    
+                case Mientras:
+                    Object filaMientras [] = {contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaMientras);
+                    break;
+                        
+                case Imprime:
+                    Object filaImprime [] = {contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaImprime);
+                    break;                
+
+                    
                 default:
                     resultado += "< " + lexer.lexeme + " >\n";
                     break;
@@ -295,6 +262,8 @@ public class Vista extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         btnLexico = new javax.swing.JButton();
         btnSintactico = new javax.swing.JButton();
+        btnLimpiar = new javax.swing.JButton();
+        btnSemantico = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         tablaSimbolos = new javax.swing.JTable();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -320,7 +289,7 @@ public class Vista extends javax.swing.JFrame {
         txaResultado.setFont(new java.awt.Font("Monospaced", 0, 18)); // NOI18N
         txaResultado.setForeground(new java.awt.Color(255, 255, 255));
         txaResultado.setRows(5);
-        txaResultado.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Consola", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(255, 255, 255))); // NOI18N
+        txaResultado.setBorder(javax.swing.BorderFactory.createTitledBorder("Consola"));
         jScrollPane1.setViewportView(txaResultado);
 
         jPanel2.setBackground(new java.awt.Color(45, 61, 140));
@@ -351,6 +320,34 @@ public class Vista extends javax.swing.JFrame {
             }
         });
 
+        btnLimpiar.setBackground(new java.awt.Color(103, 70, 195));
+        btnLimpiar.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        btnLimpiar.setForeground(new java.awt.Color(103, 70, 195));
+        btnLimpiar.setText("Limpiar");
+        btnLimpiar.setBorderPainted(false);
+        btnLimpiar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnLimpiar.setDebugGraphicsOptions(javax.swing.DebugGraphics.BUFFERED_OPTION);
+        btnLimpiar.setPreferredSize(new java.awt.Dimension(90, 40));
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarActionPerformed(evt);
+            }
+        });
+
+        btnSemantico.setBackground(new java.awt.Color(103, 70, 195));
+        btnSemantico.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        btnSemantico.setForeground(new java.awt.Color(103, 70, 195));
+        btnSemantico.setText("Semantico");
+        btnSemantico.setBorderPainted(false);
+        btnSemantico.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnSemantico.setDebugGraphicsOptions(javax.swing.DebugGraphics.BUFFERED_OPTION);
+        btnSemantico.setPreferredSize(new java.awt.Dimension(90, 40));
+        btnSemantico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSemanticoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -361,6 +358,13 @@ public class Vista extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(btnSintactico, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(479, Short.MAX_VALUE))
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addGap(256, 256, 256)
+                    .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(18, 18, 18)
+                    .addComponent(btnSemantico, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(257, Short.MAX_VALUE)))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -370,6 +374,13 @@ public class Vista extends javax.swing.JFrame {
                     .addComponent(btnLexico, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSintactico, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(34, Short.MAX_VALUE))
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addGap(30, 30, 30)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnSemantico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap(30, Short.MAX_VALUE)))
         );
 
         tablaSimbolos.setModel(new javax.swing.table.DefaultTableModel(
@@ -420,7 +431,7 @@ public class Vista extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 725, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)))
+                        .addComponent(jScrollPane3)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -594,6 +605,16 @@ public class Vista extends javax.swing.JFrame {
     System.exit(0);        // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        txaResultado.setText("");
+        DefaultTableModel modelo = (DefaultTableModel) tablaSimbolos.getModel();
+        modelo.setRowCount(0);
+    }//GEN-LAST:event_btnLimpiarActionPerformed
+
+    private void btnSemanticoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSemanticoActionPerformed
+        String codigo = txtEntrada.getText();
+    }//GEN-LAST:event_btnSemanticoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -631,6 +652,8 @@ public class Vista extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLexico;
+    private javax.swing.JButton btnLimpiar;
+    private javax.swing.JButton btnSemantico;
     private javax.swing.JButton btnSintactico;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
