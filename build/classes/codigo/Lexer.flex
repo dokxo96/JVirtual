@@ -70,5 +70,5 @@ espacio=[ ,\t,\r]+
 
 
 {L}({L}|{D})* {lexeme=yytext(); return Identificador;}
-("(-"{D}+")")|{D}+ {lexeme=yytext(); return Numero;}
+("(-"{D}+")")|{D}{0,15} {lexeme=yytext(); return Numero;}
  . {lexeme=yytext(); return ERROR;}

@@ -77,5 +77,5 @@ espacio=[ ,\t,\r, \n]+
 
 
 {L}({L}|{D})*      {return new Symbol (sym.Identificador, yychar, yyline, yytext());}
-("(-"{D}+")")|{D}+ {return new Symbol (sym.Numero, yychar, yyline, yytext());}
+("(-"{D}+")")|{D}{0,15} {return new Symbol (sym.Numero, yychar, yyline, yytext());}
  .                 {return new Symbol (sym.ERROR, yychar, yyline, yytext());}

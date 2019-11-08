@@ -8,6 +8,10 @@ package codigo;
 
 import com.sun.glass.events.KeyEvent;
 import java.awt.Color;
+import java.awt.Frame;
+import java.awt.Image;
+
+import javax.swing.JLabel;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,10 +22,15 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java_cup.runtime.Symbol;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.showMessageDialog;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -44,6 +53,7 @@ public class Vista extends javax.swing.JFrame {
         lineas = new TextLineNumber(txtEntrada);
         lineas.setCurrentLineForeground(new Color(255,0,0));//current line
         lineas.setForeground(new Color(76, 175, 80));//color linea
+        lineas.setBackground(new Color (55,71,79));
 
         jScrollPane2.setRowHeaderView(lineas);
         jScrollPane2.setViewportView(txtEntrada); 
@@ -71,6 +81,7 @@ public class Vista extends javax.swing.JFrame {
             String funcion = "Funcion";
             String operadorMat = "Operador matematico/relacional";
             String agrupacion = "Operador de agrupacion";
+            
             
             //resultado+="Reservada Inicio_App\t\t"+lexer.lexeme+"\n"; --> Para que salga por un textArea
             switch (token) {                
@@ -262,26 +273,38 @@ public class Vista extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         btnLexico = new javax.swing.JButton();
         btnSintactico = new javax.swing.JButton();
-        btnLimpiar = new javax.swing.JButton();
         btnSemantico = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        jButton1 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         tablaSimbolos = new javax.swing.JTable();
         jScrollPane4 = new javax.swing.JScrollPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         txtEntrada = new javax.swing.JTextArea();
         jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu2 = new javax.swing.JMenu();
         menuArchivo = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
         menuItemAbrir = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        jMenuItem7 = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        jMenu5 = new javax.swing.JMenu();
+        jMenu4 = new javax.swing.JMenu();
+        jMenu6 = new javax.swing.JMenu();
 
         jMenuItem1.setText("jMenuItem1");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Analizador ");
+        setName("ANALIZADOR"); // NOI18N
+        setUndecorated(true);
 
-        jPanel1.setBackground(new java.awt.Color(0, 24, 94));
+        jPanel1.setBackground(new java.awt.Color(0, 10, 18));
         jPanel1.setPreferredSize(new java.awt.Dimension(1200, 750));
 
         txaResultado.setBackground(new java.awt.Color(0, 0, 0));
@@ -292,11 +315,11 @@ public class Vista extends javax.swing.JFrame {
         txaResultado.setBorder(javax.swing.BorderFactory.createTitledBorder("Consola"));
         jScrollPane1.setViewportView(txaResultado);
 
-        jPanel2.setBackground(new java.awt.Color(45, 61, 140));
+        jPanel2.setBackground(new java.awt.Color(38, 50, 56));
 
-        btnLexico.setBackground(new java.awt.Color(103, 70, 195));
+        btnLexico.setBackground(new java.awt.Color(153, 153, 153));
         btnLexico.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        btnLexico.setForeground(new java.awt.Color(255, 255, 255));
+        btnLexico.setForeground(new java.awt.Color(0, 0, 0));
         btnLexico.setText("Lexico");
         btnLexico.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         btnLexico.setBorderPainted(false);
@@ -306,9 +329,9 @@ public class Vista extends javax.swing.JFrame {
             }
         });
 
-        btnSintactico.setBackground(new java.awt.Color(103, 70, 195));
+        btnSintactico.setBackground(new java.awt.Color(153, 153, 153));
         btnSintactico.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        btnSintactico.setForeground(new java.awt.Color(255, 255, 255));
+        btnSintactico.setForeground(new java.awt.Color(0, 0, 0));
         btnSintactico.setText("Sintactico");
         btnSintactico.setBorderPainted(false);
         btnSintactico.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -320,23 +343,9 @@ public class Vista extends javax.swing.JFrame {
             }
         });
 
-        btnLimpiar.setBackground(new java.awt.Color(103, 70, 195));
-        btnLimpiar.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        btnLimpiar.setForeground(new java.awt.Color(103, 70, 195));
-        btnLimpiar.setText("Limpiar");
-        btnLimpiar.setBorderPainted(false);
-        btnLimpiar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnLimpiar.setDebugGraphicsOptions(javax.swing.DebugGraphics.BUFFERED_OPTION);
-        btnLimpiar.setPreferredSize(new java.awt.Dimension(90, 40));
-        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLimpiarActionPerformed(evt);
-            }
-        });
-
-        btnSemantico.setBackground(new java.awt.Color(103, 70, 195));
+        btnSemantico.setBackground(new java.awt.Color(153, 153, 153));
         btnSemantico.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        btnSemantico.setForeground(new java.awt.Color(103, 70, 195));
+        btnSemantico.setForeground(new java.awt.Color(0, 0, 0));
         btnSemantico.setText("Semantico");
         btnSemantico.setBorderPainted(false);
         btnSemantico.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -345,6 +354,27 @@ public class Vista extends javax.swing.JFrame {
         btnSemantico.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSemanticoActionPerformed(evt);
+            }
+        });
+
+        jSeparator1.setBackground(new java.awt.Color(255, 255, 255));
+        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
+
+        jButton1.setBackground(new java.awt.Color(38, 50, 56));
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-broom-32Black.png"))); // NOI18N
+        jButton1.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-broom-32 Green.png"))); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setBackground(new java.awt.Color(38, 50, 56));
+        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-play-32Blacn.png"))); // NOI18N
+        jButton4.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-play-32Green.png"))); // NOI18N
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
             }
         });
 
@@ -357,32 +387,32 @@ public class Vista extends javax.swing.JFrame {
                 .addComponent(btnLexico, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnSintactico, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(479, Short.MAX_VALUE))
-            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addGap(256, 256, 256)
-                    .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(18, 18, 18)
-                    .addComponent(btnSemantico, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(257, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnSemantico, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(108, 108, 108)
+                .addComponent(jButton4)
+                .addGap(12, 12, 12)
+                .addComponent(jButton1)
+                .addGap(113, 113, 113)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(btnLexico, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnSintactico, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnSemantico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jSeparator1)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnLexico, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSintactico, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(34, Short.MAX_VALUE))
-            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addGap(30, 30, 30)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnSemantico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap(30, Short.MAX_VALUE)))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1)
+                    .addComponent(jButton4))
+                .addGap(0, 12, Short.MAX_VALUE))
         );
 
+        tablaSimbolos.setBackground(new java.awt.Color(55, 71, 79));
+        tablaSimbolos.setForeground(new java.awt.Color(255, 255, 255));
         tablaSimbolos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -399,6 +429,7 @@ public class Vista extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tablaSimbolos.setOpaque(false);
         jScrollPane3.setViewportView(tablaSimbolos);
         if (tablaSimbolos.getColumnModel().getColumnCount() > 0) {
             tablaSimbolos.getColumnModel().getColumn(0).setResizable(false);
@@ -409,9 +440,12 @@ public class Vista extends javax.swing.JFrame {
             tablaSimbolos.getColumnModel().getColumn(2).setPreferredWidth(100);
         }
 
-        txtEntrada.setBackground(new java.awt.Color(222, 227, 255));
+        txtEntrada.setBackground(new java.awt.Color(55, 71, 79));
         txtEntrada.setColumns(20);
+        txtEntrada.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        txtEntrada.setForeground(new java.awt.Color(255, 255, 255));
         txtEntrada.setRows(5);
+        txtEntrada.setOpaque(true);
         txtEntrada.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtEntradaKeyPressed(evt);
@@ -428,12 +462,14 @@ public class Vista extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 725, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane3)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 478, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -442,17 +478,25 @@ public class Vista extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
-                    .addComponent(jScrollPane4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane4)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
-        menuArchivo.setText("Archivo");
+        jMenu2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-sun-glasses-32.png"))); // NOI18N
+        jMenu2.setEnabled(false);
+        jMenu2.setRequestFocusEnabled(false);
+        jMenu2.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-sun-glasses-32.png"))); // NOI18N
+        jMenuBar1.add(jMenu2);
 
-        jMenuItem4.setText("Nuevo");
+        menuArchivo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-folder-32.png"))); // NOI18N
+        menuArchivo.setToolTipText("ARCHIVO");
+
+        jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-add-file-32.png"))); // NOI18N
+        jMenuItem4.setText("NUEVO");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem4ActionPerformed(evt);
@@ -460,7 +504,8 @@ public class Vista extends javax.swing.JFrame {
         });
         menuArchivo.add(jMenuItem4);
 
-        menuItemAbrir.setText("Abrir");
+        menuItemAbrir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-open-door-32.png"))); // NOI18N
+        menuItemAbrir.setText("ABRIR");
         menuItemAbrir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuItemAbrirActionPerformed(evt);
@@ -468,7 +513,8 @@ public class Vista extends javax.swing.JFrame {
         });
         menuArchivo.add(menuItemAbrir);
 
-        jMenuItem2.setText("Guardar");
+        jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-save-32.png"))); // NOI18N
+        jMenuItem2.setText("GUARDAR");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem2ActionPerformed(evt);
@@ -476,18 +522,83 @@ public class Vista extends javax.swing.JFrame {
         });
         menuArchivo.add(jMenuItem2);
 
-        jMenuItem3.setText("Salir");
+        jMenuBar1.add(menuArchivo);
+
+        jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-web-help-32.png"))); // NOI18N
+        jMenu1.setToolTipText("AYUDA");
+
+        jMenuItem3.setText("PALABRAS RE");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem3ActionPerformed(evt);
             }
         });
-        menuArchivo.add(jMenuItem3);
+        jMenu1.add(jMenuItem3);
 
-        jMenuBar1.add(menuArchivo);
+        jMenuItem5.setText("TIPOS DE VARIABLES");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem5);
 
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
+        jMenuItem6.setText("DECLARACIONES");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem6);
+
+        jMenuItem7.setText("ESTRUCTURA GENERAL");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem7);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-conference-32.png"))); // NOI18N
+        jMenu3.setToolTipText("EQUIPO");
+        jMenu3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu3MouseClicked(evt);
+            }
+        });
+        jMenu3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu3ActionPerformed(evt);
+            }
+        });
+        jMenuBar1.add(jMenu3);
+
+        jMenu5.setText("                                                                                                                                                                                                                                                                                                                                          ");
+        jMenu5.setEnabled(false);
+        jMenuBar1.add(jMenu5);
+
+        jMenu4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-popup-window-32.png"))); // NOI18N
+        jMenu4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu4ActionPerformed(evt);
+            }
+        });
+        jMenuBar1.add(jMenu4);
+
+        jMenu6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-close-window-32.png"))); // NOI18N
+        jMenu6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu6MouseClicked(evt);
+            }
+        });
+        jMenu6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu6ActionPerformed(evt);
+            }
+        });
+        jMenuBar1.add(jMenu6);
 
         setJMenuBar(jMenuBar1);
 
@@ -495,11 +606,11 @@ public class Vista extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1211, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1221, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 729, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 713, Short.MAX_VALUE)
         );
 
         pack();
@@ -603,19 +714,259 @@ public class Vista extends javax.swing.JFrame {
         }    // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-    System.exit(0);        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
-
-    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
-        txaResultado.setText("");
-        DefaultTableModel modelo = (DefaultTableModel) tablaSimbolos.getModel();
-        modelo.setRowCount(0);
-    }//GEN-LAST:event_btnLimpiarActionPerformed
-
     private void btnSemanticoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSemanticoActionPerformed
         String codigo = txtEntrada.getText();
     }//GEN-LAST:event_btnSemanticoActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+         //Limpiar tabla
+        txaResultado.setText("");
+        
+        
+        DefaultTableModel modelo = (DefaultTableModel) tablaSimbolos.getModel();
+        modelo.setRowCount(0);
+
+        try {
+            analizarLexico();
+        } catch (IOException ex) {
+            Logger.getLogger(Vista.class.getName()).log(Level.SEVERE, null, ex);
+        }   
+        String tmp = txtEntrada.getText();
+        Sintax s = new Sintax(new codigo.LexerCup(new StringReader(tmp)));
+
+        try {
+            s.parse();
+            txaResultado.setText("Correcto");
+        } catch (Exception ex) {
+            Symbol sym = s.getS();
+            txaResultado.setText("Error linea " + (sym.right + 1) + " " + sym.value);
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+ txaResultado.setText("");
+        DefaultTableModel modelo = (DefaultTableModel) tablaSimbolos.getModel();
+        modelo.setRowCount(0);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jMenu6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu6ActionPerformed
+    System.exit(0);        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenu6ActionPerformed
+
+    private void jMenu6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu6MouseClicked
+        System.exit(0);  // TODO add your handling code here:
+    }//GEN-LAST:event_jMenu6MouseClicked
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+     JTextArea msg = new JTextArea(
+                  "PALABRA              |     DESCRICIÓN"
+                + "\n"
+                + "Inicio_App             --INICIA CODIGO        "
+                + "\n"
+                + "Y_si                        --CONDICIONAL          "
+                + "\n"
+                + "Tarea                     --DECLARA MÉTODO       "
+                + "\n"
+                + "Mientras                --CICLO REPETITIVO"
+                + "\n"
+                + "Gira_izq"
+                + "\n"
+                + "Gira_der"
+                + "\n"
+                + "Avanza"
+                + "\n"
+                + "Retroceder"
+                + "\n"
+                + "Alto"
+                + "\n"
+                + "Advertencia"
+                + "\n"
+                + "VerificarBateria"
+                + "\n"
+                + "Aviso"
+                + "\n"
+                + "Imprime"
+                + "\n"
+                + "Durante"
+                + "\n"
+                + "Repite"
+                + "\n"
+                + "Ingresa"
+                + "\n"
+                + "Text"
+                + "\n"
+                + "Inc"
+                + "\n"
+                + "Dec"
+                + "\n"
+                + "Publica"
+                + "\n"
+                + "Vibrar"
+                + "\n"
+                + "Ir"
+                + "\n"
+                + "Funcion"
+                + "\n"
+                + "Repite"
+                + "\n"
+                + "saltoLinea"
+                + "\n"
+                + "Igual"
+                + "\n"
+                + "Menor"
+                + "\n"
+                + "Mayor"
+                + "\n"
+                + "Mas"
+                + "\n"
+                + "Resta"
+                + "\n"
+                + "Multiplicacion"
+                + "\n"
+                + "Division"
+                + "\n"
+                + "Potencia"
+                + "\n"
+                + "PuntoComa"
+                + "\n"
+                + "llaveApertura"
+                + "\n"
+                + "llaveCierre"
+                + "\n"
+                + "ParentesisApertura"
+                + "\n"
+                + "ParentesisCierre"
+                + "\n"
+                + "Identificador"
+                + "\n"
+                + "Numero"
+                + "\n"
+                + "ERROR");
+        msg.setLineWrap(true);
+        msg.setWrapStyleWord(true);
+        msg.setSize(450,550);
+        JScrollPane scrollPane = new JScrollPane(msg);
+        scrollPane.setSize(455, 555);
+
+        JOptionPane.showMessageDialog(null, scrollPane);
+                // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+  JOptionPane.showMessageDialog(null,
+                  "PALABRA              |     DESCRICIÓN"
+                + "\n"
+                + "Ent                          |   --DECLARA UNA VARIABLE DE TIPO ENTERO"
+                + "\n"
+                + "Real                       |   --DECLARA UNA VARIABLE DE TIPO REAL"
+                + "\n"
+                + "RealExt                   |  --DECLARA UNA VARIABLE DE TIPO REAL EXTENDIDA"
+                + "\n"
+                + "Bool                          |--DECLARA UNA VARIABLE DE TIPO BOOLEANA"
+                + "\n"
+                + "Car                           |--DECLARA UNA VARIABLE DE TIPO CARACTER"
+                + "\n"
+                + "Text                          |--DECLARA UNA VARIABLE DE TIPO CADENA"
+                + "\n"
+               );        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+      JTextArea msg = new JTextArea(
+                "Tipo Identificador <- valor ;"
+                + "\n"
+                + "\n"
+                +"ENTEROS"+ "\n"
+                +"Ent x;"+ "\n"
+                +"Ent x <- 9;"
+                + "\n"
+                + "\n"
+                +"_________________________________"
+                +"REALES"+ "\n"
+                +"Real x;"+ "\n"
+                +"Real x <- 9.5;"+ "\n"
+                +"RealExt x;"+ "\n"
+                +"RealExt x <- 9.5;"
+                + "\n"
+                + "\n"
+                +"_________________________________"
+                +"BOOLEANOS"+ "\n"
+                +"Bool x;"+ "\n"
+                +"Bool x <- true|false;"
+                + "\n"
+                + "\n"
+                +"_________________________________"
+                +"CADENAS"+ "\n"
+                +"Text x;"+ "\n"
+                +"Text x <- 'Cadena de texto';"
+                + "\n"
+                + "\n"
+                +"_________________________________"
+                +"CARACTERES"+ "\n"
+                +"Car x;"+ "\n"
+                +"Car x <- 'X';"
+                
+                  
+          );
+        msg.setLineWrap(true);
+        msg.setWrapStyleWord(true);
+        msg.setSize(250,350);
+        JScrollPane scrollPane = new JScrollPane(msg);
+
+        JOptionPane.showMessageDialog(null, scrollPane);        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+       JTextArea msg = new JTextArea(
+                "Inicio_App ejemplo{\n                                      " +
+                "Tarea(ent a=0,ent b=2, ent c=3){\n                         " +
+                "Imprime('Las Variables son '+a+b+c);\n                                                           " 
+               +"}//Tarea\n                              "
+               +"}//Inicip_App\n                                                                                  "
+              
+                        +"\n"
+               +"________________________________________________"
+               + "Inicio_App ejemplo2{\n" +
+               " Repite(i=0;i<10;i++;){\n" +
+               "Y_si(i==6){\n" 
+               +"Alto"
+               +"}\n" 
+               +"}\n"
+                       +"\n"
+               + "Inicio_App ejemplo3{\n" +
+               "Ent a=5;"+
+               "Durante(a<10){\n" +
+               "Regresa(a)"
+               +"}\n"+
+               "Y_si(a=9){\n" +
+               "Label1;\n" +
+               "}\n"
+                +"}"
+                + "\n"
+                
+                
+                  
+          );
+        msg.setLineWrap(true);
+        msg.setWrapStyleWord(true);
+        msg.setSize(250,350);
+        JScrollPane scrollPane = new JScrollPane(msg);
+
+        JOptionPane.showMessageDialog(null, scrollPane);        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jMenu3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu3ActionPerformed
+       
+    }//GEN-LAST:event_jMenu3ActionPerformed
+
+    private void jMenu3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu3MouseClicked
+  
+    }//GEN-LAST:event_jMenu3MouseClicked
+
+    private void jMenu4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu4ActionPerformed
+    super.setExtendedState(ICONIFIED);
+          // TODO add your handling code here:
+    }//GEN-LAST:event_jMenu4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -654,21 +1005,31 @@ public class Vista extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLexico;
-    private javax.swing.JButton btnLimpiar;
     private javax.swing.JButton btnSemantico;
     private javax.swing.JButton btnSintactico;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
+    private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JMenu menuArchivo;
     private javax.swing.JMenuItem menuItemAbrir;
     private javax.swing.JTable tablaSimbolos;
