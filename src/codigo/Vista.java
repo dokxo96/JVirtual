@@ -388,11 +388,11 @@ public class Vista extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Linea", "Token", "Title 3", "Title 4"
+                "Linea", "Token", "Descripcion"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -402,9 +402,11 @@ public class Vista extends javax.swing.JFrame {
         jScrollPane3.setViewportView(tablaSimbolos);
         if (tablaSimbolos.getColumnModel().getColumnCount() > 0) {
             tablaSimbolos.getColumnModel().getColumn(0).setResizable(false);
+            tablaSimbolos.getColumnModel().getColumn(0).setPreferredWidth(30);
             tablaSimbolos.getColumnModel().getColumn(1).setResizable(false);
+            tablaSimbolos.getColumnModel().getColumn(1).setPreferredWidth(30);
             tablaSimbolos.getColumnModel().getColumn(2).setResizable(false);
-            tablaSimbolos.getColumnModel().getColumn(3).setResizable(false);
+            tablaSimbolos.getColumnModel().getColumn(2).setPreferredWidth(100);
         }
 
         txtEntrada.setBackground(new java.awt.Color(222, 227, 255));
