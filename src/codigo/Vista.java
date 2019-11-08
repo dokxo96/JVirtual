@@ -315,7 +315,7 @@ public class Vista extends javax.swing.JFrame {
         txaResultado.setBorder(javax.swing.BorderFactory.createTitledBorder("Consola"));
         jScrollPane1.setViewportView(txaResultado);
 
-        jPanel2.setBackground(new java.awt.Color(38, 50, 56));
+        jPanel2.setBackground(new java.awt.Color(69, 90, 100));
 
         btnLexico.setBackground(new java.awt.Color(153, 153, 153));
         btnLexico.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -462,10 +462,8 @@ public class Vista extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 725, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -496,7 +494,7 @@ public class Vista extends javax.swing.JFrame {
         menuArchivo.setToolTipText("ARCHIVO");
 
         jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-add-file-32.png"))); // NOI18N
-        jMenuItem4.setText("NUEVO");
+        jMenuItem4.setToolTipText("NUEVO");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem4ActionPerformed(evt);
@@ -505,7 +503,7 @@ public class Vista extends javax.swing.JFrame {
         menuArchivo.add(jMenuItem4);
 
         menuItemAbrir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-open-door-32.png"))); // NOI18N
-        menuItemAbrir.setText("ABRIR");
+        menuItemAbrir.setToolTipText("ABRIR");
         menuItemAbrir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuItemAbrirActionPerformed(evt);
@@ -514,7 +512,7 @@ public class Vista extends javax.swing.JFrame {
         menuArchivo.add(menuItemAbrir);
 
         jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-save-32.png"))); // NOI18N
-        jMenuItem2.setText("GUARDAR");
+        jMenuItem2.setToolTipText("GUARDAR");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem2ActionPerformed(evt);
@@ -527,7 +525,8 @@ public class Vista extends javax.swing.JFrame {
         jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-web-help-32.png"))); // NOI18N
         jMenu1.setToolTipText("AYUDA");
 
-        jMenuItem3.setText("PALABRAS RE");
+        jMenuItem3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-abc-32.png"))); // NOI18N
+        jMenuItem3.setToolTipText("PALABRAS RESERVADAS");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem3ActionPerformed(evt);
@@ -535,7 +534,8 @@ public class Vista extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem3);
 
-        jMenuItem5.setText("TIPOS DE VARIABLES");
+        jMenuItem5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-logic-data-types-32.png"))); // NOI18N
+        jMenuItem5.setToolTipText("TIPOS DE VARIABLES");
         jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem5ActionPerformed(evt);
@@ -543,7 +543,8 @@ public class Vista extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem5);
 
-        jMenuItem6.setText("DECLARACIONES");
+        jMenuItem6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-kackstiftaufpapier-32.png"))); // NOI18N
+        jMenuItem6.setToolTipText("DECLARACIONES");
         jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem6ActionPerformed(evt);
@@ -551,7 +552,8 @@ public class Vista extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem6);
 
-        jMenuItem7.setText("ESTRUCTURA GENERAL");
+        jMenuItem7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-hierarchy-32.png"))); // NOI18N
+        jMenuItem7.setToolTipText("ESTRUCTURA GENERAL");
         jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem7ActionPerformed(evt);
