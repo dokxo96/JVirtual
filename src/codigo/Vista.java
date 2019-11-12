@@ -7,6 +7,7 @@
 package codigo;
 
 import com.sun.glass.events.KeyEvent;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Image;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Files;
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,6 +34,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
 
 /**
  *
@@ -47,22 +54,122 @@ public class Vista extends javax.swing.JFrame {
     byte[] bytesImg;
     GestionArc gestion = new GestionArc();
     TextLineNumber lineas;
+    private DefaultStyledDocument doc;
+  
+    
     public Vista() {
+        
+    final StyleContext cont = StyleContext.getDefaultStyleContext();
+    final AttributeSet red = cont.addAttribute(cont.getEmptySet(), StyleConstants.Foreground, Color.RED);
+    final AttributeSet Black = cont.addAttribute(cont.getEmptySet(), StyleConstants.Foreground, Color.BLACK);
+    final AttributeSet blue = cont.addAttribute(cont.getEmptySet(), StyleConstants.Foreground, Color.blue);
+    final AttributeSet gray = cont.addAttribute(cont.getEmptySet(), StyleConstants.Foreground, Color.gray);
+    final AttributeSet yellow = cont.addAttribute(cont.getEmptySet(), StyleConstants.Foreground, Color.yellow);
+    final AttributeSet orange = cont.addAttribute(cont.getEmptySet(), StyleConstants.Foreground, Color.orange);
+        doc = new DefaultStyledDocument() {
+
+            @Override
+            public void insertString(int offset, String str, AttributeSet a) throws BadLocationException {
+                super.insertString(offset, str, a);
+
+                String text = jTextPane1.getText(0, getLength());
+                int before = findLastNonWordChar(text, offset);
+                if (before < 0) {
+                    before = 0;
+                }
+                int after = findFirstNonWordChar(text, offset + str.length());
+                int wordL = before;
+                int wordR = before;
+
+                while (wordR <= after) {
+                    if (wordR == after || String.valueOf(text.charAt(wordR)).matches("\\W")) {
+
+                        if (text.substring(wordL, wordR).matches("(\\W)*(true|false|start)")) {
+                            setCharacterAttributes(wordL, wordR - wordL, orange, false);
+                        } else if (text.substring(wordL, wordR).matches("(\\W)*(Inicio_App|Y_si|Tarea|Mientras|Gira_izq|Gira_der|Avanza|Retroceder|Alto|Advertencia|VerificarBateria|Aviso|Imprime|Durante|Repite|Ingresa|Text|Inc|Dec|Publica|Vibrar|Ir|Funcion|Repite|saltoLinea|Igual|Menor|Mayor|Mas|Resta|Multiplicacion|Division|Potencia|PuntoComa|llaveApertura|llaveCierre|ParentesisApertura|ParentesisCierre|Identificador|Numero|ERROR)")) {
+                            setCharacterAttributes(wordL, wordR - wordL, blue, false);
+                        } else if (text.substring(wordL, wordR).matches("(\\W)*(->|^[a-zA-Z0-9_.-]*$)")) {
+                            setCharacterAttributes(wordL, wordR - wordL, gray, false);
+                        } else if (text.substring(wordL, wordR).matches("(\\W)*(Ent|Real|RealExt|Bool|Car|Text)")) {
+                            setCharacterAttributes(wordL, wordR - wordL, red, false);
+                        } else if (text.substring(wordL, wordR).matches("(\\W)*(\\Q) (\\W)* (\\E)")) {
+                            setCharacterAttributes(wordL, wordR - wordL, yellow, false);
+                        } else {
+                            setCharacterAttributes(wordL, wordR - wordL, Black, false);
+                        }
+
+                        wordL = wordR;
+                    }
+                    wordR++;
+                }
+            }
+
+            @Override
+            public void remove(int offs, int len) throws BadLocationException {
+                super.remove(offs, len);
+                String text = jTextPane1.getText(0, getLength());
+                int before = findLastNonWordChar(text, offs);
+                if (before < 0) {
+                    before = 0;
+                }
+                int after = findFirstNonWordChar(text, offs);
+
+                if (text.substring(before, after).matches("(\\W)*(true|false|start)")) {
+                    setCharacterAttributes(before, after - before, orange, false);
+                } else if (text.substring(before, after).matches("(\\W)*(Inicio_App|Y_si|Tarea|Mientras|Gira_izq|Gira_der|Avanza|Retroceder|Alto|Advertencia|VerificarBateria|Aviso|Imprime|Durante|Repite|Ingresa|Text|Inc|Dec|Publica|Vibrar|Ir|Funcion|Repite|saltoLinea|Igual|Menor|Mayor|Mas|Resta|Multiplicacion|Division|Potencia|PuntoComa|llaveApertura|llaveCierre|ParentesisApertura|ParentesisCierre|Identificador|Numero|ERROR)")) {
+                    setCharacterAttributes(before, after - before, blue, false);
+                } else if (text.substring(before, after).matches("(\\W)*(->|^[a-zA-Z0-9_.-]*$)")) {
+                    setCharacterAttributes(before, after - before, gray, false);
+                } else if (text.substring(before, after).matches("(\\W)*(Ent|Real|RealExt|Bool|Car|Text)")) {
+                    setCharacterAttributes(before, after - before, red, false);
+//                } else if (text.substring(before, after).matches("(\\W)*(>|<)")) {
+//                    setCharacterAttributes(before, after - before, yellow, false);
+                } else {
+                    setCharacterAttributes(before, after - before, Black, false);
+                }
+            }
+        };
+        this.setUndecorated(true);
         initComponents();
         this.setLocationRelativeTo(null);
-        lineas = new TextLineNumber(txtEntrada);
+        lineas = new TextLineNumber(jTextPane1);
         lineas.setCurrentLineForeground(new Color(255,0,0));//current line
         lineas.setForeground(new Color(76, 175, 80));//color linea
         lineas.setBackground(new Color (55,71,79));
-
-        jScrollPane2.setRowHeaderView(lineas);
-        jScrollPane2.setViewportView(txtEntrada); 
+        jTextPane1.setBackground(Color.darkGray);
+        jScrollPane4.setRowHeaderView(lineas);
+        jScrollPane4.setViewportView(jTextPane1); 
+        
+        jTextPane1.requestFocus();
+        
+        //tp.setBackground(Color.DARK_GRAY);
+        txaResultado.setForeground(Color.red);
     }
+    
+  private int findLastNonWordChar(String text, int index) {
+        while (--index >= 0) {
+            if (String.valueOf(text.charAt(index)).matches("\\W")) {
+                break;
+            }
+        }
+        return index;
+    }
+       private int findFirstNonWordChar(String text, int index) {
+        while (index < text.length()) {
+            if (String.valueOf(text.charAt(index)).matches("\\W")) {
+                break;
+            }
+            index++;
+        }
+        return index;
+    }
+      
+   
 
      private void analizarLexico() throws IOException {
         
         int contLinea = 1;
-        String expr = (String) txtEntrada.getText();
+        String expr = (String) jTextPane1.getText();
 
         Lexer lexer = new Lexer(new StringReader(expr));
         String resultado = "Linea " + contLinea + "\t\t\tSimbolo\n";
@@ -280,20 +387,19 @@ public class Vista extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         tablaSimbolos = new javax.swing.JTable();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        txtEntrada = new javax.swing.JTextArea();
+        jTextPane1 = new javax.swing.JTextPane(doc);
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
         menuArchivo = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
         menuItemAbrir = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
-        jMenu3 = new javax.swing.JMenu();
         jMenu5 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
         jMenu6 = new javax.swing.JMenu();
@@ -319,7 +425,6 @@ public class Vista extends javax.swing.JFrame {
 
         btnLexico.setBackground(new java.awt.Color(153, 153, 153));
         btnLexico.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        btnLexico.setForeground(new java.awt.Color(0, 0, 0));
         btnLexico.setText("Lexico");
         btnLexico.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         btnLexico.setBorderPainted(false);
@@ -331,7 +436,6 @@ public class Vista extends javax.swing.JFrame {
 
         btnSintactico.setBackground(new java.awt.Color(153, 153, 153));
         btnSintactico.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        btnSintactico.setForeground(new java.awt.Color(0, 0, 0));
         btnSintactico.setText("Sintactico");
         btnSintactico.setBorderPainted(false);
         btnSintactico.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -345,7 +449,6 @@ public class Vista extends javax.swing.JFrame {
 
         btnSemantico.setBackground(new java.awt.Color(153, 153, 153));
         btnSemantico.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        btnSemantico.setForeground(new java.awt.Color(0, 0, 0));
         btnSemantico.setText("Semantico");
         btnSemantico.setBorderPainted(false);
         btnSemantico.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -357,7 +460,6 @@ public class Vista extends javax.swing.JFrame {
             }
         });
 
-        jSeparator1.setBackground(new java.awt.Color(255, 255, 255));
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         jButton1.setBackground(new java.awt.Color(38, 50, 56));
@@ -440,20 +542,13 @@ public class Vista extends javax.swing.JFrame {
             tablaSimbolos.getColumnModel().getColumn(2).setPreferredWidth(100);
         }
 
-        txtEntrada.setBackground(new java.awt.Color(55, 71, 79));
-        txtEntrada.setColumns(20);
-        txtEntrada.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
-        txtEntrada.setForeground(new java.awt.Color(255, 255, 255));
-        txtEntrada.setRows(5);
-        txtEntrada.setOpaque(true);
-        txtEntrada.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtEntradaKeyPressed(evt);
-            }
-        });
-        jScrollPane2.setViewportView(txtEntrada);
+        jTextPane1.setOpaque(false);
+        jScrollPane4.setViewportView(jTextPane1);
+        jTextPane1.setBackground(new java.awt.Color(55, 71, 79));
 
-        jScrollPane4.setViewportView(jScrollPane2);
+        jTextPane1.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+
+        jTextPane1.setForeground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -484,14 +579,23 @@ public class Vista extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jMenuBar1.setBackground(new java.awt.Color(69, 90, 100));
+        jMenuBar1.setForeground(new java.awt.Color(69, 90, 100));
+        jMenuBar1.setBorderPainted(false);
+        jMenuBar1.setOpaque(true);
+
+        jMenu2.setBackground(new java.awt.Color(69, 90, 100));
         jMenu2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-sun-glasses-32.png"))); // NOI18N
         jMenu2.setEnabled(false);
+        jMenu2.setOpaque(true);
         jMenu2.setRequestFocusEnabled(false);
         jMenu2.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-sun-glasses-32.png"))); // NOI18N
         jMenuBar1.add(jMenu2);
 
+        menuArchivo.setBackground(new java.awt.Color(69, 90, 100));
         menuArchivo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-folder-32.png"))); // NOI18N
         menuArchivo.setToolTipText("ARCHIVO");
+        menuArchivo.setOpaque(true);
 
         jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-add-file-32.png"))); // NOI18N
         jMenuItem4.setToolTipText("NUEVO");
@@ -522,8 +626,25 @@ public class Vista extends javax.swing.JFrame {
 
         jMenuBar1.add(menuArchivo);
 
+        jMenu3.setBackground(new java.awt.Color(69, 90, 100));
+        jMenu3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-conference-32.png"))); // NOI18N
+        jMenu3.setToolTipText("EQUIPO");
+        jMenu3.setOpaque(true);
+        jMenu3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu3MouseClicked(evt);
+            }
+        });
+        jMenu3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu3ActionPerformed(evt);
+            }
+        });
+
+        jMenu1.setBackground(new java.awt.Color(69, 90, 100));
         jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-web-help-32.png"))); // NOI18N
         jMenu1.setToolTipText("AYUDA");
+        jMenu1.setOpaque(true);
 
         jMenuItem3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-abc-32.png"))); // NOI18N
         jMenuItem3.setToolTipText("PALABRAS RESERVADAS");
@@ -561,27 +682,19 @@ public class Vista extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem7);
 
-        jMenuBar1.add(jMenu1);
+        jMenu3.add(jMenu1);
 
-        jMenu3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-conference-32.png"))); // NOI18N
-        jMenu3.setToolTipText("EQUIPO");
-        jMenu3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jMenu3MouseClicked(evt);
-            }
-        });
-        jMenu3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenu3ActionPerformed(evt);
-            }
-        });
         jMenuBar1.add(jMenu3);
 
+        jMenu5.setBackground(new java.awt.Color(69, 90, 100));
         jMenu5.setText("                                                                                                                                                                                                                                                                                                                                          ");
         jMenu5.setEnabled(false);
+        jMenu5.setOpaque(true);
         jMenuBar1.add(jMenu5);
 
+        jMenu4.setBackground(new java.awt.Color(69, 90, 100));
         jMenu4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-popup-window-32.png"))); // NOI18N
+        jMenu4.setOpaque(true);
         jMenu4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenu4ActionPerformed(evt);
@@ -589,7 +702,9 @@ public class Vista extends javax.swing.JFrame {
         });
         jMenuBar1.add(jMenu4);
 
+        jMenu6.setBackground(new java.awt.Color(69, 90, 100));
         jMenu6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-close-window-32.png"))); // NOI18N
+        jMenu6.setOpaque(true);
         jMenu6.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jMenu6MouseClicked(evt);
@@ -608,7 +723,7 @@ public class Vista extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1221, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1257, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -631,7 +746,7 @@ public class Vista extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLexicoActionPerformed
 
     private void btnSintacticoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSintacticoActionPerformed
-        String tmp = txtEntrada.getText();
+        String tmp = jTextPane1.getText();
         Sintax s = new Sintax(new codigo.LexerCup(new StringReader(tmp)));
 
         try {
@@ -644,17 +759,13 @@ public class Vista extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSintacticoActionPerformed
 
 
-    private void txtEntradaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEntradaKeyPressed
-
-    }//GEN-LAST:event_txtEntradaKeyPressed
-
     private void menuItemAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAbrirActionPerformed
         if(seleccionado.showDialog(null, "ABRIR ARCHIVO") == JFileChooser.APPROVE_OPTION){
             archivo = seleccionado.getSelectedFile();
             if(archivo.canRead()){
                 if(archivo.getName().endsWith("txt")){
                     String contenido = gestion.AbrirATexto(archivo);
-                    txtEntrada.setText(contenido);
+                    jTextPane1.setText(contenido);
                 }else{               
                         JOptionPane.showMessageDialog(null, "Por favor seleccione un archivo de texto.");
                     }
@@ -666,7 +777,7 @@ public class Vista extends javax.swing.JFrame {
     private void guardar(){
         try {
             java.io.FileOutputStream fs = new java.io.FileOutputStream(fileName,true); //fs = Flujo de Salida
-            byte b[]=txtEntrada.getText().getBytes();
+            byte b[]=jTextPane1.getText().getBytes();
             fs.write(b);
         } catch (FileNotFoundException ex) {
             javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage());
@@ -675,14 +786,14 @@ public class Vista extends javax.swing.JFrame {
         }
     }
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-     if(!txtEntrada.getText().equals("")&&!g)
+     if(!jTextPane1.getText().equals("")&&!g)
         if(javax.swing.JOptionPane.showConfirmDialog(this, "¿Desea Guardar los Cambios?")==0){
             
             /////////////////////
              if(seleccionado.showDialog(null, "GUARDAR TEXTO") == JFileChooser.APPROVE_OPTION){
             archivo = seleccionado.getSelectedFile();
             if(archivo.getName().endsWith("txt")){
-                String contenido = txtEntrada.getText();
+                String contenido = jTextPane1.getText();
                 String respuesta = gestion.GuardarATexto(archivo, contenido);
                 if(respuesta!=null){
                     JOptionPane.showMessageDialog(null, respuesta);
@@ -696,14 +807,14 @@ public class Vista extends javax.swing.JFrame {
             /////////////////////
             
         }//Guardar = si
-        txtEntrada.setText(""); fileName=""; g=false;        // TODO add your handling code here:
+        jTextPane1.setText(""); fileName=""; g=false;        // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
       if(seleccionado.showDialog(null, "GUARDAR TEXTO") == JFileChooser.APPROVE_OPTION){
             archivo = seleccionado.getSelectedFile();
             if(archivo.getName().endsWith("txt")){
-                String contenido = txtEntrada.getText();
+                String contenido = jTextPane1.getText();
                 String respuesta = gestion.GuardarATexto(archivo, contenido);
                 if(respuesta!=null){
                     JOptionPane.showMessageDialog(null, respuesta);
@@ -717,7 +828,7 @@ public class Vista extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void btnSemanticoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSemanticoActionPerformed
-        String codigo = txtEntrada.getText();
+        String codigo = jTextPane1.getText();
     }//GEN-LAST:event_btnSemanticoActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -733,7 +844,7 @@ public class Vista extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(Vista.class.getName()).log(Level.SEVERE, null, ex);
         }   
-        String tmp = txtEntrada.getText();
+        String tmp = jTextPane1.getText();
         Sintax s = new Sintax(new codigo.LexerCup(new StringReader(tmp)));
 
         try {
@@ -761,7 +872,7 @@ public class Vista extends javax.swing.JFrame {
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
      JTextArea msg = new JTextArea(
-                  "PALABRA              |     DESCRICIÓN"
+                  "PALABRA              |     DESCRIPCIÓN"
                 + "\n"
                 + "Inicio_App             --INICIA CODIGO        "
                 + "\n"
@@ -856,7 +967,7 @@ public class Vista extends javax.swing.JFrame {
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
   JOptionPane.showMessageDialog(null,
-                  "PALABRA              |     DESCRICIÓN"
+                  "PALABRA              |     DESCRIPCIÓN"
                 + "\n"
                 + "Ent                          |   --DECLARA UNA VARIABLE DE TIPO ENTERO"
                 + "\n"
@@ -873,6 +984,8 @@ public class Vista extends javax.swing.JFrame {
                );        // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
+
+     
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
       JTextArea msg = new JTextArea(
                 "Tipo Identificador <- valor ;"
@@ -970,6 +1083,7 @@ public class Vista extends javax.swing.JFrame {
           // TODO add your handling code here:
     }//GEN-LAST:event_jMenu4ActionPerformed
 
+   
     /**
      * @param args the command line arguments
      */
@@ -1000,7 +1114,7 @@ public class Vista extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Vista().setVisible(true);
+              new Vista().setVisible(true);
             }
         });
     }
@@ -1028,15 +1142,14 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTextPane jTextPane1;
     private javax.swing.JMenu menuArchivo;
     private javax.swing.JMenuItem menuItemAbrir;
     private javax.swing.JTable tablaSimbolos;
     private javax.swing.JTextArea txaResultado;
-    private javax.swing.JTextArea txtEntrada;
     // End of variables declaration//GEN-END:variables
 }
 
