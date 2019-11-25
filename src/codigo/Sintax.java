@@ -406,6 +406,7 @@ public class Sintax extends java_cup.runtime.lr_parser {
         this.s = s;
     }
 
+    
     public Symbol getS(){
         return this.s;
 }

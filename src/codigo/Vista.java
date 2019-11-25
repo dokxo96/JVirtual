@@ -55,10 +55,30 @@ public class Vista extends javax.swing.JFrame {
     GestionArc gestion = new GestionArc();
     TextLineNumber lineas;
     private DefaultStyledDocument doc;
+    private static ArrayList<String> listaErrores;
+    DefaultTableModel modelo;
+    
+    public static String sentencia[]=new String[36];
+    public static String declaracion;
+    public static String ifs;
+    public static String elses;
+    public static String s_arit;
+    public static String s_bool;
+    public static String whiles;
+    public static String dowhiles;
+    public static String fors;
+    public static String s_for;
+    public static String d_for;
+    
+    public static int temp;
+    public static int tempb;
+    public static int status;
+    public static int choice;
+    public static int loop;
   
     
     public Vista() {
-        
+    listaErrores = new ArrayList<String>();    
     final StyleContext cont = StyleContext.getDefaultStyleContext();
     final AttributeSet red = cont.addAttribute(cont.getEmptySet(), StyleConstants.Foreground, Color.RED);
     final AttributeSet Black = cont.addAttribute(cont.getEmptySet(), StyleConstants.Foreground, Color.BLACK);
@@ -66,6 +86,9 @@ public class Vista extends javax.swing.JFrame {
     final AttributeSet gray = cont.addAttribute(cont.getEmptySet(), StyleConstants.Foreground, Color.gray);
     final AttributeSet yellow = cont.addAttribute(cont.getEmptySet(), StyleConstants.Foreground, Color.yellow);
     final AttributeSet orange = cont.addAttribute(cont.getEmptySet(), StyleConstants.Foreground, Color.orange);
+   
+  
+    
         doc = new DefaultStyledDocument() {
 
             @Override
@@ -354,7 +377,8 @@ public class Vista extends javax.swing.JFrame {
                 case Imprime:
                     Object filaImprime [] = {contLinea, lexer.lexeme, reservada};
                     modelo.addRow(filaImprime);
-                    break;                
+                    break;      
+            
 
                     
                 default:
@@ -394,12 +418,12 @@ public class Vista extends javax.swing.JFrame {
         jMenuItem4 = new javax.swing.JMenuItem();
         menuItemAbrir = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
-        jMenu3 = new javax.swing.JMenu();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
         jMenu5 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
         jMenu6 = new javax.swing.JMenu();
@@ -582,7 +606,6 @@ public class Vista extends javax.swing.JFrame {
         jMenuBar1.setBackground(new java.awt.Color(69, 90, 100));
         jMenuBar1.setForeground(new java.awt.Color(69, 90, 100));
         jMenuBar1.setBorderPainted(false);
-        jMenuBar1.setOpaque(true);
 
         jMenu2.setBackground(new java.awt.Color(69, 90, 100));
         jMenu2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-sun-glasses-32.png"))); // NOI18N
@@ -626,21 +649,6 @@ public class Vista extends javax.swing.JFrame {
 
         jMenuBar1.add(menuArchivo);
 
-        jMenu3.setBackground(new java.awt.Color(69, 90, 100));
-        jMenu3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-conference-32.png"))); // NOI18N
-        jMenu3.setToolTipText("EQUIPO");
-        jMenu3.setOpaque(true);
-        jMenu3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jMenu3MouseClicked(evt);
-            }
-        });
-        jMenu3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenu3ActionPerformed(evt);
-            }
-        });
-
         jMenu1.setBackground(new java.awt.Color(69, 90, 100));
         jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-web-help-32.png"))); // NOI18N
         jMenu1.setToolTipText("AYUDA");
@@ -682,8 +690,22 @@ public class Vista extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem7);
 
-        jMenu3.add(jMenu1);
+        jMenuBar1.add(jMenu1);
 
+        jMenu3.setBackground(new java.awt.Color(69, 90, 100));
+        jMenu3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-conference-32.png"))); // NOI18N
+        jMenu3.setToolTipText("EQUIPO");
+        jMenu3.setOpaque(true);
+        jMenu3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu3MouseClicked(evt);
+            }
+        });
+        jMenu3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu3ActionPerformed(evt);
+            }
+        });
         jMenuBar1.add(jMenu3);
 
         jMenu5.setBackground(new java.awt.Color(69, 90, 100));
@@ -754,11 +776,45 @@ public class Vista extends javax.swing.JFrame {
             txaResultado.setText("Correcto");
         } catch (Exception ex) {
             Symbol sym = s.getS();
-            txaResultado.setText("Error linea " + (sym.right + 1) + " " + sym.value);
+            txaResultado.setText("\nError de sintaxis. Linea: " + (sym.right + 1) + " Columna: " + (sym.left + 1) + ", Texto: \"" + sym.value + "\"");
         }
+        
+    for(int i=0;i<=35;i++){    
+    sentencia[i]="";}
+    declaracion="";
+    ifs="";
+    elses="";
+    s_arit="";
+    s_bool="";
+    whiles="";
+    dowhiles="";
+    fors="";
+    s_for="";
+    d_for="";
+    
+    status=0;
+    temp=0;
+    choice=0;
+    loop=0;
+        
+        String resultado;
+        int n=tablaSimbolos.getRowCount();
+        
+        while(n>0){
+            modelo.removeRow(n-1);
+            n--;
+        }
+        
+        try {
+            analizarLexico();
+        } catch (IOException ex) {
+            Logger.getLogger(Vista.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_btnSintacticoActionPerformed
 
 
+ 
     private void menuItemAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAbrirActionPerformed
         if(seleccionado.showDialog(null, "ABRIR ARCHIVO") == JFileChooser.APPROVE_OPTION){
             archivo = seleccionado.getSelectedFile();
@@ -1070,6 +1126,7 @@ public class Vista extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, scrollPane);        // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
+ 
     private void jMenu3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu3ActionPerformed
        
     }//GEN-LAST:event_jMenu3ActionPerformed

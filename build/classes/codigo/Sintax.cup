@@ -1,7 +1,100 @@
 package codigo;
+import java.io.FileReader;
+import java.util.Hashtable;
+import java.util.Stack;
+import java_cup.runtime.*;
 
 import java_cup.runtime.Symbol;
 
+action code{:
+
+
+void print(String msj)
+ 
+   {System.out.println(msj);}
+
+
+:}
+
+init with{:
+    vars = 0;
+    :}
+
+parser code {:
+
+private Symbol s;
+    
+    public void syntax_error(Symbol s){
+        this.s = s;
+    }
+
+    public Symbol getS(){
+        return this.s;
+    }
+
+    Hashtable<String, Lexema> tabla = new Hashtable<>();
+    int contadorTemporales = 0; 
+    int ifs = 0;
+    int whiles = 0;
+    int fors = 0;
+    int switches = 0;
+    int cases = 0;
+    Stack caso = new Stack();
+
+    public static int vars;
+    StringBuilder m = new StringBuilder("");
+
+
+public void report_error(String message, Object info) {
+        if (info instanceof java_cup.runtime.Symbol){
+            java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
+            m=new StringBuilder("Error Critico "+s+" : ");
+            if (s.left >= 0) {m.append(" Linea: "+(s.left+1));
+                if (s.right >= 0)m.append(" Columna: "+(s.right+1)+"\nRepare antes de Continuar");}}
+            if(m.length()!=0)
+                Interface.setError(m+"");
+    }
+
+public void syntax_error(Symbol s){
+append("La Cadena en la Linea: "+(s.left+1)+ " Columna: "+(s.right+1)+" esta fuera de contexto.");
+}
+
+
+public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+append("La Cadena en la Linea: "+(s.left+1)+ " esta fuera de contexto.");
+}
+
+public static void append(String mensaje){
+StringBuilder me;
+    me = new StringBuilder("Error Sintactico: "+" ");
+    me.append(mensaje);
+    //System.out.println(me);
+    Interface.setError(me.toString());
+}
+
+public static void addProduction(String prod){ // Himura mandas las producciones a la interfaz con este metodo
+    StringBuilder production;
+
+    production = new StringBuilder("->"+prod);
+    Interface.addProduction(production.toString());
+}
+
+    public static void main(String[] args){
+        try {
+                Cup sintactico = new Cup(new Lexer(new FileReader(args[0])));
+try{
+                Object result = sintactico.parse().value;}catch(Exception ex){
+
+
+}
+            System.out.println("\n*** Resultados finales ***");
+        } catch (Exception ex) {
+           // ex.printStackTrace();
+        }
+    }
+:};
+
+/*
 parser code
 {:
     private Symbol s;
@@ -14,7 +107,7 @@ parser code
         return this.s;
 }
 :};
-
+*/
 
 terminal
     Linea                         ,
