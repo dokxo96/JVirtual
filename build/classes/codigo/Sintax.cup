@@ -72,7 +72,7 @@ StringBuilder me;
     Interface.setError(me.toString());
 }
 
-public static void addProduction(String prod){ // Himura mandas las producciones a la interfaz con este metodo
+public static void addProduction(String prod){ // Se mandas las producciones a la interfaz con este metodo
     StringBuilder production;
 
     production = new StringBuilder("->"+prod);
@@ -180,174 +180,174 @@ start with INICIO;
 
 
 INICIO ::= 
-    Inicio_App Identificador Llave_a Llave_c 
+    {: Cup.addProduction("INICIO");:}Inicio_App Identificador Llave_a Llave_c 
     |
     Inicio_App Identificador Llave_a SENTENCIA Llave_c
 ;
 
 
 SENTENCIA ::= 
-    SENTENCIA DECLARACION 
+    {: Cup.addProduction("SENTENCIA");:}SENTENCIA DECLARACION 
     |
-    DECLARACION 
+    DECLARACION {: Cup.addProduction("SENTENCIA2");:}
     |
-    SENTENCIA IF 
+    SENTENCIA IF {: Cup.addProduction("SENTENCIA3");:}
     | 
-    IF 
+    IF {: Cup.addProduction("SENTENCIA4");:}
     |      
-    SENTENCIA TAREA
+    SENTENCIA TAREA{: Cup.addProduction("SENTENCIA5");:}
     |
-    TAREA
+    TAREA{: Cup.addProduction("SENTENCIA6");:}
     |
-    SENTENCIA MIENTRAS
+    SENTENCIA MIENTRAS{: Cup.addProduction("SENTENCIA7");:}
     |
-    MIENTRAS
+    MIENTRAS{: Cup.addProduction("SENTENCIA8");:}
     |
-    SENTENCIA IMPRIME
+    SENTENCIA IMPRIME{: Cup.addProduction("SENTENCIA9");:}
     |
-    IMPRIME
+    IMPRIME{: Cup.addProduction("SENTENCIA10");:}
     |
-    SENTENCIA SENTENCIA_GIRA_IZQ 
+    SENTENCIA SENTENCIA_GIRA_IZQ{: Cup.addProduction("SENTENCIA11");:} 
     |
-    SENTENCIA_GIRA_IZQ 
+    SENTENCIA_GIRA_IZQ {: Cup.addProduction("SENTENCIA12");:}
     |   
-    SENTENCIA SENTENCIA_GIRA_DER
+    SENTENCIA SENTENCIA_GIRA_DER{: Cup.addProduction("SENTENCIA13");:}
     |   
-    SENTENCIA_GIRA_DER
+    SENTENCIA_GIRA_DER{: Cup.addProduction("SENTENCIA14");:}
     |
-    SENTENCIA SENTENCIA_AVANZA
+    SENTENCIA SENTENCIA_AVANZA{: Cup.addProduction("SENTENCIA15");:}
     |
-    SENTENCIA_AVANZA
+    SENTENCIA_AVANZA{: Cup.addProduction("SENTENCIA16");:}
     |
-    SENTENCIA SENTENCIA_RETROCEDE
+    SENTENCIA SENTENCIA_RETROCEDE{: Cup.addProduction("SENTENCIA17");:}
     |
-    SENTENCIA_RETROCEDE
+    SENTENCIA_RETROCEDE{: Cup.addProduction("SENTENCIA18");:}
     |
-    SENTENCIA SENTENCIA_DETENER
+    SENTENCIA SENTENCIA_DETENER{: Cup.addProduction("SENTENCIA19");:}
     |
-    SENTENCIA_DETENER
+    SENTENCIA_DETENER{: Cup.addProduction("SENTENCIA20");:}
     |
-    SENTENCIA SENTENCIA_AVISO
+    SENTENCIA SENTENCIA_AVISO{: Cup.addProduction("SENTENCIA21");:}
     |
-    SENTENCIA_AVISO
+    SENTENCIA_AVISO{: Cup.addProduction("SENTENCIA22");:}
     |
-    SENTENCIA SENTENCIA_ADVERTENCIA
+    SENTENCIA SENTENCIA_ADVERTENCIA{: Cup.addProduction("SENTENCIA23");:}
     |
-    SENTENCIA_ADVERTENCIA
+    SENTENCIA_ADVERTENCIA{: Cup.addProduction("SENTENCIA24");:}
     |
-    SENTENCIA SENTENCIA_VERIFICA_BATERIA
+    SENTENCIA SENTENCIA_VERIFICA_BATERIA{: Cup.addProduction("SENTENCIA25");:}
     |
-    SENTENCIA_VERIFICA_BATERIA
+    SENTENCIA_VERIFICA_BATERIA{: Cup.addProduction("SENTENCIA26");:}
 
 ;
 
 
 DECLARACION ::= 
-    Text Identificador P_coma
+    Text Identificador P_coma {: Cup.addProduction("DEC");:}
     |
-    Text Identificador asignacion Comillas Comillas P_coma
+    Text Identificador asignacion Comillas Comillas P_coma{: Cup.addProduction("DEC1");:}
     |
-    Text Identificador asignacion Comillas Identificador Comillas P_coma
+    Text Identificador asignacion Comillas Identificador Comillas P_coma{: Cup.addProduction("DEC2");:}
 
     |
 
-    Ent Identificador P_coma
+    Ent Identificador P_coma{: Cup.addProduction("DEC3");:}
     |
-    Ent Identificador asignacion Numero P_coma
+    Ent Identificador asignacion Numero P_coma{: Cup.addProduction("DEC4");:}
     |
-    Ent Identificador operadorIncrementoDecremento P_coma
+    Ent Identificador operadorIncrementoDecremento P_coma{: Cup.addProduction("DEC5");:}
 
     |
 
-    Real Identificador asignacion Numero punto Numero P_coma
+    Real Identificador asignacion Numero punto Numero P_coma{: Cup.addProduction("DEC6");:}
     |
-    Real Identificador P_coma
+    Real Identificador P_coma{: Cup.addProduction("DEC7");:}
 
     |
 
-    Bool Identificador P_coma
+    Bool Identificador P_coma{: Cup.addProduction("DEC8");:}
     |
-    Bool Identificador asignacion operadorBooleano P_coma        
+    Bool Identificador asignacion operadorBooleano P_coma{: Cup.addProduction("DEC9");:}        
 
     |
 
-    Car Identificador P_coma
+    Car Identificador P_coma{: Cup.addProduction("DEC10");:}
     |
-    Car Identificador asignacion Comillas Identificador Comillas P_coma
+    Car Identificador asignacion Comillas Identificador Comillas P_coma{: Cup.addProduction("DEC10");:}
     |
-    Car Identificador asignacion Comillas Comillas P_coma
+    Car Identificador asignacion Comillas Comillas P_coma{: Cup.addProduction("DEC11");:}
 ;
 
 
 IF ::=
-    Y_si Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c
+    Y_si Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c{: Cup.addProduction("IF");:}
 ;
 
 
 MIENTRAS ::=
-	Mientras Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c
+	Mientras Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c{: Cup.addProduction("MIENTRAS");:}
 ;	
 
 
 TAREA::=
-    Tarea Identificador Parentesis_a Parentesis_c Llave_a SENTENCIA Llave_c
+    Tarea Identificador Parentesis_a Parentesis_c Llave_a SENTENCIA Llave_c{: Cup.addProduction("TAREA");:}
 ;
 
 SENTENCIA_BOOLEANA ::= 
-    	operadorBooleano
+    	operadorBooleano{: Cup.addProduction("BOOL");:}
 	|
-	Identificador operadorLogico
+	Identificador operadorLogico{: Cup.addProduction("BOOL1");:}
 	|
-	Identificador operadorRelacional Numero	
+	Identificador operadorRelacional Numero{: Cup.addProduction("BOOL2");:}	
 	|
-	Identificador operadorRelacional Identificador
+	Identificador operadorRelacional Identificador{: Cup.addProduction("BOOL3");:}
         |
-        Numero operadorRelacional Identificador              
+        Numero operadorRelacional Identificador {: Cup.addProduction("BOOL4");:}             
 ;
 
 
 IMPRIME ::=
-    Imprime Parentesis_a Parentesis_c P_coma
+    Imprime Parentesis_a Parentesis_c P_coma{: Cup.addProduction("IMPRIME1");:}
     |
-    Imprime Parentesis_a Comillas Identificador Comillas Parentesis_c P_coma
+    Imprime Parentesis_a Comillas Identificador Comillas Parentesis_c P_coma{: Cup.addProduction("IMPRIME2");:}
 ;
 
 
 SENTENCIA_GIRA_IZQ ::=
-    Gira_izq Parentesis_a Numero Parentesis_c P_coma
+    Gira_izq Parentesis_a Numero Parentesis_c P_coma{: Cup.addProduction("IZQ");:}
 ;
 
 
 SENTENCIA_GIRA_DER ::=
-    Gira_der Parentesis_a Numero Parentesis_c P_coma
+    Gira_der Parentesis_a Numero Parentesis_c P_coma{: Cup.addProduction("DER");:}
 ;
 
 
 SENTENCIA_AVANZA ::=
-    Avanza Parentesis_a Numero Parentesis_c P_coma
+    Avanza Parentesis_a Numero Parentesis_c P_coma{: Cup.addProduction("AVANZA");:}
 ;
 
 
 SENTENCIA_RETROCEDE ::=
-    Retroceder Parentesis_a Numero Parentesis_c P_coma
+    Retroceder Parentesis_a Numero Parentesis_c P_coma{: Cup.addProduction("RETROCEDE");:}
 ;
 
 
 SENTENCIA_DETENER ::=
-    Detener Parentesis_a Parentesis_c P_coma
+    Detener Parentesis_a Parentesis_c P_coma{: Cup.addProduction("DETENER");:}
 ;
 
 
 SENTENCIA_AVISO ::=
-    Aviso Parentesis_a Comillas Identificador Comillas Parentesis_c P_coma
+    Aviso Parentesis_a Comillas Identificador Comillas Parentesis_c P_coma{: Cup.addProduction("AVISO");:}
 ;
 
 
 SENTENCIA_ADVERTENCIA ::=
-    Advertencia Parentesis_a Comillas Identificador Comillas Parentesis_c P_coma
+    Advertencia Parentesis_a Comillas Identificador Comillas Parentesis_c P_coma{: Cup.addProduction("ADVERTENCIA");:}
 ;
 
 
 SENTENCIA_VERIFICA_BATERIA ::=
-    VerificarBateria Parentesis_a Parentesis_c P_coma
+    VerificarBateria Parentesis_a Parentesis_c P_coma{: Cup.addProduction("BATERIA");:}
 ;

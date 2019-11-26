@@ -15,11 +15,13 @@ import java.awt.Image;
 import javax.swing.JLabel;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Files;
 import java.security.Key;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -55,8 +57,11 @@ public class Vista extends javax.swing.JFrame {
     GestionArc gestion = new GestionArc();
     TextLineNumber lineas;
     private DefaultStyledDocument doc;
+    private boolean compilado=false;
     private static ArrayList<String> listaErrores;
     DefaultTableModel modelo;
+    private static ArrayList<String> produtions = new ArrayList<String>();
+    static ArrayList<String> listaLexemas;
     
     public static String sentencia[]=new String[36];
     public static String declaracion;
@@ -78,6 +83,7 @@ public class Vista extends javax.swing.JFrame {
   
     
     public Vista() {
+    listaLexemas = new ArrayList<>();
     listaErrores = new ArrayList<String>();    
     final StyleContext cont = StyleContext.getDefaultStyleContext();
     final AttributeSet red = cont.addAttribute(cont.getEmptySet(), StyleConstants.Foreground, Color.RED);
@@ -408,6 +414,7 @@ public class Vista extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jButton1 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        Gramatica = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         tablaSimbolos = new javax.swing.JTable();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -504,6 +511,15 @@ public class Vista extends javax.swing.JFrame {
             }
         });
 
+        Gramatica.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        Gramatica.setText("Gramatica");
+        Gramatica.setActionCommand("Gramática");
+        Gramatica.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GramaticaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -515,13 +531,15 @@ public class Vista extends javax.swing.JFrame {
                 .addComponent(btnSintactico, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnSemantico, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(108, 108, 108)
+                .addGap(115, 115, 115)
                 .addComponent(jButton4)
                 .addGap(12, 12, 12)
                 .addComponent(jButton1)
-                .addGap(113, 113, 113)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(Gramatica)
+                .addGap(30, 30, 30)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(415, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -531,10 +549,12 @@ public class Vista extends javax.swing.JFrame {
                 .addComponent(btnSemantico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(jSeparator1)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(jButton4))
-                .addGap(0, 12, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(Gramatica, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jButton1)
+                        .addComponent(jButton4)))
+                .addGap(0, 1, Short.MAX_VALUE))
         );
 
         tablaSimbolos.setBackground(new java.awt.Color(55, 71, 79));
@@ -597,7 +617,7 @@ public class Vista extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane4)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -813,8 +833,6 @@ public class Vista extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnSintacticoActionPerformed
 
-
- 
     private void menuItemAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAbrirActionPerformed
         if(seleccionado.showDialog(null, "ABRIR ARCHIVO") == JFileChooser.APPROVE_OPTION){
             archivo = seleccionado.getSelectedFile();
@@ -900,18 +918,40 @@ public class Vista extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(Vista.class.getName()).log(Level.SEVERE, null, ex);
         }   
-        String tmp = jTextPane1.getText();
+                String tmp = jTextPane1.getText();
         Sintax s = new Sintax(new codigo.LexerCup(new StringReader(tmp)));
 
         try {
             s.parse();
-            txaResultado.setText("Correcto");
+            run();
         } catch (Exception ex) {
             Symbol sym = s.getS();
-            txaResultado.setText("Error linea " + (sym.right + 1) + " " + sym.value);
+            txaResultado.setText("\nError de sintaxis. Linea: " + (sym.right + 1) + " Columna: " + (sym.left + 1) + ", Texto: \"" + sym.value + "\"");
         }
+        
+  
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    
+      private void mostrarResultados() {
+        txaResultado.setText("Compilado en " +GetTiempoDeEjecucion() +" milisegundos.\n");
+        if (listaErrores.isEmpty()) {
+            compilado = true;
+            
+            txaResultado.setText(txaResultado.getText()+"\nCompilado con éxito!!\n");
+           
+        } else {
+            compilado = false;
+            for (String error : listaErrores) {
+                System.err.println(error);
+                txaResultado.setText(txaResultado.getText() + error + "\n");
+            }
+        }
+        for (String lexema : listaLexemas) {
+            System.out.println(lexema);
+          
+        }
+    }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
  txaResultado.setText("");
         DefaultTableModel modelo = (DefaultTableModel) tablaSimbolos.getModel();
@@ -1140,7 +1180,46 @@ public class Vista extends javax.swing.JFrame {
           // TODO add your handling code here:
     }//GEN-LAST:event_jMenu4ActionPerformed
 
-   
+    private void GramaticaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GramaticaActionPerformed
+       
+         if(compilado == false){
+           javax.swing.JOptionPane.showMessageDialog(rootPane, "No se ha compilado o el codigo contiene errores");
+           return;
+       }
+        Gramatica gramar =  new Gramatica(this, rootPaneCheckingEnabled, produtions);
+       gramar.setVisible(true);
+       produtions.clear();
+// TODO add your handling code here:
+    }//GEN-LAST:event_GramaticaActionPerformed
+ long tiempoDeEjecucion;
+    private void run() throws IOException, Exception {
+        //////GUARDANDO CÓDIGO
+        String codigo = jTextPane1.getText();
+        File archivoDeCodigo = new File("fichero.txt");
+        FileWriter escribe = new FileWriter(archivoDeCodigo, false);
+        escribe.write(codigo);
+        escribe.close();
+        ///////COMPILANDO CÓDIGO
+        String codigoArray[] = {"fichero.txt"};
+        Date hora = new Date();
+        long tiempo = hora.getTime();
+        long tiempo2 = new Date().getTime();
+        setTiempoDeEjecucion(tiempo2 - tiempo);
+        mostrarResultados();
+       
+    }
+    public static void addProduction(String prod){ 
+        produtions.add(prod);
+    }
+    public static void setError(String error) {
+        listaErrores.add(error);
+    }
+    public void setTiempoDeEjecucion(long tiempoDeEjecucion) {
+        this.tiempoDeEjecucion = tiempoDeEjecucion;
+    }
+    public long GetTiempoDeEjecucion() {
+        return tiempoDeEjecucion;
+    }
     /**
      * @param args the command line arguments
      */
@@ -1172,11 +1251,13 @@ public class Vista extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
               new Vista().setVisible(true);
+              
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Gramatica;
     private javax.swing.JButton btnLexico;
     private javax.swing.JButton btnSemantico;
     private javax.swing.JButton btnSintactico;
