@@ -1,6 +1,0 @@
-Inicio_App iden {
-Ent i <- 3;
-	Mientras(0 < i){
-		Ent h <- 6; 
-	}
-}

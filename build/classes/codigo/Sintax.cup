@@ -1,100 +1,7 @@
 package codigo;
-import java.io.FileReader;
-import java.util.Hashtable;
-import java.util.Stack;
-import java_cup.runtime.*;
 
 import java_cup.runtime.Symbol;
 
-action code{:
-
-
-void print(String msj)
- 
-   {System.out.println(msj);}
-
-
-:}
-
-init with{:
-    vars = 0;
-    :}
-
-parser code {:
-
-private Symbol s;
-    
-    public void syntax_error(Symbol s){
-        this.s = s;
-    }
-
-    public Symbol getS(){
-        return this.s;
-    }
-
-    Hashtable<String, Lexema> tabla = new Hashtable<>();
-    int contadorTemporales = 0; 
-    int ifs = 0;
-    int whiles = 0;
-    int fors = 0;
-    int switches = 0;
-    int cases = 0;
-    Stack caso = new Stack();
-
-    public static int vars;
-    StringBuilder m = new StringBuilder("");
-
-
-public void report_error(String message, Object info) {
-        if (info instanceof java_cup.runtime.Symbol){
-            java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
-            m=new StringBuilder("Error Critico "+s+" : ");
-            if (s.left >= 0) {m.append(" Linea: "+(s.left+1));
-                if (s.right >= 0)m.append(" Columna: "+(s.right+1)+"\nRepare antes de Continuar");}}
-            if(m.length()!=0)
-                Interface.setError(m+"");
-    }
-
-public void syntax_error(Symbol s){
-append("La Cadena en la Linea: "+(s.left+1)+ " Columna: "+(s.right+1)+" esta fuera de contexto.");
-}
-
-
-public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
-append("La Cadena en la Linea: "+(s.left+1)+ " esta fuera de contexto.");
-}
-
-public static void append(String mensaje){
-StringBuilder me;
-    me = new StringBuilder("Error Sintactico: "+" ");
-    me.append(mensaje);
-    //System.out.println(me);
-    Interface.setError(me.toString());
-}
-
-public static void addProduction(String prod){ // Se mandas las producciones a la interfaz con este metodo
-    StringBuilder production;
-
-    production = new StringBuilder("->"+prod);
-    Interface.addProduction(production.toString());
-}
-
-    public static void main(String[] args){
-        try {
-                Cup sintactico = new Cup(new Lexer(new FileReader(args[0])));
-try{
-                Object result = sintactico.parse().value;}catch(Exception ex){
-
-
-}
-            System.out.println("\n*** Resultados finales ***");
-        } catch (Exception ex) {
-           // ex.printStackTrace();
-        }
-    }
-:};
-
-/*
 parser code
 {:
     private Symbol s;
@@ -107,7 +14,16 @@ parser code
         return this.s;
 }
 :};
-*/
+
+terminal String 
+    Identificador                   ,
+    Numero                          ,
+    operadorBooleano                ,
+    operadorIncrementoDecremento    ,
+    operadorLogico                  ,
+    operadorRelacional            
+;
+
 
 terminal
     Linea                         ,
@@ -124,26 +40,19 @@ terminal
     Corchete_a                    , 
     Corchete_c                    , 
     P_coma                        , 
-    Identificador                 , 
-    Numero                        , 
     ERROR                         , 
     Inicio_App                    , 
-    Text                          , 
     Ent                           ,
+    Text                          ,     
     asignacion                    , 
     punto                         , 
     Real                          , 
-    Bool                          , 
-    operadorBooleano              ,            
-    operadorIncrementoDecremento  , 
-    operadorLogico                ,
-    Car                           ,
-    operadorRelacional            , 
+    Bool                          ,             
+    Car                           ,  
     Tarea                         , 
     Y_si                          , 
     Mientras                      , 
-    Imprime                       ,
-  
+    Imprime                       ,  
     Gira_izq                      ,
     Gira_der                      ,   
     Avanza                        ,     
@@ -178,176 +87,212 @@ non terminal
 start with INICIO;
 
 
-
 INICIO ::= 
-    {: Cup.addProduction("INICIO");:}Inicio_App Identificador Llave_a Llave_c 
+    Inicio_App Identificador Llave_a Llave_c     
     |
     Inicio_App Identificador Llave_a SENTENCIA Llave_c
+    |
+    Inicio_App 
+    {:  
+    Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta se esperaba un identificador "); :}
+    |
+    Inicio_App Identificador 
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta se esperaba uns Llave_a "); :}
+    |
+    Inicio_App Identificador Llave_a 
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta se esperaba uns Llave_c "); :}
+    |
+     Identificador Llave_a Llave_c
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se espera la palabra de Inicio_App antes "); :}
+    |
+    Inicio_App  Llave_a Llave_c   
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba identificador entre Inicio_App y Llave_c "); :}
+    |
+    Inicio_App Identificador  Llave_c  
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba Llave_a entre Indentificador y Llave_c "); :}
+    |
+     Llave_a Llave_c
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se espera = 'Inicio_App Identificador' antes "); :}
+
 ;
 
 
 SENTENCIA ::= 
-    {: Cup.addProduction("SENTENCIA");:}SENTENCIA DECLARACION 
+    SENTENCIA DECLARACION 
     |
-    DECLARACION {: Cup.addProduction("SENTENCIA2");:}
+    DECLARACION 
     |
-    SENTENCIA IF {: Cup.addProduction("SENTENCIA3");:}
+    SENTENCIA IF 
     | 
-    IF {: Cup.addProduction("SENTENCIA4");:}
+    IF 
     |      
-    SENTENCIA TAREA{: Cup.addProduction("SENTENCIA5");:}
+    SENTENCIA TAREA
     |
-    TAREA{: Cup.addProduction("SENTENCIA6");:}
+    TAREA
     |
-    SENTENCIA MIENTRAS{: Cup.addProduction("SENTENCIA7");:}
+    SENTENCIA MIENTRAS
     |
-    MIENTRAS{: Cup.addProduction("SENTENCIA8");:}
+    MIENTRAS
     |
-    SENTENCIA IMPRIME{: Cup.addProduction("SENTENCIA9");:}
+    SENTENCIA IMPRIME
     |
-    IMPRIME{: Cup.addProduction("SENTENCIA10");:}
+    IMPRIME
     |
-    SENTENCIA SENTENCIA_GIRA_IZQ{: Cup.addProduction("SENTENCIA11");:} 
+    SENTENCIA SENTENCIA_GIRA_IZQ 
     |
-    SENTENCIA_GIRA_IZQ {: Cup.addProduction("SENTENCIA12");:}
+    SENTENCIA_GIRA_IZQ 
     |   
-    SENTENCIA SENTENCIA_GIRA_DER{: Cup.addProduction("SENTENCIA13");:}
+    SENTENCIA SENTENCIA_GIRA_DER
     |   
-    SENTENCIA_GIRA_DER{: Cup.addProduction("SENTENCIA14");:}
+    SENTENCIA_GIRA_DER
     |
-    SENTENCIA SENTENCIA_AVANZA{: Cup.addProduction("SENTENCIA15");:}
+    SENTENCIA SENTENCIA_AVANZA
     |
-    SENTENCIA_AVANZA{: Cup.addProduction("SENTENCIA16");:}
+    SENTENCIA_AVANZA
     |
-    SENTENCIA SENTENCIA_RETROCEDE{: Cup.addProduction("SENTENCIA17");:}
+    SENTENCIA SENTENCIA_RETROCEDE
     |
-    SENTENCIA_RETROCEDE{: Cup.addProduction("SENTENCIA18");:}
+    SENTENCIA_RETROCEDE
     |
-    SENTENCIA SENTENCIA_DETENER{: Cup.addProduction("SENTENCIA19");:}
+    SENTENCIA SENTENCIA_DETENER
     |
-    SENTENCIA_DETENER{: Cup.addProduction("SENTENCIA20");:}
+    SENTENCIA_DETENER
     |
-    SENTENCIA SENTENCIA_AVISO{: Cup.addProduction("SENTENCIA21");:}
+    SENTENCIA SENTENCIA_AVISO
     |
-    SENTENCIA_AVISO{: Cup.addProduction("SENTENCIA22");:}
+    SENTENCIA_AVISO
     |
-    SENTENCIA SENTENCIA_ADVERTENCIA{: Cup.addProduction("SENTENCIA23");:}
+    SENTENCIA SENTENCIA_ADVERTENCIA
     |
-    SENTENCIA_ADVERTENCIA{: Cup.addProduction("SENTENCIA24");:}
+    SENTENCIA_ADVERTENCIA
     |
-    SENTENCIA SENTENCIA_VERIFICA_BATERIA{: Cup.addProduction("SENTENCIA25");:}
+    SENTENCIA SENTENCIA_VERIFICA_BATERIA
     |
-    SENTENCIA_VERIFICA_BATERIA{: Cup.addProduction("SENTENCIA26");:}
+    SENTENCIA_VERIFICA_BATERIA
 
 ;
 
 
 DECLARACION ::= 
-    Text Identificador P_coma {: Cup.addProduction("DEC");:}
+    Text Identificador:id P_coma
+    {:Generador.gc(Generador.DECLARACION,"String",null,id);:}
     |
-    Text Identificador asignacion Comillas Comillas P_coma{: Cup.addProduction("DEC1");:}
+    Text Identificador:id asignacion Comillas Comillas P_coma
+    {:Generador.gc(Generador.DECLARACION,"String", null, id);:}
     |
-    Text Identificador asignacion Comillas Identificador Comillas P_coma{: Cup.addProduction("DEC2");:}
-
-    |
-
-    Ent Identificador P_coma{: Cup.addProduction("DEC3");:}
-    |
-    Ent Identificador asignacion Numero P_coma{: Cup.addProduction("DEC4");:}
-    |
-    Ent Identificador operadorIncrementoDecremento P_coma{: Cup.addProduction("DEC5");:}
-
+    Text Identificador:id asignacion Comillas Identificador:text Comillas P_coma
+    {:Generador.gc(Generador.ASIGNACION,"String",id,text);:}
     |
 
-    Real Identificador asignacion Numero punto Numero P_coma{: Cup.addProduction("DEC6");:}
-    |
-    Real Identificador P_coma{: Cup.addProduction("DEC7");:}
 
+    Ent Identificador:id P_coma
+    {:Generador.gc(Generador.DECLARACION,"int",null,id);:}
+    |
+    Ent Identificador:id asignacion Numero:numero P_coma
+    {:Generador.gc(Generador.ASIGNACION,"int",id,numero);:}
+    |
+    Ent Identificador:id operadorIncrementoDecremento:operadorIncDec P_coma
+    {:Generador.gc(Generador.ASIGNACION,"int",id,operadorIncDec);:}    
     |
 
-    Bool Identificador P_coma{: Cup.addProduction("DEC8");:}
-    |
-    Bool Identificador asignacion operadorBooleano P_coma{: Cup.addProduction("DEC9");:}        
 
+    Real Identificador:id asignacion Numero:Numero1 punto Numero:Numero2 P_coma 
+    {:Generador.gc(Generador.ASIGNACION,"float",Numero1+"."+Numero2,id);:}
+    |
+    Real Identificador:id P_coma
+    {:Generador.gc(Generador.DECLARACION,"float",null,id);:}
     |
 
-    Car Identificador P_coma{: Cup.addProduction("DEC10");:}
+
+    Bool Identificador:id P_coma
+    {:Generador.gc(Generador.DECLARACION,"boolean",null,id);:}
     |
-    Car Identificador asignacion Comillas Identificador Comillas P_coma{: Cup.addProduction("DEC10");:}
+    Bool Identificador:id asignacion operadorBooleano:operador P_coma
+    {:Generador.gc(Generador.ASIGNACION,"boolean",operador,id);:}
     |
-    Car Identificador asignacion Comillas Comillas P_coma{: Cup.addProduction("DEC11");:}
+
+
+    Car Identificador:id P_coma
+    {:Generador.gc(Generador.DECLARACION,"char",null,id);:}
+    |
+    Car Identificador:id asignacion Comillas Identificador:caracter Comillas P_coma
+    {:Generador.gc(Generador.ASIGNACION,"char",caracter,id);:}
+    |
+    Car Identificador:id asignacion Comillas Comillas P_coma
+    {:Generador.gc(Generador.DECLARACION,"char",null,id);:}
 ;
 
 
 IF ::=
-    Y_si Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c{: Cup.addProduction("IF");:}
+    Y_si Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c
 ;
 
 
 MIENTRAS ::=
-	Mientras Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c{: Cup.addProduction("MIENTRAS");:}
+	Mientras Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c
 ;	
 
 
 TAREA::=
-    Tarea Identificador Parentesis_a Parentesis_c Llave_a SENTENCIA Llave_c{: Cup.addProduction("TAREA");:}
+    Tarea Identificador Parentesis_a Parentesis_c Llave_a SENTENCIA Llave_c
 ;
 
 SENTENCIA_BOOLEANA ::= 
-    	operadorBooleano{: Cup.addProduction("BOOL");:}
+    	operadorBooleano:operador
+        {:Generador.gc(Generador.DeclaracionBool,null,null,operador);:}
 	|
-	Identificador operadorLogico{: Cup.addProduction("BOOL1");:}
+	Identificador:id operadorLogico:operadorLogico        
 	|
-	Identificador operadorRelacional Numero{: Cup.addProduction("BOOL2");:}	
+	Identificador:id operadorRelacional:operadorRelacional Numero:numero       
 	|
-	Identificador operadorRelacional Identificador{: Cup.addProduction("BOOL3");:}
+	Identificador:id1 operadorRelacional:operadorRelacional Identificador:id2        
         |
-        Numero operadorRelacional Identificador {: Cup.addProduction("BOOL4");:}             
+        Numero:numero operadorRelacional:operadorRelacional Identificador:id        
 ;
 
 
 IMPRIME ::=
-    Imprime Parentesis_a Parentesis_c P_coma{: Cup.addProduction("IMPRIME1");:}
+    Imprime Parentesis_a Parentesis_c P_coma
     |
-    Imprime Parentesis_a Comillas Identificador Comillas Parentesis_c P_coma{: Cup.addProduction("IMPRIME2");:}
+    Imprime Parentesis_a Comillas Identificador Comillas Parentesis_c P_coma
 ;
 
 
 SENTENCIA_GIRA_IZQ ::=
-    Gira_izq Parentesis_a Numero Parentesis_c P_coma{: Cup.addProduction("IZQ");:}
+    Gira_izq Parentesis_a Numero Parentesis_c P_coma
 ;
 
 
 SENTENCIA_GIRA_DER ::=
-    Gira_der Parentesis_a Numero Parentesis_c P_coma{: Cup.addProduction("DER");:}
+    Gira_der Parentesis_a Numero Parentesis_c P_coma
 ;
 
 
 SENTENCIA_AVANZA ::=
-    Avanza Parentesis_a Numero Parentesis_c P_coma{: Cup.addProduction("AVANZA");:}
+    Avanza Parentesis_a Numero Parentesis_c P_coma
 ;
 
 
 SENTENCIA_RETROCEDE ::=
-    Retroceder Parentesis_a Numero Parentesis_c P_coma{: Cup.addProduction("RETROCEDE");:}
+    Retroceder Parentesis_a Numero Parentesis_c P_coma
 ;
 
 
 SENTENCIA_DETENER ::=
-    Detener Parentesis_a Parentesis_c P_coma{: Cup.addProduction("DETENER");:}
+    Detener Parentesis_a Parentesis_c P_coma
 ;
 
 
 SENTENCIA_AVISO ::=
-    Aviso Parentesis_a Comillas Identificador Comillas Parentesis_c P_coma{: Cup.addProduction("AVISO");:}
+    Aviso Parentesis_a Comillas Identificador Comillas Parentesis_c P_coma
 ;
 
 
 SENTENCIA_ADVERTENCIA ::=
-    Advertencia Parentesis_a Comillas Identificador Comillas Parentesis_c P_coma{: Cup.addProduction("ADVERTENCIA");:}
+    Advertencia Parentesis_a Comillas Identificador Comillas Parentesis_c P_coma
 ;
 
 
 SENTENCIA_VERIFICA_BATERIA ::=
-    VerificarBateria Parentesis_a Parentesis_c P_coma{: Cup.addProduction("BATERIA");:}
+    VerificarBateria Parentesis_a Parentesis_c P_coma
 ;

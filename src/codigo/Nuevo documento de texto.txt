@@ -1,0 +1,28 @@
+INICIO ::= 
+    Inicio_App Identificador Llave_a Llave_c     
+    |
+    Inicio_App Identificador Llave_a SENTENCIA Llave_c
+    |
+    Inicio_App 
+    {:  
+    Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta se esperaba un identificador "); :}
+    |
+    Inicio_App Identificador 
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta se esperaba uns Llave_a "); :}
+    |
+    Inicio_App Identificador Llave_a 
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta se esperaba uns Llave_c "); :}
+    |
+     Identificador Llave_a Llave_c
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se espera la palabra de Inicio_App antes "); :}
+    |
+    Inicio_App  Llave_a Llave_c   
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba identificador entre Inicio_App y Llave_c "); :}
+    |
+    Inicio_App Identificador  Llave_c  
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba Llave_a entre Indentificador y Llave_c "); :}
+    |
+     Llave_a Llave_c
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se espera = 'Inicio_App Identificador' antes "); :}
+
+;

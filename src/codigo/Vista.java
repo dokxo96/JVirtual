@@ -6,34 +6,23 @@
  */
 package codigo;
 
-import com.sun.glass.events.KeyEvent;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Frame;
-import java.awt.Image;
 
-import javax.swing.JLabel;
+import java.awt.Color;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
-import java.nio.file.Files;
-import java.security.Key;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java_cup.runtime.Symbol;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
+import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.AttributeSet;
@@ -57,44 +46,19 @@ public class Vista extends javax.swing.JFrame {
     GestionArc gestion = new GestionArc();
     TextLineNumber lineas;
     private DefaultStyledDocument doc;
-    private boolean compilado=false;
-    private static ArrayList<String> listaErrores;
-    DefaultTableModel modelo;
-    private static ArrayList<String> produtions = new ArrayList<String>();
-    static ArrayList<String> listaLexemas;
-    
-    public static String sentencia[]=new String[36];
-    public static String declaracion;
-    public static String ifs;
-    public static String elses;
-    public static String s_arit;
-    public static String s_bool;
-    public static String whiles;
-    public static String dowhiles;
-    public static String fors;
-    public static String s_for;
-    public static String d_for;
-    
-    public static int temp;
-    public static int tempb;
-    public static int status;
-    public static int choice;
-    public static int loop;
-  
+    static DefaultListModel listModel = new DefaultListModel();
+    boolean f=true;
+
     
     public Vista() {
-    listaLexemas = new ArrayList<>();
-    listaErrores = new ArrayList<String>();    
-    final StyleContext cont = StyleContext.getDefaultStyleContext();
-    final AttributeSet red = cont.addAttribute(cont.getEmptySet(), StyleConstants.Foreground, Color.RED);
-    final AttributeSet Black = cont.addAttribute(cont.getEmptySet(), StyleConstants.Foreground, Color.BLACK);
-    final AttributeSet blue = cont.addAttribute(cont.getEmptySet(), StyleConstants.Foreground, Color.blue);
-    final AttributeSet gray = cont.addAttribute(cont.getEmptySet(), StyleConstants.Foreground, Color.gray);
-    final AttributeSet yellow = cont.addAttribute(cont.getEmptySet(), StyleConstants.Foreground, Color.yellow);
-    final AttributeSet orange = cont.addAttribute(cont.getEmptySet(), StyleConstants.Foreground, Color.orange);
-   
-  
-    
+        //Asignar color a las palabras reservadas
+        final StyleContext cont = StyleContext.getDefaultStyleContext();
+        final AttributeSet red = cont.addAttribute(cont.getEmptySet(), StyleConstants.Foreground, Color.RED);
+        final AttributeSet Black = cont.addAttribute(cont.getEmptySet(), StyleConstants.Foreground, Color.BLACK);
+        final AttributeSet blue = cont.addAttribute(cont.getEmptySet(), StyleConstants.Foreground, Color.blue);
+        final AttributeSet gray = cont.addAttribute(cont.getEmptySet(), StyleConstants.Foreground, Color.gray);
+        final AttributeSet yellow = cont.addAttribute(cont.getEmptySet(), StyleConstants.Foreground, Color.yellow);
+        final AttributeSet orange = cont.addAttribute(cont.getEmptySet(), StyleConstants.Foreground, Color.orange);
         doc = new DefaultStyledDocument() {
 
             @Override
@@ -112,7 +76,8 @@ public class Vista extends javax.swing.JFrame {
 
                 while (wordR <= after) {
                     if (wordR == after || String.valueOf(text.charAt(wordR)).matches("\\W")) {
-
+                        
+                        //Si concide con la siguiente expresion se pinta de color
                         if (text.substring(wordL, wordR).matches("(\\W)*(true|false|start)")) {
                             setCharacterAttributes(wordL, wordR - wordL, orange, false);
                         } else if (text.substring(wordL, wordR).matches("(\\W)*(Inicio_App|Y_si|Tarea|Mientras|Gira_izq|Gira_der|Avanza|Retroceder|Alto|Advertencia|VerificarBateria|Aviso|Imprime|Durante|Repite|Ingresa|Text|Inc|Dec|Publica|Vibrar|Ir|Funcion|Repite|saltoLinea|Igual|Menor|Mayor|Mas|Resta|Multiplicacion|Division|Potencia|PuntoComa|llaveApertura|llaveCierre|ParentesisApertura|ParentesisCierre|Identificador|Numero|ERROR)")) {
@@ -142,7 +107,7 @@ public class Vista extends javax.swing.JFrame {
                     before = 0;
                 }
                 int after = findFirstNonWordChar(text, offs);
-
+                //Si no coincide se elimina el color
                 if (text.substring(before, after).matches("(\\W)*(true|false|start)")) {
                     setCharacterAttributes(before, after - before, orange, false);
                 } else if (text.substring(before, after).matches("(\\W)*(Inicio_App|Y_si|Tarea|Mientras|Gira_izq|Gira_der|Avanza|Retroceder|Alto|Advertencia|VerificarBateria|Aviso|Imprime|Durante|Repite|Ingresa|Text|Inc|Dec|Publica|Vibrar|Ir|Funcion|Repite|saltoLinea|Igual|Menor|Mayor|Mas|Resta|Multiplicacion|Division|Potencia|PuntoComa|llaveApertura|llaveCierre|ParentesisApertura|ParentesisCierre|Identificador|Numero|ERROR)")) {
@@ -151,8 +116,6 @@ public class Vista extends javax.swing.JFrame {
                     setCharacterAttributes(before, after - before, gray, false);
                 } else if (text.substring(before, after).matches("(\\W)*(Ent|Real|RealExt|Bool|Car|Text)")) {
                     setCharacterAttributes(before, after - before, red, false);
-//                } else if (text.substring(before, after).matches("(\\W)*(>|<)")) {
-//                    setCharacterAttributes(before, after - before, yellow, false);
                 } else {
                     setCharacterAttributes(before, after - before, Black, false);
                 }
@@ -162,20 +125,20 @@ public class Vista extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         lineas = new TextLineNumber(jTextPane1);
-        lineas.setCurrentLineForeground(new Color(255,0,0));//current line
+        lineas.setCurrentLineForeground(new Color(255, 0, 0));//current line
         lineas.setForeground(new Color(76, 175, 80));//color linea
-        lineas.setBackground(new Color (55,71,79));
+        lineas.setBackground(new Color(55, 71, 79));
         jTextPane1.setBackground(Color.darkGray);
         jScrollPane4.setRowHeaderView(lineas);
-        jScrollPane4.setViewportView(jTextPane1); 
-        
+        jScrollPane4.setViewportView(jTextPane1);
+
         jTextPane1.requestFocus();
-        
+
         //tp.setBackground(Color.DARK_GRAY);
         txaResultado.setForeground(Color.red);
     }
-    
-  private int findLastNonWordChar(String text, int index) {
+
+    private int findLastNonWordChar(String text, int index) {
         while (--index >= 0) {
             if (String.valueOf(text.charAt(index)).matches("\\W")) {
                 break;
@@ -183,7 +146,8 @@ public class Vista extends javax.swing.JFrame {
         }
         return index;
     }
-       private int findFirstNonWordChar(String text, int index) {
+
+    private int findFirstNonWordChar(String text, int index) {
         while (index < text.length()) {
             if (String.valueOf(text.charAt(index)).matches("\\W")) {
                 break;
@@ -192,11 +156,11 @@ public class Vista extends javax.swing.JFrame {
         }
         return index;
     }
-      
+
    
 
-     private void analizarLexico() throws IOException {
-        
+    private void analizarLexico() throws IOException {
+
         int contLinea = 1;
         String expr = (String) jTextPane1.getText();
 
@@ -213,180 +177,182 @@ public class Vista extends javax.swing.JFrame {
             }
             DefaultTableModel modelo = (DefaultTableModel) tablaSimbolos.getModel();
             String reservada = "Palabra reservada";
-            String tipoDato = "Tipo de dato";
-            String funcion = "Funcion";
+            String tipoDato = "Tipo de dato";            
             String operadorMat = "Operador matematico/relacional";
             String agrupacion = "Operador de agrupacion";
+                       
             
-            
-            //resultado+="Reservada Inicio_App\t\t"+lexer.lexeme+"\n"; --> Para que salga por un textArea
-            switch (token) {                
+            switch (token) {
                 case Linea:
                     contLinea++;
                     break;
-                    
+
                 case Comillas:
                     Object filaComillas[] = {contLinea, lexer.lexeme, "Caracter"};
                     modelo.addRow(filaComillas);
                     break;
-                
+
                 case Igual:
                     Object filaIgual[] = {contLinea, lexer.lexeme, operadorMat};
                     modelo.addRow(filaIgual);
                     break;
-    
+
                 case Suma:
-                    Object filaSuma [] = {contLinea, lexer.lexeme, operadorMat};
+                    Object filaSuma[] = {contLinea, lexer.lexeme, operadorMat};
                     modelo.addRow(filaSuma);
                     break;
-    
+
                 case Resta:
-                    Object filaResta [] = {contLinea, lexer.lexeme, operadorMat};
+                    Object filaResta[] = {contLinea, lexer.lexeme, operadorMat};
                     modelo.addRow(filaResta);
                     break;
-    
+
                 case Multiplicacion:
-                    Object filaMultiplicacion [] = {contLinea, lexer.lexeme, operadorMat};
+                    Object filaMultiplicacion[] = {contLinea, lexer.lexeme, operadorMat};
                     modelo.addRow(filaMultiplicacion);
                     break;
-    
+
                 case Division:
-                    Object filaDivision [] = {contLinea, lexer.lexeme, operadorMat};
+                    Object filaDivision[] = {contLinea, lexer.lexeme, operadorMat};
                     modelo.addRow(filaDivision);
                     break;
-                    
+
                 case Parentesis_a:
-                    Object filaParentesisA [] = {contLinea, lexer.lexeme, agrupacion};
+                    Object filaParentesisA[] = {contLinea, lexer.lexeme, agrupacion};
                     modelo.addRow(filaParentesisA);
                     break;
-    
+
                 case Parentesis_c:
-                    Object filaParentesisC [] = {contLinea, lexer.lexeme, agrupacion};
+                    Object filaParentesisC[] = {contLinea, lexer.lexeme, agrupacion};
                     modelo.addRow(filaParentesisC);
                     break;
-    
+
                 case Llave_a:
-                    Object filaLlaveA [] = {contLinea, lexer.lexeme, agrupacion};
+                    Object filaLlaveA[] = {contLinea, lexer.lexeme, agrupacion};
                     modelo.addRow(filaLlaveA);
                     break;
-                    
+
                 case Llave_c:
-                    Object filaLlaveC [] = {contLinea, lexer.lexeme, agrupacion};
+                    Object filaLlaveC[] = {contLinea, lexer.lexeme, agrupacion};
                     modelo.addRow(filaLlaveC);
                     break;
-                    
+
                 case Corchete_a:
-                    Object filaCorcheteA [] = {contLinea, lexer.lexeme, agrupacion};
+                    Object filaCorcheteA[] = {contLinea, lexer.lexeme, agrupacion};
                     modelo.addRow(filaCorcheteA);
                     break;
-    
+
                 case Corchete_c:
-                    Object filaCorcheteC [] = {contLinea, lexer.lexeme, agrupacion};
+                    Object filaCorcheteC[] = {contLinea, lexer.lexeme, agrupacion};
                     modelo.addRow(filaCorcheteC);
                     break;
-                           
+
                 case P_coma:
-                    Object filaPuntoComa [] = {contLinea, lexer.lexeme, "Caracter"};
+                    Object filaPuntoComa[] = {contLinea, lexer.lexeme, "Caracter"};
                     modelo.addRow(filaPuntoComa);
                     break;
-    
+
                 case Identificador:
-                    Object filaIdentificador [] = {contLinea, lexer.lexeme, "Identificador"};
+                    Object filaIdentificador[] = {contLinea, lexer.lexeme, "Identificador"};
                     modelo.addRow(filaIdentificador);
                     break;
-            
+
                 case Numero:
-                    Object filaNumero [] = {contLinea, lexer.lexeme, "Numero"};
+                    Object filaNumero[] = {contLinea, lexer.lexeme, "Numero"};
                     modelo.addRow(filaNumero);
-                    break;
-            
-                case ERROR:
-                    Object filaError [] = {contLinea, lexer.lexeme, "Caracter no definido"};
-                    modelo.addRow(filaError);
-                    break;
-    
+                    break;               
+
                 case Inicio_App:
-                    Object filaInicioApp [] = {contLinea, lexer.lexeme, reservada};
+                    Object filaInicioApp[] = {contLinea, lexer.lexeme, reservada};
                     modelo.addRow(filaInicioApp);
                     break;
 
                 case Text:
-                    Object filaText [] = {contLinea, lexer.lexeme, reservada};
+                    Object filaText[] = {contLinea, lexer.lexeme, reservada};
                     modelo.addRow(filaText);
                     break;
-    
+
                 case Ent:
-                    Object filaEnt [] = {contLinea, lexer.lexeme, tipoDato};
+                    Object filaEnt[] = {contLinea, lexer.lexeme, tipoDato};
                     modelo.addRow(filaEnt);
                     break;
-                    
+
                 case asignacion:
-                    Object filaAsignacion [] = {contLinea, lexer.lexeme, "caracter reservado"};
+                    Object filaAsignacion[] = {contLinea, lexer.lexeme, "caracter reservado"};
                     modelo.addRow(filaAsignacion);
                     break;
-    
+
                 case punto:
-                    Object filaPunto [] = {contLinea, lexer.lexeme, "caracter"};
+                    Object filaPunto[] = {contLinea, lexer.lexeme, "caracter"};
                     modelo.addRow(filaPunto);
                     break;
-    
+
                 case Real:
-                    Object filaReal [] = {contLinea, lexer.lexeme, tipoDato};
+                    Object filaReal[] = {contLinea, lexer.lexeme, tipoDato};
                     modelo.addRow(filaReal);
                     break;
-    
+
                 case Bool:
-                    Object filaBool [] = {contLinea, lexer.lexeme, tipoDato};
+                    Object filaBool[] = {contLinea, lexer.lexeme, tipoDato};
                     modelo.addRow(filaBool);
                     break;
-    
+
                 case operadorBooleano:
-                    Object filaOperadorBooleano [] = {contLinea, lexer.lexeme, tipoDato};
-                    modelo.addRow(filaOperadorBooleano); 
+                    Object filaOperadorBooleano[] = {contLinea, lexer.lexeme, tipoDato};
+                    modelo.addRow(filaOperadorBooleano);
                     break;
-                    
+
                 case operadorIncrementoDecremento:
-                    Object filaOperadorIncDec [] = {contLinea, lexer.lexeme, reservada};
+                    Object filaOperadorIncDec[] = {contLinea, lexer.lexeme, reservada};
                     modelo.addRow(filaOperadorIncDec);
                     break;
 
                 case operadorLogico:
-                    Object filaOpLogico [] = {contLinea, lexer.lexeme, reservada};
+                    Object filaOpLogico[] = {contLinea, lexer.lexeme, reservada};
                     modelo.addRow(filaOpLogico);
                     break;
-    
+
                 case Car:
-                    Object filaCar [] = {contLinea, lexer.lexeme, reservada};
+                    Object filaCar[] = {contLinea, lexer.lexeme, reservada};
                     modelo.addRow(filaCar);
                     break;
-    
+
                 case operadorRelacional:
-                    Object filaOpRel [] = {contLinea, lexer.lexeme, reservada};
+                    Object filaOpRel[] = {contLinea, lexer.lexeme, reservada};
                     modelo.addRow(filaOpRel);
                     break;
-                    
+
                 case Tarea:
-                    Object filaTarea [] = {contLinea, lexer.lexeme, reservada};
+                    Object filaTarea[] = {contLinea, lexer.lexeme, reservada};
                     modelo.addRow(filaTarea);
                     break;
-    
+
                 case Y_si:
-                    Object filaYsi [] ={contLinea, lexer.lexeme, reservada};
+                    Object filaYsi[] = {contLinea, lexer.lexeme, reservada};
                     modelo.addRow(filaYsi);
                     break;
-    
+
                 case Mientras:
-                    Object filaMientras [] = {contLinea, lexer.lexeme, reservada};
+                    Object filaMientras[] = {contLinea, lexer.lexeme, reservada};
                     modelo.addRow(filaMientras);
                     break;
-                        
-                case Imprime:
-                    Object filaImprime [] = {contLinea, lexer.lexeme, reservada};
-                    modelo.addRow(filaImprime);
-                    break;      
-            
 
-                    
+                case Imprime:
+                    Object filaImprime[] = {contLinea, lexer.lexeme, reservada};
+                    modelo.addRow(filaImprime);
+                    break;
+                                                        
+                                       
+                /*------------------------------------------------------------*/
+              case ERROR:
+                   Object filaError [] = {contLinea, lexer.lexeme, "Caracter no definido"};
+                    modelo.addRow(filaError);
+                    console.setForeground(Color.red);
+                    listModel.addElement("Error_Type::Lexico:: no se reconoce el caracter  '"+lexer.lexeme+ "'  en la linea -> "+contLinea);
+                    console.setModel(listModel);
+                    f=false;
+                    break;
+
                 default:
                     resultado += "< " + lexer.lexeme + " >\n";
                     break;
@@ -394,11 +360,6 @@ public class Vista extends javax.swing.JFrame {
         }
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -412,25 +373,27 @@ public class Vista extends javax.swing.JFrame {
         btnSintactico = new javax.swing.JButton();
         btnSemantico = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
-        jButton1 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        Gramatica = new javax.swing.JButton();
+        btnLimpiar = new javax.swing.JButton();
+        btnCompilar = new javax.swing.JButton();
+        btnTmp = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         tablaSimbolos = new javax.swing.JTable();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTextPane1 = new javax.swing.JTextPane(doc);
+        jScrollPane2 = new javax.swing.JScrollPane();
+        console = new javax.swing.JList<>();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
         menuArchivo = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
         menuItemAbrir = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
-        jMenu3 = new javax.swing.JMenu();
         jMenu5 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
         jMenu6 = new javax.swing.JMenu();
@@ -493,30 +456,28 @@ public class Vista extends javax.swing.JFrame {
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        jButton1.setBackground(new java.awt.Color(38, 50, 56));
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-broom-32Black.png"))); // NOI18N
-        jButton1.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-broom-32 Green.png"))); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnLimpiar.setBackground(new java.awt.Color(38, 50, 56));
+        btnLimpiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-broom-32Black.png"))); // NOI18N
+        btnLimpiar.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-broom-32 Green.png"))); // NOI18N
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnLimpiarActionPerformed(evt);
             }
         });
 
-        jButton4.setBackground(new java.awt.Color(38, 50, 56));
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-play-32Blacn.png"))); // NOI18N
-        jButton4.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-play-32Green.png"))); // NOI18N
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        btnCompilar.setBackground(new java.awt.Color(38, 50, 56));
+        btnCompilar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-play-32Blacn.png"))); // NOI18N
+        btnCompilar.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-play-32Green.png"))); // NOI18N
+        btnCompilar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                btnCompilarActionPerformed(evt);
             }
         });
 
-        Gramatica.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        Gramatica.setText("Gramatica");
-        Gramatica.setActionCommand("Gramática");
-        Gramatica.addActionListener(new java.awt.event.ActionListener() {
+        btnTmp.setText("Tmp");
+        btnTmp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                GramaticaActionPerformed(evt);
+                btnTmpActionPerformed(evt);
             }
         });
 
@@ -531,30 +492,29 @@ public class Vista extends javax.swing.JFrame {
                 .addComponent(btnSintactico, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnSemantico, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(115, 115, 115)
-                .addComponent(jButton4)
+                .addGap(18, 18, 18)
+                .addComponent(btnTmp)
+                .addGap(17, 17, 17)
+                .addComponent(btnCompilar)
                 .addGap(12, 12, 12)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(Gramatica)
-                .addGap(30, 30, 30)
+                .addComponent(btnLimpiar)
+                .addGap(113, 113, 113)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(415, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(btnLexico, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(btnSintactico, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnSemantico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(btnSemantico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnTmp))
             .addComponent(jSeparator1)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(Gramatica, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jButton1)
-                        .addComponent(jButton4)))
-                .addGap(0, 1, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnLimpiar)
+                    .addComponent(btnCompilar))
+                .addGap(0, 12, Short.MAX_VALUE))
         );
 
         tablaSimbolos.setBackground(new java.awt.Color(55, 71, 79));
@@ -594,6 +554,11 @@ public class Vista extends javax.swing.JFrame {
 
         jTextPane1.setForeground(new java.awt.Color(255, 255, 255));
 
+        console.setBackground(new java.awt.Color(0, 0, 0));
+        console.setBorder(javax.swing.BorderFactory.createTitledBorder("Console"));
+        console.setForeground(new java.awt.Color(255, 255, 255));
+        jScrollPane2.setViewportView(console);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -601,12 +566,16 @@ public class Vista extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(268, 268, 268)
+                        .addComponent(jScrollPane1))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 725, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 725, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 478, Short.MAX_VALUE)))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 514, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -617,9 +586,11 @@ public class Vista extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane4)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(37, 37, 37)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -669,6 +640,21 @@ public class Vista extends javax.swing.JFrame {
 
         jMenuBar1.add(menuArchivo);
 
+        jMenu3.setBackground(new java.awt.Color(69, 90, 100));
+        jMenu3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-conference-32.png"))); // NOI18N
+        jMenu3.setToolTipText("EQUIPO");
+        jMenu3.setOpaque(true);
+        jMenu3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu3MouseClicked(evt);
+            }
+        });
+        jMenu3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu3ActionPerformed(evt);
+            }
+        });
+
         jMenu1.setBackground(new java.awt.Color(69, 90, 100));
         jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-web-help-32.png"))); // NOI18N
         jMenu1.setToolTipText("AYUDA");
@@ -710,22 +696,8 @@ public class Vista extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem7);
 
-        jMenuBar1.add(jMenu1);
+        jMenu3.add(jMenu1);
 
-        jMenu3.setBackground(new java.awt.Color(69, 90, 100));
-        jMenu3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-conference-32.png"))); // NOI18N
-        jMenu3.setToolTipText("EQUIPO");
-        jMenu3.setOpaque(true);
-        jMenu3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jMenu3MouseClicked(evt);
-            }
-        });
-        jMenu3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenu3ActionPerformed(evt);
-            }
-        });
         jMenuBar1.add(jMenu3);
 
         jMenu5.setBackground(new java.awt.Color(69, 90, 100));
@@ -781,7 +753,7 @@ public class Vista extends javax.swing.JFrame {
         modelo.setRowCount(0);
 
         try {
-            analizarLexico();
+            analizarLexico();            
         } catch (IOException ex) {
             Logger.getLogger(Vista.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -793,65 +765,34 @@ public class Vista extends javax.swing.JFrame {
 
         try {
             s.parse();
-            txaResultado.setText("Correcto");
+            //txaResultado.setText("Correcto");
         } catch (Exception ex) {
             Symbol sym = s.getS();
-            txaResultado.setText("\nError de sintaxis. Linea: " + (sym.right + 1) + " Columna: " + (sym.left + 1) + ", Texto: \"" + sym.value + "\"");
+            //txaResultado.setText("Error linea" + (sym.right + 1) + " " + sym.value);
         }
-        
-    for(int i=0;i<=35;i++){    
-    sentencia[i]="";}
-    declaracion="";
-    ifs="";
-    elses="";
-    s_arit="";
-    s_bool="";
-    whiles="";
-    dowhiles="";
-    fors="";
-    s_for="";
-    d_for="";
-    
-    status=0;
-    temp=0;
-    choice=0;
-    loop=0;
-        
-        String resultado;
-        int n=tablaSimbolos.getRowCount();
-        
-        while(n>0){
-            modelo.removeRow(n-1);
-            n--;
-        }
-        
-        try {
-            analizarLexico();
-        } catch (IOException ex) {
-            Logger.getLogger(Vista.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
     }//GEN-LAST:event_btnSintacticoActionPerformed
 
+
     private void menuItemAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAbrirActionPerformed
-        if(seleccionado.showDialog(null, "ABRIR ARCHIVO") == JFileChooser.APPROVE_OPTION){
+        if (seleccionado.showDialog(null, "ABRIR ARCHIVO") == JFileChooser.APPROVE_OPTION) {
             archivo = seleccionado.getSelectedFile();
-            if(archivo.canRead()){
-                if(archivo.getName().endsWith("txt")){
+            if (archivo.canRead()) {
+                if (archivo.getName().endsWith("txt")) {
                     String contenido = gestion.AbrirATexto(archivo);
                     jTextPane1.setText(contenido);
-                }else{               
-                        JOptionPane.showMessageDialog(null, "Por favor seleccione un archivo de texto.");
-                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Por favor seleccione un archivo de texto.");
+                }
             }
         }
     }//GEN-LAST:event_menuItemAbrirActionPerformed
-    private String fileName="";
-    private boolean g=false;
-    private void guardar(){
+    private String fileName = "";
+    private boolean g = false;
+
+    private void guardar() {
         try {
-            java.io.FileOutputStream fs = new java.io.FileOutputStream(fileName,true); //fs = Flujo de Salida
-            byte b[]=jTextPane1.getText().getBytes();
+            java.io.FileOutputStream fs = new java.io.FileOutputStream(fileName, true); //fs = Flujo de Salida
+            byte b[] = jTextPane1.getText().getBytes();
             fs.write(b);
         } catch (FileNotFoundException ex) {
             javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage());
@@ -859,43 +800,47 @@ public class Vista extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage());
         }
     }
+    
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-     if(!jTextPane1.getText().equals("")&&!g)
-        if(javax.swing.JOptionPane.showConfirmDialog(this, "¿Desea Guardar los Cambios?")==0){
-            
-            /////////////////////
-             if(seleccionado.showDialog(null, "GUARDAR TEXTO") == JFileChooser.APPROVE_OPTION){
-            archivo = seleccionado.getSelectedFile();
-            if(archivo.getName().endsWith("txt")){
-                String contenido = jTextPane1.getText();
-                String respuesta = gestion.GuardarATexto(archivo, contenido);
-                if(respuesta!=null){
-                    JOptionPane.showMessageDialog(null, respuesta);
-                }else{
-                    JOptionPane.showMessageDialog(null, "Error al guardar texto.");
+        if (!jTextPane1.getText().equals("") && !g) {
+            if (javax.swing.JOptionPane.showConfirmDialog(this, "¿Desea Guardar los Cambios?") == 0) {
+
+                /////////////////////
+                if (seleccionado.showDialog(null, "GUARDAR TEXTO") == JFileChooser.APPROVE_OPTION) {
+                    archivo = seleccionado.getSelectedFile();
+                    if (archivo.getName().endsWith("txt")) {
+                        String contenido = jTextPane1.getText();
+                        String respuesta = gestion.GuardarATexto(archivo, contenido);
+                        if (respuesta != null) {
+                            JOptionPane.showMessageDialog(null, respuesta);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Error al guardar texto.");
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "El texto se debe guardar en un formato de texto.");
+                    }
                 }
-            }else{
-                JOptionPane.showMessageDialog(null, "El texto se debe guardar en un formato de texto.");
-            }
-        } 
-            /////////////////////
-            
-        }//Guardar = si
-        jTextPane1.setText(""); fileName=""; g=false;        // TODO add your handling code here:
+                /////////////////////
+
+            }//Guardar = si
+        }
+        jTextPane1.setText("");
+        fileName = "";
+        g = false;        // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-      if(seleccionado.showDialog(null, "GUARDAR TEXTO") == JFileChooser.APPROVE_OPTION){
+        if (seleccionado.showDialog(null, "GUARDAR TEXTO") == JFileChooser.APPROVE_OPTION) {
             archivo = seleccionado.getSelectedFile();
-            if(archivo.getName().endsWith("txt")){
+            if (archivo.getName().endsWith("txt")) {
                 String contenido = jTextPane1.getText();
                 String respuesta = gestion.GuardarATexto(archivo, contenido);
-                if(respuesta!=null){
+                if (respuesta != null) {
                     JOptionPane.showMessageDialog(null, respuesta);
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(null, "Error al guardar texto.");
                 }
-            }else{
+            } else {
                 JOptionPane.showMessageDialog(null, "El texto se debe guardar en un formato de texto.");
             }
         }    // TODO add your handling code here:
@@ -905,61 +850,47 @@ public class Vista extends javax.swing.JFrame {
         String codigo = jTextPane1.getText();
     }//GEN-LAST:event_btnSemanticoActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-         //Limpiar tabla
+    private void btnCompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCompilarActionPerformed
+          //Limpiar tabla
         txaResultado.setText("");
-        
+        console.setModel(new DefaultListModel());
+        listModel.clear();
         
         DefaultTableModel modelo = (DefaultTableModel) tablaSimbolos.getModel();
         modelo.setRowCount(0);
 
-        try {
-            analizarLexico();
-        } catch (IOException ex) {
-            Logger.getLogger(Vista.class.getName()).log(Level.SEVERE, null, ex);
-        }   
-                String tmp = jTextPane1.getText();
+       String tmp = jTextPane1.getText();
         Sintax s = new Sintax(new codigo.LexerCup(new StringReader(tmp)));
 
         try {
+            analizarLexico();
             s.parse();
-            run();
-        } catch (Exception ex) {
-            Symbol sym = s.getS();
-            txaResultado.setText("\nError de sintaxis. Linea: " + (sym.right + 1) + " Columna: " + (sym.left + 1) + ", Texto: \"" + sym.value + "\"");
-        }
-        
-  
-    }//GEN-LAST:event_jButton4ActionPerformed
-
-    
-      private void mostrarResultados() {
-        txaResultado.setText("Compilado en " +GetTiempoDeEjecucion() +" milisegundos.\n");
-        if (listaErrores.isEmpty()) {
-            compilado = true;
-            
-            txaResultado.setText(txaResultado.getText()+"\nCompilado con éxito!!\n");
-           
-        } else {
-            compilado = false;
-            for (String error : listaErrores) {
-                System.err.println(error);
-                txaResultado.setText(txaResultado.getText() + error + "\n");
+            if(f){showMessageDialog(null,f);
+            console.setForeground(Color.white);
+            listModel.addElement("Analisis léxico y Sintactico Correcto!");
+            console.setModel(listModel);
             }
+            
+            
+        } catch (IOException ex) {
+            Logger.getLogger(Vista.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {   
+            Logger.getLogger(Vista.class.getName()).log(Level.SEVERE, null, ex);
+            Symbol sym = s.getS();
+            console.setForeground(Color.red);
+            listModel.addElement("Error_Type::Sintaxis::  Linea->" + (sym.right+1  ) + ", Columna-> " + (sym.left+1 ) + ", Error antes de::  \"" + sym.value + "\"");
+            console.setModel(listModel);
         }
-        for (String lexema : listaLexemas) {
-            System.out.println(lexema);
-          
-        }
-    }
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
- txaResultado.setText("");
+    }//GEN-LAST:event_btnCompilarActionPerformed
+
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        txaResultado.setText("");
         DefaultTableModel modelo = (DefaultTableModel) tablaSimbolos.getModel();
         modelo.setRowCount(0);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnLimpiarActionPerformed
 
     private void jMenu6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu6ActionPerformed
-    System.exit(0);        // TODO add your handling code here:
+        System.exit(0);        // TODO add your handling code here:
     }//GEN-LAST:event_jMenu6ActionPerformed
 
     private void jMenu6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu6MouseClicked
@@ -967,8 +898,8 @@ public class Vista extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu6MouseClicked
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-     JTextArea msg = new JTextArea(
-                  "PALABRA              |     DESCRIPCIÓN"
+        JTextArea msg = new JTextArea(
+                "PALABRA              |     DESCRIPCIÓN"
                 + "\n"
                 + "Inicio_App             --INICIA CODIGO        "
                 + "\n"
@@ -1053,17 +984,18 @@ public class Vista extends javax.swing.JFrame {
                 + "ERROR");
         msg.setLineWrap(true);
         msg.setWrapStyleWord(true);
-        msg.setSize(450,550);
+        msg.setSize(450, 550);
+        msg.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(msg);
         scrollPane.setSize(455, 555);
 
         JOptionPane.showMessageDialog(null, scrollPane);
-                // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-  JOptionPane.showMessageDialog(null,
-                  "PALABRA              |     DESCRIPCIÓN"
+        JOptionPane.showMessageDialog(null,
+                "PALABRA              |     DESCRIPCIÓN"
                 + "\n"
                 + "Ent                          |   --DECLARA UNA VARIABLE DE TIPO ENTERO"
                 + "\n"
@@ -1077,152 +1009,108 @@ public class Vista extends javax.swing.JFrame {
                 + "\n"
                 + "Text                          |--DECLARA UNA VARIABLE DE TIPO CADENA"
                 + "\n"
-               );        // TODO add your handling code here:
+        );        // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
-
-     
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-      JTextArea msg = new JTextArea(
+        JTextArea msg = new JTextArea(
                 "Tipo Identificador <- valor ;"
                 + "\n"
                 + "\n"
-                +"ENTEROS"+ "\n"
-                +"Ent x;"+ "\n"
-                +"Ent x <- 9;"
+                + "ENTEROS" + "\n"
+                + "Ent x;" + "\n"
+                + "Ent x <- 9;"
                 + "\n"
                 + "\n"
-                +"_________________________________"
-                +"REALES"+ "\n"
-                +"Real x;"+ "\n"
-                +"Real x <- 9.5;"+ "\n"
-                +"RealExt x;"+ "\n"
-                +"RealExt x <- 9.5;"
+                + "_________________________________"
+                + "REALES" + "\n"
+                + "Real x;" + "\n"
+                + "Real x <- 9.5;" + "\n"
+                + "RealExt x;" + "\n"
+                + "RealExt x <- 9.5;"
                 + "\n"
                 + "\n"
-                +"_________________________________"
-                +"BOOLEANOS"+ "\n"
-                +"Bool x;"+ "\n"
-                +"Bool x <- true|false;"
+                + "_________________________________"
+                + "BOOLEANOS" + "\n"
+                + "Bool x;" + "\n"
+                + "Bool x <- true|false;"
                 + "\n"
                 + "\n"
-                +"_________________________________"
-                +"CADENAS"+ "\n"
-                +"Text x;"+ "\n"
-                +"Text x <- 'Cadena de texto';"
+                + "_________________________________"
+                + "CADENAS" + "\n"
+                + "Text x;" + "\n"
+                + "Text x <- 'Cadena de texto';"
                 + "\n"
                 + "\n"
-                +"_________________________________"
-                +"CARACTERES"+ "\n"
-                +"Car x;"+ "\n"
-                +"Car x <- 'X';"
-                
-                  
-          );
+                + "_________________________________"
+                + "CARACTERES" + "\n"
+                + "Car x;" + "\n"
+                + "Car x <- 'X';"
+        );
         msg.setLineWrap(true);
         msg.setWrapStyleWord(true);
-        msg.setSize(250,350);
+        msg.setSize(250, 350);
+        msg.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(msg);
 
         JOptionPane.showMessageDialog(null, scrollPane);        // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
-       JTextArea msg = new JTextArea(
-                "Inicio_App ejemplo{\n                                      " +
-                "Tarea(ent a=0,ent b=2, ent c=3){\n                         " +
-                "Imprime('Las Variables son '+a+b+c);\n                                                           " 
-               +"}//Tarea\n                              "
-               +"}//Inicip_App\n                                                                                  "
-              
-                        +"\n"
-               +"________________________________________________"
-               + "Inicio_App ejemplo2{\n" +
-               " Repite(i=0;i<10;i++;){\n" +
-               "Y_si(i==6){\n" 
-               +"Alto"
-               +"}\n" 
-               +"}\n"
-                       +"\n"
-               + "Inicio_App ejemplo3{\n" +
-               "Ent a=5;"+
-               "Durante(a<10){\n" +
-               "Regresa(a)"
-               +"}\n"+
-               "Y_si(a=9){\n" +
-               "Label1;\n" +
-               "}\n"
-                +"}"
+        JTextArea msg = new JTextArea(
+                "Inicio_App ejemplo{\n                                      "
+                + "Tarea(ent a=0,ent b=2, ent c=3){\n                         "
+                + "Imprime('Las Variables son '+a+b+c);\n                                                           "
+                + "}//Tarea\n                              "
+                + "}//Inicip_App\n                                                                                  "
                 + "\n"
-                
-                
-                  
-          );
+                + "________________________________________________"
+                + "Inicio_App ejemplo2{\n"
+                + " Repite(i=0;i<10;i++;){\n"
+                + "Y_si(i==6){\n"
+                + "Alto"
+                + "}\n"
+                + "}\n"
+                + "\n"
+                + "Inicio_App ejemplo3{\n"
+                + "Ent a <-5;"
+                + "Durante(a<10){\n"
+                + "Regresa(a)"
+                + "}\n"
+                + "Y_si(a=9){\n"
+                + "Label1;\n"
+                + "}\n"
+                + "}"
+                + "\n"
+        );
         msg.setLineWrap(true);
         msg.setWrapStyleWord(true);
-        msg.setSize(250,350);
+        msg.setSize(250, 350);
+        msg.setEnabled(false);
         JScrollPane scrollPane = new JScrollPane(msg);
 
         JOptionPane.showMessageDialog(null, scrollPane);        // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
- 
     private void jMenu3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu3ActionPerformed
-       
+
     }//GEN-LAST:event_jMenu3ActionPerformed
 
     private void jMenu3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu3MouseClicked
-  
+
     }//GEN-LAST:event_jMenu3MouseClicked
 
     private void jMenu4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu4ActionPerformed
-    super.setExtendedState(ICONIFIED);
-          // TODO add your handling code here:
+        super.setExtendedState(ICONIFIED);      
     }//GEN-LAST:event_jMenu4ActionPerformed
 
-    private void GramaticaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GramaticaActionPerformed
-       
-         if(compilado == false){
-           javax.swing.JOptionPane.showMessageDialog(rootPane, "No se ha compilado o el codigo contiene errores");
-           return;
-       }
-        Gramatica gramar =  new Gramatica(this, rootPaneCheckingEnabled, produtions);
-       gramar.setVisible(true);
-       produtions.clear();
-// TODO add your handling code here:
-    }//GEN-LAST:event_GramaticaActionPerformed
- long tiempoDeEjecucion;
-    private void run() throws IOException, Exception {
-        //////GUARDANDO CÓDIGO
-        String codigo = jTextPane1.getText();
-        File archivoDeCodigo = new File("fichero.txt");
-        FileWriter escribe = new FileWriter(archivoDeCodigo, false);
-        escribe.write(codigo);
-        escribe.close();
-        ///////COMPILANDO CÓDIGO
-        String codigoArray[] = {"fichero.txt"};
-        Date hora = new Date();
-        long tiempo = hora.getTime();
-        long tiempo2 = new Date().getTime();
-        setTiempoDeEjecucion(tiempo2 - tiempo);
-        mostrarResultados();
-       
+    private void btnTmpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTmpActionPerformed
+
+    }//GEN-LAST:event_btnTmpActionPerformed
+
+   public static void setError(String error) {
+        listModel.addElement(error);
     }
-    public static void addProduction(String prod){ 
-        produtions.add(prod);
-    }
-    public static void setError(String error) {
-        listaErrores.add(error);
-    }
-    public void setTiempoDeEjecucion(long tiempoDeEjecucion) {
-        this.tiempoDeEjecucion = tiempoDeEjecucion;
-    }
-    public long GetTiempoDeEjecucion() {
-        return tiempoDeEjecucion;
-    }
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -1250,19 +1138,22 @@ public class Vista extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-              new Vista().setVisible(true);
-              
+                new Vista().setVisible(true);
             }
         });
     }
-
+      
+  
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Gramatica;
+    private javax.swing.JButton btnCompilar;
     private javax.swing.JButton btnLexico;
+    private javax.swing.JButton btnLimpiar;
     private javax.swing.JButton btnSemantico;
     private javax.swing.JButton btnSintactico;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton btnTmp;
+    private javax.swing.JList<String> console;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
@@ -1280,6 +1171,7 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSeparator jSeparator1;
@@ -1287,7 +1179,6 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JMenu menuArchivo;
     private javax.swing.JMenuItem menuItemAbrir;
     private javax.swing.JTable tablaSimbolos;
-    private javax.swing.JTextArea txaResultado;
+    public static javax.swing.JTextArea txaResultado;
     // End of variables declaration//GEN-END:variables
 }
-

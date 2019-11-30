@@ -8,52 +8,58 @@ package codigo;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int Inicio_App = 19;
-  public static final int Llave_c = 12;
-  public static final int Llave_a = 11;
+  public static final int Inicio_App = 23;
+  public static final int Llave_c = 18;
+  public static final int Llave_a = 17;
   public static final int Detener = 39;
-  public static final int Real = 24;
+  public static final int Real = 28;
   public static final int VerificarBateria = 42;
   public static final int Advertencia = 41;
-  public static final int operadorIncrementoDecremento = 27;
-  public static final int operadorRelacional = 30;
-  public static final int Corchete_c = 14;
-  public static final int Corchete_a = 13;
+  public static final int operadorIncrementoDecremento = 5;
+  public static final int operadorRelacional = 7;
+  public static final int Corchete_c = 20;
+  public static final int Corchete_a = 19;
   public static final int Retroceder = 38;
   public static final int Gira_der = 36;
-  public static final int Car = 29;
-  public static final int Text = 20;
-  public static final int Division = 8;
-  public static final int Parentesis_c = 10;
-  public static final int Parentesis_a = 9;
+  public static final int Car = 30;
+  public static final int Text = 25;
+  public static final int Division = 14;
+  public static final int Parentesis_c = 16;
+  public static final int Parentesis_a = 15;
   public static final int Avanza = 37;
   public static final int EOF = 0;
-  public static final int P_coma = 15;
+  public static final int P_coma = 21;
   public static final int error = 1;
-  public static final int Linea = 2;
-  public static final int punto = 23;
-  public static final int operadorBooleano = 26;
-  public static final int ERROR = 18;
+  public static final int Linea = 8;
+  public static final int operadorBooleano = 4;
+  public static final int punto = 27;
+  public static final int ERROR = 22;
   public static final int Tarea = 31;
   public static final int Imprime = 34;
   public static final int Aviso = 40;
-  public static final int Identificador = 16;
-  public static final int Resta = 6;
+  public static final int Identificador = 2;
+  public static final int Resta = 12;
   public static final int Mientras = 33;
-  public static final int Bool = 25;
-  public static final int operadorLogico = 28;
-  public static final int Multiplicacion = 7;
-  public static final int Ent = 21;
+  public static final int Bool = 29;
+  public static final int operadorLogico = 6;
+  public static final int Multiplicacion = 13;
+  public static final int Ent = 24;
   public static final int Y_si = 32;
-  public static final int Numero = 17;
-  public static final int asignacion = 22;
-  public static final int Suma = 5;
+  public static final int Numero = 3;
+  public static final int asignacion = 26;
+  public static final int Suma = 11;
   public static final int Gira_izq = 35;
-  public static final int Igual = 4;
-  public static final int Comillas = 3;
+  public static final int Igual = 10;
+  public static final int Comillas = 9;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
+  "Identificador",
+  "Numero",
+  "operadorBooleano",
+  "operadorIncrementoDecremento",
+  "operadorLogico",
+  "operadorRelacional",
   "Linea",
   "Comillas",
   "Igual",
@@ -68,21 +74,15 @@ public class sym {
   "Corchete_a",
   "Corchete_c",
   "P_coma",
-  "Identificador",
-  "Numero",
   "ERROR",
   "Inicio_App",
-  "Text",
   "Ent",
+  "Text",
   "asignacion",
   "punto",
   "Real",
   "Bool",
-  "operadorBooleano",
-  "operadorIncrementoDecremento",
-  "operadorLogico",
   "Car",
-  "operadorRelacional",
   "Tarea",
   "Y_si",
   "Mientras",
