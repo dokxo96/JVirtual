@@ -23,12 +23,18 @@ public class Generador {
             
             case ASIGNACION:
                 Vista.txaResultado.append(arg1+" "+arg2+" "+resultado+"\n");
-                break;
-                
-            case DeclaracionBool:
-                Vista.txaResultado.append(arg1+" "+arg2+" "+resultado+"\n");
-                break;
-                
+                break;    
         }
     }
+    
+    
+    public static void bool(int operacion, String arg1, String operando, String arg2){
+        switch(operacion){
+            case DeclaracionBool:
+                Vista.txaResultado.append(arg1+" "+operando+" "+arg2+"\n");
+                break;
+        }
+    }
+    
+    
 }

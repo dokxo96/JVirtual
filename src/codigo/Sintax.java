@@ -441,10 +441,10 @@ class CUP$Sintax$actions {
     {
       /* Symbol object for return from actions */
       java_cup.runtime.Symbol CUP$Sintax$result;
-      int start_valleft = ((java_cup.runtime.Symbol)CUP$Sintax$stack.elementAt(CUP$Sintax$top-1)).left;
-		int start_valright = ((java_cup.runtime.Symbol)CUP$Sintax$stack.elementAt(CUP$Sintax$top-1)).right;
+      
+      int start_valleft = ((java_cup.runtime.Symbol)CUP$Sintax$stack.elementAt(CUP$Sintax$top-1)).left; 
+                int start_valright = ((java_cup.runtime.Symbol)CUP$Sintax$stack.elementAt(CUP$Sintax$top-1)).right;
 		
-
       /* select the action based on the action number */
       switch (CUP$Sintax$act_num)
         {
@@ -454,6 +454,7 @@ class CUP$Sintax$actions {
               Object RESULT =null;
 		Object start_val = (Object)((java_cup.runtime.Symbol) CUP$Sintax$stack.elementAt(CUP$Sintax$top-1)).value;
 		RESULT = start_val;
+               
               CUP$Sintax$result = parser.getSymbolFactory().newSymbol("$START",0, ((java_cup.runtime.Symbol)CUP$Sintax$stack.elementAt(CUP$Sintax$top-1)), ((java_cup.runtime.Symbol)CUP$Sintax$stack.peek()), RESULT);
             }
           /* ACCEPT */

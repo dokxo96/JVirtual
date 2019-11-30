@@ -94,6 +94,17 @@ INICIO ::=
     |
     Inicio_App 
     {:  
+    StyledDocument doc =Gramaticas.GramargetStyledDocument();
+        Style style = compilador.txtgramaticas.addStyle("HidroCar", null);
+        StyleConstants.setForeground(style, Color.black);
+
+        try { doc.insertString(doc.getLength(),"linea"+(nleft+1)+"INICIO= HidroCar ID    ",style); }
+        catch (BadLocationException e){}
+        StyleConstants.setForeground(style, Color.red);
+
+        try { doc.insertString(doc.getLength(), "  LLAVEIZQ cuerpo LLAVEDER \n ",style); }
+        catch (BadLocationException e){}
+        StyleConstants.setForeground(style, Color.BLACK);
     Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta se esperaba un identificador "); :}
     |
     Inicio_App Identificador 
@@ -174,13 +185,13 @@ SENTENCIA ::=
 
 
 DECLARACION ::= 
-    Text Identificador:id P_coma
+    Text Identificador:id P_coma  
     {:Generador.gc(Generador.DECLARACION,"String",null,id);:}
     |
-    Text Identificador:id asignacion Comillas Comillas P_coma
+    Text Identificador:id asignacion Comillas Comillas P_coma   
     {:Generador.gc(Generador.DECLARACION,"String", null, id);:}
     |
-    Text Identificador:id asignacion Comillas Identificador:text Comillas P_coma
+    Text Identificador:id asignacion Comillas Identificador:text Comillas P_coma   
     {:Generador.gc(Generador.ASIGNACION,"String",id,text);:}
     |
 
@@ -238,18 +249,18 @@ TAREA::=
 ;
 
 SENTENCIA_BOOLEANA ::= 
-    	operadorBooleano:operador
-        {:Generador.gc(Generador.DeclaracionBool,null,null,operador);:}
+    	operadorBooleano:operador      //verdad -- Falso
 	|
-	Identificador:id operadorLogico:operadorLogico        
+	Identificador:id operadorLogico:operadorLogico   //i&& -- i|| -- i!     
 	|
-	Identificador:id operadorRelacional:operadorRelacional Numero:numero       
+	Identificador:id operadorRelacional:operadorRelacional Numero:numero    // id > 5
+        {:Generador.gc(Generador.DeclaracionBool,id,operadorRelacional,numero);:}
 	|
-	Identificador:id1 operadorRelacional:operadorRelacional Identificador:id2        
+	Identificador:id1 operadorRelacional:operadorRelacional Identificador:id2   //id2 > id2
         |
-        Numero:numero operadorRelacional:operadorRelacional Identificador:id        
+        Numero:numero operadorRelacional:operadorRelacional Identificador:id    //5<i
 ;
-
+{arg1,arg2,res}
 
 IMPRIME ::=
     Imprime Parentesis_a Parentesis_c P_coma
