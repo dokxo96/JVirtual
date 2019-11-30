@@ -38,3 +38,6 @@ public class Generador {
     
     
 }
+
+
+//Vista.txaResultado.append(arg1+" "+operando+" "+arg2+"\n");

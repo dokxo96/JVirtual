@@ -15,9 +15,9 @@ public class principal {
         String ruta2 = "C:/proyectosNeatBeans/JVirtualLocal/src/codigo/LexerCup.flex";
         String[] rutaS = {"-parser", "Sintax", "C:/proyectosNeatBeans/JVirtualLocal/src/codigo/Sintax.cup"};  */
         //esta ruta es de daniel
-        String ruta1 = "C:\\Users\\dokxo\\Documents\\JVirtual\\src\\codigo\\Lexer.flex";
-        String ruta2 = "C:\\Users\\dokxo\\Documents\\JVirtual\\src\\codigo\\LexerCup.flex";
-        String[] rutaS = {"-parser", "Sintax", "C:\\Users\\dokxo\\Documents\\JVirtual\\src\\codigo\\Sintax.cup"};   
+        String ruta1 = "C:\\Users\\Isidro\\Documents\\GitHub\\JVirtual\\src\\codigo\\Lexer.flex";
+        String ruta2 = "C:\\Users\\Isidro\\Documents\\GitHub\\JVirtual\\src\\codigo\\LexerCup.flex";
+        String[] rutaS = {"-parser", "Sintax", "C:\\Users\\Isidro\\Documents\\GitHub\\JVirtual\\src\\codigo\\Sintax.cup"};   
         generar(ruta1, ruta2, rutaS );   
     }
 

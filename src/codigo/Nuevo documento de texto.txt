@@ -26,3 +26,6 @@ INICIO ::=
     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se espera = 'Inicio_App Identificador' antes "); :}
 
 ;
+
+
+Esta version tenemos el codigo intermedio (Booleano) jalando  -Tapia
