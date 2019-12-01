@@ -184,6 +184,32 @@ DECLARACION ::=
     {:Generador.gc(Generador.ASIGNACION,"String",id,text);:}
     |
 
+//Text Errores
+    Text Identificador asignacion P_coma
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaban Comillas antes de P_coma "); :}
+    |  
+    Text P_coma
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba Identificador antes de P_coma "); :}
+    |
+    Text Identificador
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba un P_coma y/o asignacion despuÃ©s de Identificador "); :}
+    |
+    Text Identificador asignacion Comillas P_coma
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaban Comillas antes de P_coma "); :}
+    |
+    Identificador P_coma
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaban un Tipo de dato antes de Identificador "); :}
+    |
+    Identificador asignacion Comillas Comillas P_coma
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba Text antes de Identificador "); :}
+    |
+    Text asignacion Comillas Comillas P_coma
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba Identificador antes de asignacion "); :}
+    |
+    Text Identificador asignacion Comillas Identificador Comillas 
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba P_coma despuÃ©s de las comillas "); :}
+    |
+
 
     Ent Identificador:id P_coma
     {:Generador.gc(Generador.DECLARACION,"int",null,id);:}
@@ -194,7 +220,41 @@ DECLARACION ::=
     Ent Identificador:id operadorIncrementoDecremento:operadorIncDec P_coma
     {:Generador.gc(Generador.ASIGNACION,"int",id,operadorIncDec);:}    
     |
-
+    
+//Errores Ent
+Ent P_coma
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba Identificador antes de P_coma "); :}
+    |
+    Ent Identificador
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba un P_coma y/o asignacion, operadorIncrementoDecremento despuÃ©s de Identificador "); :}
+    |
+    Ent asignacion
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba un Identificador antes de la asignacion y un Numero y P_Coma despuÃ©s de la misma "); :}
+    |
+    Ent operadorIncrementoDecremento
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba un Identificador antes del operador y un P_coma despuÃ©s del mismo "); :}
+    |
+    Identificador operadorIncrementoDecremento
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba la palabra Ent antes del operador y un P_coma despuÃ©s de operadorIncrementoDecremento "); :}
+    |  
+    Identificador asignacion Numero
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba la palabra Ent antes del Identificador y un P_coma despuÃ©s del Numero "); :}
+    | 
+    Identificador asignacion 
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba un Tipo de dato antes del Identificador, un Numero o Cadena despuÃ©s de la asginacion y un P_coma despuÃ©s del Mismo "); :}
+    | 
+    Ent operadorIncrementoDecremento P_coma
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba la palabra Identificador despuÃ©s de Ent "); :}
+    |  
+    Ent asignacion Numero P_coma
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba la palabra Identificador despuÃ©s de Ent "); :}
+    |
+    Ent Identificador asignacion Numero
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba P_coma despuÃ©s del Numero "); :}
+    |
+    Ent Identificador operadorIncrementoDecremento
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba P_coma despuÃ©s de operadorIncrementoDecremento "); :}
+    |
 
     Real Identificador:id asignacion Numero:Numero1 punto Numero:Numero2 P_coma 
     {:Generador.gc(Generador.ASIGNACION,"float",Numero1+"."+Numero2,id);:}
@@ -203,6 +263,48 @@ DECLARACION ::=
     {:Generador.gc(Generador.DECLARACION,"float",null,id);:}
     |
 
+// Erores Real
+ Identificador asignacion Numero punto Numero P_coma
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba la palabra Real antes del Identificador "); :}
+    | 
+    Identificador Numero punto Numero P_coma
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba la palabra Real antes del Identificador y asignaciÃ³n despuÃ©s del Identificador "); :}
+    | 
+    Identificador punto Numero P_coma
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba la palabra Real antes del Identificador y asignaciÃ³n despuÃ©s del Identificador y un Numero antes de punto "); :}
+    |
+    Identificador Numero punto P_coma
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba la palabra Real antes del Identificador y asignaciÃ³n despuÃ©s del Identificador y un Numero antes de P_coma"); :}
+    |
+    Identificador punto P_coma
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba la palabra Real antes del Identificador y asignaciÃ³n despuÃ©s del Identificador y Numeros antes y despuÃ©s de punto"); :}
+    | 
+    Identificador asignacion P_coma
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba Tipo de dato antes del Identificador y Variables despuÃ©s de la asignaciÃ³n"); :}
+    | 
+    Real Numero punto Numero P_coma
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba Identificador y asignacion antes de Numero "); :}
+    | 
+    Real asignacion Numero punto Numero P_coma
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba Identificador antes de asignaciÃ³n "); :}
+    |
+    Real punto Numero P_coma
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba la palabra Identificador despuÃ©s de Real y asignaciÃ³n despuÃ©s del Identificador y un Numero antes de punto "); :}
+    |
+    Real Identificador asignacion Numero punto Numero
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba P_coma despuÃ©s del Ãºltimo Numero"); :}
+    | 
+    Real Identificador
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba P_coma despuÃ©s del Identificador "); :}
+    |
+    Real P_coma
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba Identificador antes de P_coma "); :}
+    |
+    Real Numero punto P_coma
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba Identificador despuÃ©s de Real y asignaciÃ³n despuÃ©s del Identificador y un Numero antes de P_coma"); :}
+    |
+//
+
 
     Bool Identificador:id P_coma
     {:Generador.gc(Generador.DECLARACION,"boolean",null,id);:}
@@ -210,8 +312,29 @@ DECLARACION ::=
     Bool Identificador:id asignacion operadorBooleano:operador P_coma
     {:Generador.gc(Generador.ASIGNACION,"boolean",operador,id);:}
     |
-
-
+//Erorres Booleano
+    Bool Identificador
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta P_coma despuÃ©s del Identificador"); :}
+    |
+    Bool P_coma
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta Identificador antes de P_coma"); :}
+    |
+    Bool asignacion operadorBooleano P_coma
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta Identificador antes de asignacion"); :}
+    |
+    Bool Identificador operadorBooleano P_coma
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta asignacion antes de operadorBooleano"); :}
+    |
+    Bool Identificador asignacion P_coma
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta operadorBooleano antes de P_coma"); :}
+    |
+    Bool Identificador asignacion operadorBooleano
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta P_coma despuÃ©s de operadorBooleano"); :}
+    |
+    Bool Identificador asignacion 
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta operadorBooleano y P_coma despuÃ©s de asginacion"); :}
+    |
+//Car
     Car Identificador:id P_coma
     {:Generador.gc(Generador.DECLARACION,"char",null,id);:}
     |
@@ -220,26 +343,102 @@ DECLARACION ::=
     |
     Car Identificador:id asignacion Comillas Comillas P_coma
     {:Generador.gc(Generador.DECLARACION,"char",null,id);:}
+     |
+//Erroes Car
+    Car P_coma
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta Identificador antes de P_coma"); :}
+    |
+    Car Identificador
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta P_coma antes del Identificador"); :}
+    |
+    Car Identificador asignacion Comillas Identificador Comillas 
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta P_coma antes de las Ãºltimas Comillas"); :}
+    |
+    Car Identificador asignacion Comillas Identificador P_coma
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Faltan Comillas despuÃ©s del segundo Identificador"); :}
+    |
+    Car Identificador asignacion Identificador Comillas P_coma
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Faltan Comillas antes del segundo Identificador"); :}
+    |
+    Car Identificador Comillas Identificador Comillas P_coma
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta asignaciÃ³n antes de las primeras Comillas"); :}
+    |
+    Car asignacion Comillas Identificador Comillas P_coma
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta Identificador antes de asignacion"); :}
+    |
+    Identificador:id asignacion Comillas Identificador:caracter Comillas P_coma
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta palabra Car antes de Identificador"); :}
+    
+    
 ;
 
 
 IF ::=
     Y_si Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c
+    |
+    Y_si Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a Llave_c
+    |
+//Errores IF
+
+    Y_si SENTENCIA_BOOLEANA Parentesis_c Llave_a Llave_c
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta Parentesis_a antes de SENTENCIA_BOOLEANA"); :}
+    |
+    Y_si Parentesis_a Parentesis_c Llave_a Llave_c
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta SENTENCIA_BOOLEANA antes de Parentesis_c"); :}
+    |
+    Y_si Parentesis_a SENTENCIA_BOOLEANA Llave_a Llave_c
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta Parentesis_c antes de Llave_a"); :}
+    |
+    Y_si Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_c
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta Llave_a antes de Llave_c"); :}
+    |
+    Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a Llave_c
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta Y_si o Mientras antes de parentesis_a"); :}
+   
 ;
+
 
 
 MIENTRAS ::=
 	Mientras Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c 
+         |
+//Errores Mientras 
+    Mientras SENTENCIA_BOOLEANA Parentesis_c Llave_a Llave_c
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta Parentesis_a antes de SENTENCIA_BOOLEANA"); :}
+    |
+    Mientras Parentesis_a Parentesis_c Llave_a Llave_c
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta SENTENCIA_BOOLEANA antes de Parentesis_c"); :}
+    |
+    Mientras Parentesis_a SENTENCIA_BOOLEANA Llave_a Llave_c
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta Parentesis_c antes de Llave_a"); :}
+    |
+    Mientras Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_c
+    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta Llave_a antes de Llave_c"); :}
+    
 ;	
 
 
 TAREA::=
     Tarea Identificador Parentesis_a Parentesis_c Llave_a SENTENCIA Llave_c
+|
+//Errores Tarea
+     Tarea Parentesis_a Parentesis_c Llave_a SENTENCIA Llave_c
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta Identificador antes de Parentesis_a"); :}
+     |
+     Tarea Identificador Parentesis_c Llave_a SENTENCIA Llave_c
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta Parentesis_a antes de Parentesis_c"); :}
+     |
+     Tarea Identificador Parentesis_a Llave_a SENTENCIA Llave_c
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta Parentesis_c antes de Llave_a"); :}
+     |
+     Tarea Identificador Parentesis_a Parentesis_c SENTENCIA Llave_c
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta Llave_a antes de la Sentencia"); :}
+    
 ;
 
 SENTENCIA_BOOLEANA ::= 
     	operadorBooleano:operador      
-        {:Generador.bool(Generador.DeclaracionBool,null,operador,null);:}
+        {:Generador.bool(Generador.DeclaracionBool,operador,"-","-");:}
 	|
 	Identificador:id operadorRelacional:operadorRelacional Numero:numero    
         {:Generador.bool(Generador.DeclaracionBool,id,operadorRelacional,numero);:}
@@ -249,6 +448,31 @@ SENTENCIA_BOOLEANA ::=
         |
         Numero:numero operadorRelacional:operadorRelacional Identificador:id    
         {:Generador.bool(Generador.DeclaracionBool,numero,operadorRelacional,id);:}
+|
+     operadorLogico
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta Identificador antes de operadorLogico"); :}
+     |
+     Identificador
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta operador despuÃ©s del Identificador"); :}
+     |
+     Identificador operadorRelacional
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta Numero o Segundo Identificador despuÃ©s de operadorRelacional"); :}
+     |
+     Identificador Numero
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta operadorRelacional antes del Numero"); :}
+     |
+     Identificador Identificador
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta operadorRelacional antes del Identificador"); :}
+     |
+     operadorRelacional Identificador
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta un Numero antes del operadorRelacional"); :}
+     |
+     Numero Identificador
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta operadorRelacional despuÃ©s del Numero"); :}
+     |
+     Numero operadorRelacional
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta un Identificador despuÃ©s del operadorRelacional"); :}
+     
 ;
 
 
@@ -256,32 +480,21 @@ IMPRIME ::=
     Imprime Parentesis_a Parentesis_c P_coma
     |
     Imprime Parentesis_a Comillas Identificador Comillas Parentesis_c P_coma
+//Errores Imprime
+
+    |
+    Imprime Parentesis_a
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta Parentesis_c P_coma despuÃ©s de Parentesis_a"); :}
+    |
+    Imprime Parentesis_a Parentesis_c
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta P_coma despuÃ©s de Parentesis_c"); :}
+   
 ;
 
 
-SENTENCIA_GIRA_IZQ ::=
-    Gira_izq Parentesis_a Numero Parentesis_c P_coma
-;
 
 
-SENTENCIA_GIRA_DER ::=
-    Gira_der Parentesis_a Numero Parentesis_c P_coma
-;
 
-
-SENTENCIA_AVANZA ::=
-    Avanza Parentesis_a Numero Parentesis_c P_coma
-;
-
-
-SENTENCIA_RETROCEDE ::=
-    Retroceder Parentesis_a Numero Parentesis_c P_coma
-;
-
-
-SENTENCIA_DETENER ::=
-    Detener Parentesis_a Parentesis_c P_coma
-;
 
 
 SENTENCIA_AVISO ::=
@@ -294,6 +507,4 @@ SENTENCIA_ADVERTENCIA ::=
 ;
 
 
-SENTENCIA_VERIFICA_BATERIA ::=
-    VerificarBateria Parentesis_a Parentesis_c P_coma
-;
+

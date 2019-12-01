@@ -27,7 +27,6 @@ public class Generador {
         }
     }
     
-    
     public static void bool(int operacion, String arg1, String operando, String arg2){
         switch(operacion){
             case DeclaracionBool:
