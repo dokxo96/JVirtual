@@ -366,8 +366,6 @@ Ent P_coma
     |
     Identificador:id asignacion Comillas Identificador:caracter Comillas P_coma
     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta palabra Car antes de Identificador"); :}
-    
-    
 ;
 
 

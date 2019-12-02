@@ -15,6 +15,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java_cup.runtime.Symbol;
@@ -48,7 +49,9 @@ public class Vista extends javax.swing.JFrame {
     private DefaultStyledDocument doc;
     static DefaultListModel listModel = new DefaultListModel();
     boolean f=true;
-
+    static ArrayList<ArryL> Arr = new ArrayList<ArryL>();
+    LinkedList<Object[]> tablaS;
+    static DefaultListModel palabrasRes = new DefaultListModel();
     
     public Vista() {
         //Asignar color a las palabras reservadas
@@ -78,13 +81,13 @@ public class Vista extends javax.swing.JFrame {
                     if (wordR == after || String.valueOf(text.charAt(wordR)).matches("\\W")) {
                         
                         //Si concide con la siguiente expresion se pinta de color
-                        if (text.substring(wordL, wordR).matches("(\\W)*(true|false|start)")) {
+                        if (text.substring(wordL, wordR).matches("(\\W)*(Verdad|Falso|start)")) {
                             setCharacterAttributes(wordL, wordR - wordL, orange, false);
-                        } else if (text.substring(wordL, wordR).matches("(\\W)*(Inicio_App|Y_si|Tarea|Mientras|Gira_izq|Gira_der|Avanza|Retroceder|Alto|Advertencia|VerificarBateria|Aviso|Imprime|Durante|Repite|Ingresa|Text|Inc|Dec|Publica|Vibrar|Ir|Funcion|Repite|saltoLinea|Igual|Menor|Mayor|Mas|Resta|Multiplicacion|Division|Potencia|PuntoComa|llaveApertura|llaveCierre|ParentesisApertura|ParentesisCierre|Identificador|Numero|ERROR)")) {
+                        } else if (text.substring(wordL, wordR).matches("(\\W)*(Inicio_App|Y_si|Tarea|Mientras|Gira_izq|Gira_der|Avanza|Retroceder|Alto|Advertencia|VerificarBateria|Aviso|Imprime|Durante|Repite|Ingresa|Text|Inc|Dec|Publica|Vibrar|Ir|Funcion|Repite|saltoLinea|Igual|Menor|Mayor|Mas|Resta|Multiplicacion|Division|Potencia|PuntoComa|Identificador|Numero|ERROR)")) {
                             setCharacterAttributes(wordL, wordR - wordL, blue, false);
                         } else if (text.substring(wordL, wordR).matches("(\\W)*(->|^[a-zA-Z0-9_.-]*$)")) {
                             setCharacterAttributes(wordL, wordR - wordL, gray, false);
-                        } else if (text.substring(wordL, wordR).matches("(\\W)*(Ent|Real|RealExt|Bool|Car|Text)")) {
+                        } else if (text.substring(wordL, wordR).matches("(\\W)*(|llaveApertura|llaveCierre|ParentesisApertura|ParentesisCierre|Ent|Real|RealExt|Bool|Car|Text)")) {
                             setCharacterAttributes(wordL, wordR - wordL, red, false);
                         } else if (text.substring(wordL, wordR).matches("(\\W)*(\\Q) (\\W)* (\\E)")) {
                             setCharacterAttributes(wordL, wordR - wordL, yellow, false);
@@ -131,7 +134,7 @@ public class Vista extends javax.swing.JFrame {
         jTextPane1.setBackground(Color.darkGray);
         jScrollPane4.setRowHeaderView(lineas);
         jScrollPane4.setViewportView(jTextPane1);
-
+        tablaS = new LinkedList<>();
         jTextPane1.requestFocus();
 
         //tp.setBackground(Color.DARK_GRAY);
@@ -163,13 +166,13 @@ public class Vista extends javax.swing.JFrame {
 
         int contLinea = 1;
         String expr = (String) jTextPane1.getText();
-
+        this.tablaS.clear();
         Lexer lexer = new Lexer(new StringReader(expr));
         String resultado = "Linea " + contLinea + "\t\t\tSimbolo\n";
 
         while (true) {
             Tokens token = lexer.yylex();
-
+            String dato = lexer.lexeme.toString();
             if (token == null) {
                 //txaResultado.setText(resultado + "\n Terminado");
                 txaResultado.setText("");
@@ -180,7 +183,9 @@ public class Vista extends javax.swing.JFrame {
             String tipoDato = "Tipo de dato";            
             String operadorMat = "Operador matematico/relacional";
             String agrupacion = "Operador de agrupacion";
-                       
+            
+            System.out.print("\n Aqui anda valiendo \n\n\n\n"+"  lexer:: "+lexer.lexeme.toString()+"  token:"+token.toString());
+            this.tablaS.add(new Object[]{lexer.lexeme.toString(),token.toString()});          
             
             switch (token) {
                 case Linea:
@@ -188,7 +193,7 @@ public class Vista extends javax.swing.JFrame {
                     break;
 
                 case Comillas:
-                    Object filaComillas[] = {contLinea, lexer.lexeme, "Caracter"};
+                    Object filaComillas[] = {contLinea, lexer.lexeme, "Comillas"};
                     modelo.addRow(filaComillas);
                     break;
 
@@ -248,7 +253,7 @@ public class Vista extends javax.swing.JFrame {
                     break;
 
                 case P_coma:
-                    Object filaPuntoComa[] = {contLinea, lexer.lexeme, "Caracter"};
+                    Object filaPuntoComa[] = {contLinea, lexer.lexeme, "P_coma"};
                     modelo.addRow(filaPuntoComa);
                     break;
 
@@ -283,7 +288,7 @@ public class Vista extends javax.swing.JFrame {
                     break;
 
                 case punto:
-                    Object filaPunto[] = {contLinea, lexer.lexeme, "caracter"};
+                    Object filaPunto[] = {contLinea, lexer.lexeme, "punto"};
                     modelo.addRow(filaPunto);
                     break;
 
@@ -313,7 +318,7 @@ public class Vista extends javax.swing.JFrame {
                     break;
 
                 case Car:
-                    Object filaCar[] = {contLinea, lexer.lexeme, reservada};
+                    Object filaCar[] = {contLinea, lexer.lexeme, "cadenas"};
                     modelo.addRow(filaCar);
                     break;
 
@@ -500,7 +505,7 @@ public class Vista extends javax.swing.JFrame {
                 .addComponent(btnLimpiar)
                 .addGap(113, 113, 113)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(456, Short.MAX_VALUE))
+                .addContainerGap(502, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -585,15 +590,15 @@ public class Vista extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane4)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 422, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(82, 82, 82))
+                        .addGap(17, 17, 17)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(25, 25, 25))
         );
 
         jMenuBar1.setBackground(new java.awt.Color(69, 90, 100));
@@ -603,7 +608,6 @@ public class Vista extends javax.swing.JFrame {
         jMenu2.setBackground(new java.awt.Color(69, 90, 100));
         jMenu2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-sun-glasses-32.png"))); // NOI18N
         jMenu2.setEnabled(false);
-        jMenu2.setOpaque(true);
         jMenu2.setRequestFocusEnabled(false);
         jMenu2.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-sun-glasses-32.png"))); // NOI18N
         jMenuBar1.add(jMenu2);
@@ -611,7 +615,6 @@ public class Vista extends javax.swing.JFrame {
         menuArchivo.setBackground(new java.awt.Color(69, 90, 100));
         menuArchivo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-folder-32.png"))); // NOI18N
         menuArchivo.setToolTipText("ARCHIVO");
-        menuArchivo.setOpaque(true);
 
         jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-add-file-32.png"))); // NOI18N
         jMenuItem4.setToolTipText("NUEVO");
@@ -645,7 +648,6 @@ public class Vista extends javax.swing.JFrame {
         jMenu1.setBackground(new java.awt.Color(69, 90, 100));
         jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-web-help-32.png"))); // NOI18N
         jMenu1.setToolTipText("AYUDA");
-        jMenu1.setOpaque(true);
 
         jMenuItem3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-abc-32.png"))); // NOI18N
         jMenuItem3.setToolTipText("PALABRAS RESERVADAS");
@@ -688,7 +690,6 @@ public class Vista extends javax.swing.JFrame {
         jMenu3.setBackground(new java.awt.Color(69, 90, 100));
         jMenu3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-conference-32.png"))); // NOI18N
         jMenu3.setToolTipText("EQUIPO");
-        jMenu3.setOpaque(true);
         jMenu3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jMenu3MouseClicked(evt);
@@ -704,12 +705,10 @@ public class Vista extends javax.swing.JFrame {
         jMenu5.setBackground(new java.awt.Color(69, 90, 100));
         jMenu5.setText("                                                                                                                                                                                                                                                                                                                                          ");
         jMenu5.setEnabled(false);
-        jMenu5.setOpaque(true);
         jMenuBar1.add(jMenu5);
 
         jMenu4.setBackground(new java.awt.Color(69, 90, 100));
         jMenu4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-popup-window-32.png"))); // NOI18N
-        jMenu4.setOpaque(true);
         jMenu4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenu4ActionPerformed(evt);
@@ -719,7 +718,6 @@ public class Vista extends javax.swing.JFrame {
 
         jMenu6.setBackground(new java.awt.Color(69, 90, 100));
         jMenu6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-close-window-32.png"))); // NOI18N
-        jMenu6.setOpaque(true);
         jMenu6.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jMenu6MouseClicked(evt);
@@ -738,7 +736,7 @@ public class Vista extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1257, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1273, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -787,20 +785,7 @@ public class Vista extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_menuItemAbrirActionPerformed
-    private String fileName = "";
-    private boolean g = false;
-
-    private void guardar() {
-        try {
-            java.io.FileOutputStream fs = new java.io.FileOutputStream(fileName, true); //fs = Flujo de Salida
-            byte b[] = jTextPane1.getText().getBytes();
-            fs.write(b);
-        } catch (FileNotFoundException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage());
-        } catch (IOException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage());
-        }
-    }
+    
     
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         if (!jTextPane1.getText().equals("") && !g) {
@@ -870,6 +855,7 @@ public class Vista extends javax.swing.JFrame {
             console.setForeground(Color.white);
             listModel.addElement("Analisis léxico y Sintactico Correcto!");
             console.setModel(listModel);
+            analizadorSemantico();
             }
             
             
@@ -887,6 +873,7 @@ public class Vista extends javax.swing.JFrame {
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
         txaResultado.setText("");
         DefaultTableModel modelo = (DefaultTableModel) tablaSimbolos.getModel();
+        console.setModel(new DefaultListModel());
         modelo.setRowCount(0);
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
@@ -949,18 +936,19 @@ public class Vista extends javax.swing.JFrame {
                 + "ERROR"
         ); 
         // TODO add your handling code here:
-        // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem3ActionPerformed
-
+ 
+        
+     
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-        JOptionPane.showMessageDialog(null,
-                "PALABRA                         |     DESCRIPCIÓN"
+     JOptionPane.showMessageDialog(null,
+                "PALABRA              |     DESCRIPCIÓN"
                 + "\n"
-                + "Ent                           |--DECLARA UNA VARIABLE DE TIPO ENTERO"
+                + "Ent                          |   --DECLARA UNA VARIABLE DE TIPO ENTERO"
                 + "\n"
-                + "Real                          |--DECLARA UNA VARIABLE DE TIPO REAL"
+                + "Real                       |   --DECLARA UNA VARIABLE DE TIPO REAL"
                 + "\n"
-                + "RealExt                       |--DECLARA UNA VARIABLE DE TIPO REAL EXTENDIDA"
+                + "RealExt                   |  --DECLARA UNA VARIABLE DE TIPO REAL EXTENDIDA"
                 + "\n"
                 + "Bool                          |--DECLARA UNA VARIABLE DE TIPO BOOLEANA"
                 + "\n"
@@ -968,11 +956,14 @@ public class Vista extends javax.swing.JFrame {
                 + "\n"
                 + "Text                          |--DECLARA UNA VARIABLE DE TIPO CADENA"
                 + "\n"
-        );        // TODO add your handling code here:
+        );  
+      
+          // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-       JOptionPane.showMessageDialog(null,
+        
+         JOptionPane.showMessageDialog(null,
                 "Tipo Identificador <- valor ;"
                 + "\n"
                 + "\n"
@@ -1005,11 +996,11 @@ public class Vista extends javax.swing.JFrame {
                 + "CARACTERES" + "\n"
                 + "Car x;" + "\n"
                 + "Car x <- 'X';"
-        );       // TODO add your handling code here:       // TODO add your handling code here:
+        );         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
-        JOptionPane.showMessageDialog(null,
+         JOptionPane.showMessageDialog(null,
                 "Inicio_App ejemplo{\n                                      "
                 + "Tarea(ent a=0,ent b=2, ent c=3){\n                         "
                 + "Imprime('Las Variables son '+a+b+c);\n                                                           "
@@ -1035,7 +1026,7 @@ public class Vista extends javax.swing.JFrame {
                 + "}\n"
                 + "}"
                 + "\n"
-       );          // TODO add your handling code here:
+       );        // TODO add your handling code here:        // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     private void jMenu3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu3ActionPerformed
@@ -1043,7 +1034,7 @@ public class Vista extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu3ActionPerformed
 
     private void jMenu3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu3MouseClicked
-        Info in = new Info();
+      Info in = new Info();
         in.setVisible(true);
     }//GEN-LAST:event_jMenu3MouseClicked
 
@@ -1054,9 +1045,751 @@ public class Vista extends javax.swing.JFrame {
     private void btnTmpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTmpActionPerformed
 
     }//GEN-LAST:event_btnTmpActionPerformed
+   private String fileName = "";
+    private boolean g = false;
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////Analisis Semantico///////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+   private void analizadorSemantico() throws IOException{
+        LinkedList<String> variables = new LinkedList<>();
+        LinkedList<Object[]> variablesTabla = new LinkedList<>();
+        LinkedList<String> funciones = new LinkedList<>();
+        LinkedList<String> parametros = new LinkedList<>();
+        LinkedList<Object[]> expresion = new LinkedList<>();
+        LinkedList<String> expresiones = new LinkedList<>();
+        LinkedList<Object[]> funcionesTabla = new LinkedList<>();
+        
+        //Variables de banderas
+        Boolean evalInit = false;
+        Boolean evalFun = false;
+        Boolean evalDes = false;
+        Boolean evalCic = false;
+        Boolean asignacion = false;
+        Boolean evalPRMOV = false;
+        Boolean cuerpo = false;
+        Boolean param = false;
+        
+        //Objeto principal
+        String token = "";
+        String obj = "";
+        
+        //Variables de uso temporales
+        String tipo = "";
+        String var = "";
+        String temp = "";
+        String aux = "";
+        
+        //Variables de uso de comparacion entre elementos
+        String vartype1 = "";
+        String vartype2 = "";
+        
+        //Contador de linea
+        int counter = 1;
+        
+        LinkedList<Object[]> prcomTabla = new LinkedList<>();
+        prcomTabla.add(new Object[]{"color","detectarColor"});
+        prcomTabla.add(new Object[]{"color","detectarParada"});
+        prcomTabla.add(new Object[]{"verdad","detectarAnomalia"});
+        prcomTabla.add(new Object[]{"verdadero","estadoCamara"});
+        prcomTabla.add(new Object[]{"tiempo","duracionRecorrido"});
+        prcomTabla.add(new Object[]{"color","detectarLinea"});
+        prcomTabla.add(new Object[]{"verdad","obstaculo"});
+        
+        //Inicio del analisis semantico
+        System.out.println("Inicio del programa");
+        for(Object[] elem: this.tablaS){
+            obj = elem[0].toString();
+            token = elem[1].toString();
+            
+            //Detectar que estamos en la parte de inicializacion de variables
+            if(token.equals("Linea")){
+                counter++;
+                System.out.println("se detecto un salto de linea");
+                
+                continue;
+                
+            }
+            
+            if(token.equals("Inicio_App")){
+                evalInit = true; //Cambiamos la bandera para que pueda leer las variables declaradas en el programa
+                System.out.println("token inicio_App");
+            } else
+            if(token.equals("Tarea")){
+                evalFun = true; //Cambiamos la bandera para que pueda leer el cuerpo de una funcion
+                System.out.println("token Tarea");
+            } else
+            if(token.equals("Y_si")){
+                temp = "";
+                var = "";
+                tipo = "";
+                vartype1 = "";
+                vartype2 = "";
+                System.out.println("token Y_Si");
+                evalDes = true; //Cambiamos la bandera para que pueda leer la estrcutra de decision
+            } else
+            if(token.equals("Mientras")){
+                temp = "";
+                var = "";
+                tipo = "";
+                vartype1 = "";
+                vartype2 = "";
+                System.out.println("token mientras  ");
+                evalCic = true; //Cambiamos la bandera para que pueda leer la estructura de ciclo de mientras
+            } 
+            
+            
+            //Analisis de variables bandera evalInit para inicializacion
+            if(evalInit){
+                System.out.println("Declaracion de inicializacion \n");
+                System.out.println(token);
+                switch (token) {
+                    case "Llave_a":
+                        break;
+                    case "Bool":
+                        tipo = token;
+                        break;
+                    case "Ent":
+                        tipo = token;
+                        break;
+                    case "Text":
+                        tipo = token;
+                        break;
+                    case "Identificador": //Evaluamos que la variable no haya sido ya declarada, de ser asi, colocara la variable que lo guarda en vacio para que no lo guarde una vez exista una comparacion con lo que se esta declarando.
+                        var = obj;
+                        if(variables.contains(var)){
+                            listModel.addElement("Error_Type::Semantico::\nLinea: " + counter + ". La variable \"" + var + "\" ya fue declarada.");
+                            var = "";
+                           
+                        }else{
+                        if(!var.isEmpty()){
+                                variables.add(var);
+                                variablesTabla.add(new Object[]{tipo, var});
+                                 var = "";
+                            }
+                        }
+                        break;
+                    case "Verdad": 
+                        if(!"Bool".equals(tipo))
+                            listModel.addElement("Error_Type::Semantico::\nLinea: " + counter + ". Declaracion incorrecta de tipos " + tipo + " no corresponde a Bool.");
+                        else{
+                            if(!var.isEmpty()){
+                                variables.add(var);
+                                variablesTabla.add(new Object[]{tipo, var});
+                            }
+                        }
+                        break;
+                    case "Falso": 
+                        if(!"Bool".equals(tipo))
+                           listModel.addElement("Error_Type::Semantico::\nLinea: " + counter + ". Declaracion incorrecta de tipos " + tipo + " se esperaba del tipo  Bool.");
+                        else{
+                            if(!var.isEmpty()){
+                                variables.add(var);
+                                variablesTabla.add(new Object[]{tipo, var});
+                            }
+                        }
+                        break;
+                    case "Car": 
+                        if(!"Text".equals(tipo))
+                            listModel.addElement("Error_Type::Semantico::\nLinea: " + counter + ". Declaracion incorrecta de tipos " + tipo + " se esperaba del tipo Text.");
+                        else{
+                            if(!var.isEmpty()){
+                                variables.add(var);
+                                variablesTabla.add(new Object[]{tipo, var});
+                            }
+                        }
+                        break;
+                    
+                
+                }
+                if(token.equals("Llave_c")){
+                    evalInit = false;
+                    System.out.println("Fin de prog");
+                }
+            }
+            else 
+            //analisis de palabras de movimiento que requieren de parametros
+            if(evalPRMOV) {
+                System.out.println("Entrando a evaluacion de PARAMETROS DE MOVIMIENTO");
+                switch(token){
+                    case "Tarea":
+                        aux = token;
+                        break;
+                    case "esperar":
+                        aux = token;
+                        break;
+                    case "identificador":
+                        temp = obtenerTipo(variablesTabla, obj);
+                        System.out.println(temp);
+                        if(temp.isEmpty())
+                            temp = obtenerTipoFuncion(funcionesTabla,obj);
+                        if(!variables.contains(obj) && !funciones.contains(obj) && !parametros.contains(obj)){
+                            listModel.addElement("Error_Type::Semantico::\nLinea: " + counter + ". La variable o funcion \"" + obj + "\" no ha sido declarada.");
+                        } else if(tipo.equals("avanzar") && !temp.equals("velocidad") )
+                            listModel.addElement("Error_Type::Semantico::\nLinea: " + counter + ". La variable o funcion \"" + obj + "\" no corresponde al tipo velocidad.");
+                        else if(tipo.equals("esperar") && !temp.equals("tiempo")) 
+                               listModel.addElement("Error_Type::Semantico::\nLinea: " + counter + ". La variable \"" + obj + "\" no corresponde al tipo tiempo.");
+                        break;
+                    case "veloc":
+                        if(!aux.equals("avanzar"))
+                            listModel.addElement("Error semantico de parametros en metodo de movimiento. Linea: " + counter + ". Parametro velocidad es solo aplicable al metodo avanzar");
+                        break;
+                    case "time": 
+                        if(!aux.equals("esperar"))
+                            listModel.addElement("Error semantico de parametros en metodo de movimiento. Linea: " + counter + ". Parametro tiempo es solo aplicable al metodo esperar");
+                        break;
+                    case "parentesis_a":
+                        tipo = token;
+                    case "parentesis_c":
+                        if(temp.isEmpty() && !tipo.equals("parentesis_a"))
+                            listModel.addElement("Error semantico de parametros en metodo de movimiento. Linea: " + counter + ". El metodo necesita de un parametro");
+                        tipo = token;
+                        break;
+                }
+                if(token.equals("parentesis_c")&& !tipo.equals("parentesis_a")){
+                    evalPRMOV = false;
+                    System.out.println("Saliendo de evaluación de PARAMETROS DE MOVIMIENTO");
+                }
+            } 
+            else
+            //Analizar una asignación cuando esta entra en parte del cuerpo del ciclo
+            if(asignacion){
+                System.out.println("Entrando a evaluacion para expresion de ASIGNACION");
+                switch (token) {  
+                    case "Igual":
+                        expresion.add(elem);
+                        break;
+                    case "Identificador":
+                        expresion.add(elem);
+                        break;
+                    case "Verdad":
+                        expresion.add(elem);
+                        break;
+                    case "Falso":
+                        expresion.add(elem);
+                        break;
+                    case "Cad":
+                        expresion.add(elem);
+                        break;
+                    case "Suma":
+                        expresion.add(elem);
+                        break; 
+                    case "Resta":
+                        expresion.add(elem);
+                        break; 
+                    case "P_coma":
+                        expresion.add(elem);
+                        expresiones.add(validacionesAsig(expresion, parametros, variablesTabla, variables, counter));
+                        asignacion = false;
+                        expresion.clear();
+                        System.out.println("Saliendo a evaluacion para expresion de ASIGNACION");
+                        break;
+               }
+            } 
+            else
+            //Analisis de sentencia para bandera evalDes para decision
+            if(evalDes){
+                System.out.println("Entrando a evaluacion de DECISION");
+                var = obj;
+                switch(token){
+                    case "operadorRelacional":
+                        break;
+                    case "Llave_a":
+                        tipo = "Llave_a";
+                        break;
+                    case "Llave_c":
+                        tipo = "Llave_c";
+                        vartype1 = "";
+                        vartype2 = "";
+                        evalDes = false;
+                        System.out.println("Saliendo a evaluacion de DECISION");
+                        break;
+                    case "Identificador":
+                        if(temp.equals("Llave_a")){
+                            asignacion = true;
+                            expresion.add(elem);
+                            System.out.println("CAMBIANDO a evaluacion de decision para ASIGNACION");
+                        }else if(!variables.contains(var) && !parametros.contains(var)){
+                           listModel.addElement("Error_Type::Semantico::\nDeclaracion. Linea: " + counter + ". La variable \"" + obj + "\" no ha sido declarada.");
+                        } else if(vartype1.isEmpty()){
+                            vartype1 = obtenerTipo(variablesTabla, var);
+                        } else {
+                            vartype2 = obtenerTipo(variablesTabla, var);
+                            if(!vartype1.equals(vartype2))
+                               listModel.addElement("Error_Type::Semantico::\nParametros de evaluacion. Linea: " + counter + ". La operacion de relacion no es posible con las variables otorgadas, verifique que sean del mismo tipo"); 
+                        }
+                        break;
+                    
+                                       
+                    case "Verdad":
+                        if(vartype1.isEmpty()) {
+                            vartype1 = "Bool";
+                        } else {
+                            vartype2 = "Bool";
+                            if(!vartype1.equals(vartype2)){
+                                listModel.addElement("Error_Type::Semantico::\nasignacion de expresion. Linea: " + counter + ". La variable \" \" de tipo " + vartype1 + " no corresponde a la variable \" \" de tipo " + vartype2  );
+                            }
+                            vartype1 = vartype2;
+                        }
+                        break;
 
+                    case "Falso":
+                        if(vartype1.isEmpty()) {
+                            vartype1 = "Bool";
+                        } else {
+                            vartype2 = "Bool";
+                            if(!vartype1.equals(vartype2)){
+                              listModel.addElement("Error de asignacion de expresion. Linea: " + counter + ". La variable \" \" de tipo " + vartype1 + " no corresponde a la variable \" \" de tipo " + vartype2  );
+                            }
+                            vartype1 = vartype2;
+                        }
+                        break;
+
+                    case "Cad":
+                        if(vartype1.isEmpty()) {
+                            vartype1 = "Text";
+                        } else {
+                            vartype2 = "Text";
+                            if(!vartype1.equals(vartype2)){
+                               listModel.addElement("Error_Type::Semantico::\nasignacion de expresion. Linea: " + counter + ". La variable \" \" de tipo " + vartype1 + " no corresponde a la variable \" \" de tipo " + vartype2  );
+                            }
+                            vartype1 = vartype2;
+                        }
+                        break;
+
+                    }
+            }
+            else
+            if(evalCic) {
+                System.out.println("Entrando a evaluacion de CICLO");
+                switch(token){
+                    case "Mientras":
+                        break;
+                    case "operadorRelacional":
+                        break;
+                    case "Llave_a":
+                        temp = "Llave_a";
+                        cuerpo = true;
+                        break;
+                    case "Llave_c":
+                        temp = "Llave_c";
+                        evalCic = false;
+                        cuerpo = false;
+                        System.out.println("Saliendo de evaluacion de CICLO");
+                        break;
+                    case "Parentesis_a":
+                        break;
+                    case "Parentesis_c":
+                        break;
+                   
+                    case "Identificador":
+                        var = obj;
+                        if(cuerpo){
+                            asignacion = true;
+                            expresion.add(elem);
+                            tipo = temp;
+                             System.out.println("CAMBIANDO a evaluacion de ciclo para ASIGNACION");
+                        }else if(!variables.contains(var) && !parametros.contains(var)){
+                           listModel.addElement("Error_Type::Semantico::\ndeclaracion. Linea: " + counter + ". La variable \"" + obj + "\" no ha sido declarada.");
+                        } else if(vartype1.isEmpty()){
+                            vartype1 = obtenerTipo(variablesTabla, var);
+                            if(!vartype1.equals("Bool"))
+                                listModel.addElement("Error semantico de ciclo. Linea: " + counter + ". La variable \"" + obj + "\" no es de tipo color.");
+                        } else {
+                            vartype2 = obtenerTipo(variablesTabla, var);
+                            if(!vartype2.equals("color"))
+                                listModel.addElement("Error semantico de ciclo. Linea: " + counter + ". La variable \"" + obj + "\" no es de tipo color.");
+                            if(!vartype1.equals(vartype2))
+                               listModel.addElement("Error semantico de parametros de evaluacion. Linea: " + counter + ". La operacion de relacion no es posible con las variables otorgadas, verifique que sean de tipo color"); 
+                        }
+                        break;
+                    
+                    case "Y_si":
+                        vartype1 = "";
+                        vartype2 = "";
+                        evalDes = true;
+                        break;
+                }
+            }else 
+                
+            if(evalFun) {
+                System.out.println("Entrando a evaluacion de FUNCION");
+                switch (token) {
+                    case "Tarea":
+                        tipo = token;
+                        break;
+                    case "Y_si":
+                        tipo = token;
+                        break;
+                    case "Parentesis_a":
+                        param = true;
+                        break;
+                    case "Parentesis_c":
+                        param=false;
+                        break;
+                    case "Llave_a":
+                        cuerpo = true;
+                        break;
+                    case "Igual":
+                        expresion.add(elem);
+                        break;
+                    case "Identificador":
+                        var = obj;
+                        if("Tarea".equals(tipo)){ //Si es tipo funcion, comparara si el identificador no es una funcion ya repetida. 
+                            if(funciones.contains(var)){
+                               listModel.addElement("Error_Type::Semantico::\nasignacion. Linea: " + counter + ". La funcion \"" + var + "\" ya fue declarada.");
+                            } else {
+                                temp = var;
+                                funciones.add(var);
+                            }
+                        } else if (param){ //Esto servira para evitar el contacto con los identificadores dentro de los parametros, proseguira con el analisis del curpo del ciclo al detectar si se encuentra con la llave de apertura {
+                            if(variables.contains(var)){
+                               listModel.addElement("Error_Type::Semantico::\nparametros. Linea: " + counter + ". El parametro \"" + var + "\" no puede nombrarse igual que una variable ya declarada.");
+                            } else {
+                                parametros.add(var);
+                                variablesTabla.add(new Object[]{tipo, var});
+                            }
+                        } else if(cuerpo){
+                            expresion.add(elem);
+                            asignacion = true;
+                        } 
+                        break; 
+                   
+                    case "Mientras":
+                        evalCic = true;
+                        break;
+                    
+               }
+                
+                if(token.equals("Llave_c")){
+                    evalFun = false;
+                    cuerpo = false;
+                    System.out.println("Saliendo a evaluacion de FUNCION");
+                }
+            }
+            
+        }
+            mostrarResultados(variables, variablesTabla,funciones,parametros,expresiones,funcionesTabla);
+    } 
+   
+    public void mostrarResultados(LinkedList<String> variables,LinkedList<Object[]> variablesTabla, LinkedList<String> funciones, LinkedList<String> parametros, LinkedList<String> expresion, LinkedList<Object[]> funcionesTabla){
+        String tabla = "|-------------------------|";
+        tabla = tabla +"\n|--------Variables--------|\n|-------------------------|";
+        for (String var : variables) {
+            tabla = tabla + "\n\t  " + var;
+        }
+        System.out.println(tabla);
+        
+        tabla = "|-------------------------|";
+        tabla = tabla +"\n|-----Variables Tabla-----|\n|-------------------------|";
+        for (Object[] var : variablesTabla) {
+            tabla = tabla + "\n" + var[0] + "  -  " + var[1];
+        }
+        System.out.println(tabla);
+        
+        tabla = "|-------------------------|";
+        tabla = tabla +"\n|--------Funciones--------|\n|-------------------------|";
+        for (String fun : funciones) {
+            tabla = tabla + "\n  " + fun;
+        }
+        System.out.println(tabla);
+        
+        tabla = "|-------------------------|";
+        tabla = tabla +"\n|--------Parametros-------|\n|-------------------------|";
+        for (String par : parametros) {
+            tabla = tabla + "\n\t  " + par;
+        }
+        System.out.println(tabla);
+        
+        tabla = "|-------------------------|";
+        tabla = tabla +"\n|-------Expresiones-------|\n|-------------------------|";
+        for (String var : expresion) {
+            tabla = tabla + "\n " + var;
+        }
+        System.out.println(tabla);
+        
+        tabla = "|-------------------------|";
+        tabla = tabla +"\n|-----Funciones Tabla-----|\n|-------------------------|";
+        for (Object[] fun : funcionesTabla) {
+            tabla = tabla + "\n" + fun[0] + "()  -  retorno=" + fun[1] + "  -  tipo_retorno=" + fun[2];
+        }
+        System.out.println(tabla);
+    }
+   
+     public String obtenerTipo(LinkedList<Object[]> list, String var){
+        String tipo = "";
+        for(Object[] elem: list){
+            if(elem[1].equals(var)){
+                tipo = elem[0].toString();
+                break;
+            } 
+        }
+        return tipo;
+    }
+    
+    
+    public String obtenerTipoFuncion(LinkedList<Object[]> list, String var){
+        String tipo = "";
+        for(Object[] elem: list){
+            if(elem[0].equals(var)){
+                tipo = elem[2].toString();
+                break;
+            } 
+        }
+        return tipo;
+    }
+    private void guardar() {
+        try {
+            java.io.FileOutputStream fs = new java.io.FileOutputStream(fileName, true); //fs = Flujo de Salida
+            byte b[] = jTextPane1.getText().getBytes();
+            fs.write(b);
+        } catch (FileNotFoundException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage());
+        } catch (IOException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+    }
+    public static void agregarid(String ID, String tipo, String val) { 
+       Arr.add(new ArryL(ID, tipo, val));
+    }
    public static void setError(String error) {
         listModel.addElement(error);
+    }
+    public String validacionesAsig(LinkedList<Object[]> valores, LinkedList<String> parametros,LinkedList<Object[]> variablesTabla, LinkedList<String> variables, int renglon){
+        String obj = "";
+        String token = "";
+        String principalType = "";
+        Object[] temp = new Object[]{};
+        Boolean bandera = true;
+        Boolean estado = false;
+        String vartype1 = "";
+        String vartype2 = "";
+        String expresion = "";
+        
+        System.out.println("Tamaño entrando a la evalucion de asignacion: " + valores.size());
+        
+        for(Object[] valor: valores){
+            //System.out.println(valor[0] + " " + valor[1]); 
+            
+            //Evaluar si en caso de ser una variable existe como una declaracion o pertenecen al grupo de parametros
+
+            //En caso de que la igualdad (lado derecho) sea del mismo tipo que del lado izquierdo a donde se le esta asignando el valor.
+            //En caso de que haya sido declarada un identificador en el area de las expresiones verificar si ya esta declarada o pertenece a los parametros
+            //Para esto tenemos distintos casos de forma en la que se puede generar una expresion
+            //1.- identificador
+            //2.- tipos (tiemp, veloc, cadena, energy, verdad, falso, colores)
+            //3.- identificador (+-) identificador
+            //4.- identificador (+-) tipos
+            //5.- tipos (+-) identificador
+            //6.- tipos (+-) tipos
+            //7.- Cualquier de las operaciones anteriores de forma compleja de mas de dos operando e intercalando las operaciones de suma, resta, producto y diviision 
+            
+            //Una vez evaluamos que una expresion pueda ser correcta comparar que el lado izquierdo pertenece al mismo tipo que el lado derecho
+            
+            obj = valor[0].toString();
+            token = valor[1].toString();
+            //Ejemplo: token = identificador, obj = val1
+            //System.out.println(obj);
+            expresion = expresion + obj + " ";
+            switch(token){
+                case "identificador":
+                    if(bandera){ //Esto guardara el primer identificador que corresponde al valor de comparacion de la expresion
+                        temp = valor;
+                        principalType = obtenerTipo(variablesTabla, temp[0].toString());
+                    } else {
+                        if(vartype1.isEmpty()) {
+                            vartype1 = obtenerTipo(variablesTabla, obj);
+                        } else {
+                            vartype2 = obtenerTipo(variablesTabla, obj);
+                            if(!vartype1.equals(vartype2)){
+                              listModel.addElement("Error de expresion. Linea: " + renglon + ". Las variables u objetos no pertenecen al mismo tipo operacion incorrecta");
+                                estado = true;
+                            }
+                        }
+                    } 
+                    if(!variables.contains(obj) && !parametros.contains(obj)){
+                        listModel.addElement("Error de variable. Linea: " + renglon + ". La variable " + obj + " no ha sido declarada en el area de inicializacion o parametros.");
+                    } 
+                    break;
+                    
+                case "suma":
+                    break;
+                
+                case "resta":
+                    break;
+                    
+                case "producto":
+                    break;
+                    
+                case "division":
+                    break;
+                    
+                case "veloc":
+                    if(vartype1.isEmpty()) {
+                            vartype1 = "velocidad";
+                        } else {
+                            vartype2 = "velocidad";
+                            if(!vartype1.equals(vartype2)){
+                               listModel.addElement("Error de asignacion de expresion. Linea: " + renglon + ". La variable \" \" de tipo " + vartype1 + " no corresponde a la variable \" \" de tipo " + vartype2  );
+                                estado = true;
+                            }
+                            vartype1 = vartype2;
+                        }
+                    break;
+                    
+                case "verdad":
+                    if(vartype1.isEmpty()) {
+                            vartype1 = "decision";
+                        } else {
+                           listModel.addElement("Error de asignacion de expresion. Linea: " + renglon + ". Las operaciones entre valores de decision no son posibles"  );
+                            estado = true;
+                        }
+                    break;
+                
+                case "falso":
+                    if(vartype1.isEmpty()) {
+                            vartype1 = "decision";
+                        } else {
+                          listModel.addElement("Error de asignacion de expresion. Linea: " + renglon + ". Las operaciones entre valores de decision no son posibles"  );
+                            estado = true;
+                        }
+                    break;
+                    
+                case "time":
+                    if(vartype1.isEmpty()) {
+                            vartype1 = "tiempo";
+                        } else {
+                            vartype2 = "tiempo";
+                            if(!vartype1.equals(vartype2)){
+                              listModel.addElement("Error de asignacion de expresion. Linea: " + renglon + ". La variable \" \" de tipo " + vartype1 + " no corresponde a la variable \" \" de tipo " + vartype2  );
+                                estado = true;
+                            }
+                            vartype1 = vartype2;
+                        }
+                    break;
+                    
+                case "cadena":
+                    if(vartype1.isEmpty()) {
+                            vartype1 = "alerta";
+                        } else {
+                            vartype2 = "alerta";
+                            if(!vartype1.equals(vartype2)){
+                               listModel.addElement("Error de asignacion de expresion. Linea: " + renglon + ". La variable \" \" de tipo " + vartype1 + " no corresponde a la variable \" \" de tipo " + vartype2  );
+                                estado = true;
+                            }
+                            vartype1 = vartype2;
+                        }
+                    break;
+                    
+                case "colores":
+                    if(vartype1.isEmpty()) {
+                        vartype1 = "color";
+                    } else {
+                        vartype2 = "color";
+                        if(!vartype1.equals(vartype2)){
+                           listModel.addElement("Error de asignacion de expresion. Linea: " + renglon + ". La variable \" \" de tipo " + vartype1 + " no corresponde a la variable \" \" de tipo " + vartype2  );
+                            estado = true;
+                        }
+                        vartype1 = vartype2;
+                    }
+                    break;
+                
+                case "punto_medio":
+                    if(valores.size()==4 && !principalType.equals(vartype1)){
+                        listModel.addElement("Error1. Linea: " + renglon + ". Asignacion incorrecta de tipos el valor " + vartype1 + " no puede ser asignado a la variable principal " + temp[0].toString() + " de tipo " + principalType );                        
+                    } else if (estado)
+                       listModel.addElement("Error2. Linea: " + renglon + ". Asignacion incorrecta de tipos la expresion resultante no puede ser asignada a la variable principal " + temp[0].toString() + " de tipo " + principalType );                        
+                    
+                    break;
+            }
+            
+            bandera = false;
+        }
+        
+        return expresion;
+        
+    }
+    
+ public static boolean isNumeric(String cadena) {
+
+        boolean resultado;
+
+        try {
+            Integer.parseInt(cadena);
+            resultado = true;
+        } catch (NumberFormatException excepcion) {
+            resultado = false;
+        }
+
+        return resultado;
+    }
+ public static boolean num(String c){
+
+ 
+if (c.matches("[0-9]+[.][0-9]+|[0-9]+"))
+return true;
+else
+return false ;
+        }
+ public static void Mostrar(String a) {
+        String I = "";
+        String t = "";
+        String v = "";
+        for (int i = 0; i < Arr.size(); i++) {
+            if (Arr.get(i).getId().equals(a)) {
+
+                I += Arr.get(i).getId();
+                t += Arr.get(i).getTipo();
+                v += Arr.get(i).getVal();
+            }
+        }
+     //   JOptionPane.showMessageDialog(null, I + t + v);
+    }
+ public static String Buscar1(String a) {
+
+        for (int i = 0; i < Arr.size(); i++) {
+            if (Arr.get(i).getId().equals(a)) {
+                return Arr.get(i).getVal();
+            }
+
+        }
+        return "Error";
+    }
+ public static String Buscar(String a) {
+
+        for (int i = 0; i < Arr.size(); i++) {
+            if (Arr.get(i).getId().equals(a)) {
+
+                return Arr.get(i).getTipo();
+            }
+
+        }
+        return "Error";
+    }
+ public boolean existEnArray(String bus) {
+
+        boolean saber = false;
+
+        for (int i = 0; i <= Arr.size(); i++) {
+            if (Arr.get(i).getId().equals(bus)) {
+                saber = true;
+                break;
+            }
+        }
+        return saber;
+    }
+ public int indiceDato(String bus) {
+        int j = 0;
+
+        for (int i = 0; i < Arr.size(); i++) {
+            if (Arr.get(i).getId().equals(bus)) {
+                j = i;
+                break;
+            }
+        }
+        return j;
     }
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
