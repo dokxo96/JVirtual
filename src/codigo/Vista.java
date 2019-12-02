@@ -381,6 +381,7 @@ public class Vista extends javax.swing.JFrame {
         btnLimpiar = new javax.swing.JButton();
         btnCompilar = new javax.swing.JButton();
         btnTmp = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         tablaSimbolos = new javax.swing.JTable();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -486,6 +487,16 @@ public class Vista extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setBackground(new java.awt.Color(38, 50, 56));
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-estimate-32.png"))); // NOI18N
+        jButton1.setMnemonic('E');
+        jButton1.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-estimate-32 (1).png"))); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -503,9 +514,11 @@ public class Vista extends javax.swing.JFrame {
                 .addComponent(btnCompilar)
                 .addGap(12, 12, 12)
                 .addComponent(btnLimpiar)
-                .addGap(113, 113, 113)
+                .addGap(18, 18, 18)
+                .addComponent(jButton1)
+                .addGap(52, 52, 52)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(502, Short.MAX_VALUE))
+                .addContainerGap(491, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -518,7 +531,8 @@ public class Vista extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnLimpiar)
-                    .addComponent(btnCompilar))
+                    .addComponent(btnCompilar)
+                    .addComponent(jButton1))
                 .addGap(0, 12, Short.MAX_VALUE))
         );
 
@@ -590,7 +604,7 @@ public class Vista extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane4)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1045,6 +1059,12 @@ public class Vista extends javax.swing.JFrame {
     private void btnTmpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTmpActionPerformed
 
     }//GEN-LAST:event_btnTmpActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    Notacion_In_Post n = new Notacion_In_Post();
+    n.setVisible(true);
+    // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
    private String fileName = "";
     private boolean g = false;
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1834,6 +1854,7 @@ return false ;
     private javax.swing.JButton btnSintactico;
     private javax.swing.JButton btnTmp;
     private javax.swing.JList<String> console;
+    private javax.swing.JButton jButton1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
