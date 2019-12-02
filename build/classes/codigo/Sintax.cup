@@ -21,7 +21,10 @@ terminal String
     operadorBooleano                ,
     operadorIncrementoDecremento    ,
     operadorLogico                  ,
-    operadorRelacional            
+    operadorRelacional              ,
+    Imprime                         ,
+    Aviso                           ,
+    Advertencia                   
 ;
 
 
@@ -51,15 +54,12 @@ terminal
     Car                           ,  
     Tarea                         , 
     Y_si                          , 
-    Mientras                      , 
-    Imprime                       ,  
+    Mientras                      ,   
     Gira_izq                      ,
     Gira_der                      ,   
     Avanza                        ,     
     Retroceder                    ,
     Detener                       ,
-    Aviso                         ,
-    Advertencia                   ,
     VerificarBateria    
 ;
 non terminal 
@@ -304,8 +304,6 @@ Ent P_coma
      {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba Identificador despuÃ©s de Real y asignaciÃ³n despuÃ©s del Identificador y un Numero antes de P_coma"); :}
     |
 //
-
-
     Bool Identificador:id P_coma
     {:Generador.gc(Generador.DECLARACION,"boolean",null,id);:}
     |
@@ -373,10 +371,9 @@ Ent P_coma
 ;
 
 
+
 IF ::=
-    Y_si Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c
-    |
-    Y_si Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a Llave_c
+    Y_si Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a Llave_c 
     |
 //Errores IF
 
@@ -397,10 +394,10 @@ IF ::=
    
 ;
 
-
-
+    
+    
 MIENTRAS ::=
-	Mientras Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c 
+	Mientras:mientras Parentesis_a  Parentesis_c Llave_a SENTENCIA Llave_c 
          |
 //Errores Mientras 
     Mientras SENTENCIA_BOOLEANA Parentesis_c Llave_a Llave_c
@@ -448,7 +445,7 @@ SENTENCIA_BOOLEANA ::=
         |
         Numero:numero operadorRelacional:operadorRelacional Identificador:id    
         {:Generador.bool(Generador.DeclaracionBool,numero,operadorRelacional,id);:}
-|
+        |
      operadorLogico
      {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta Identificador antes de operadorLogico"); :}
      |
@@ -471,17 +468,17 @@ SENTENCIA_BOOLEANA ::=
      {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta operadorRelacional despuÃ©s del Numero"); :}
      |
      Numero operadorRelacional
-     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta un Identificador despuÃ©s del operadorRelacional"); :}
-     
+     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta un Identificador despuÃ©s del operadorRelacional"); :}     
 ;
 
 
 IMPRIME ::=
-    Imprime Parentesis_a Parentesis_c P_coma
+    Imprime:Reservada Parentesis_a Comillas Comillas Parentesis_c P_coma 
+    {:Generador.mensaje(Generador.Imprime,Reservada,"");:}
     |
-    Imprime Parentesis_a Comillas Identificador Comillas Parentesis_c P_coma
+    Imprime:Reservada Parentesis_a Comillas Identificador:texto Comillas Parentesis_c P_coma
+    {:Generador.mensaje(Generador.Imprime,Reservada,texto);:}
 //Errores Imprime
-
     |
     Imprime Parentesis_a
      {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta Parentesis_c P_coma despuÃ©s de Parentesis_a"); :}
@@ -492,18 +489,15 @@ IMPRIME ::=
 ;
 
 
-
-
-
-
-
 SENTENCIA_AVISO ::=
-    Aviso Parentesis_a Comillas Identificador Comillas Parentesis_c P_coma
+    Aviso:Reservada Parentesis_a Comillas Identificador:texto Comillas Parentesis_c P_coma  
+    {:Generador.sen(Generador.SENAV,Reservada,texto);:}
 ;
 
 
 SENTENCIA_ADVERTENCIA ::=
-    Advertencia Parentesis_a Comillas Identificador Comillas Parentesis_c P_coma
+    Advertencia:Reservada Parentesis_a Comillas Identificador:texto Comillas Parentesis_c P_coma
+    {:Generador.sen(Generador.SENAA,Reservada,texto);:}
 ;
 
 

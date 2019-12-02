@@ -388,12 +388,12 @@ public class Vista extends javax.swing.JFrame {
         jMenuItem4 = new javax.swing.JMenuItem();
         menuItemAbrir = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
-        jMenu3 = new javax.swing.JMenu();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
         jMenu5 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
         jMenu6 = new javax.swing.JMenu();
@@ -642,21 +642,6 @@ public class Vista extends javax.swing.JFrame {
 
         jMenuBar1.add(menuArchivo);
 
-        jMenu3.setBackground(new java.awt.Color(69, 90, 100));
-        jMenu3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-conference-32.png"))); // NOI18N
-        jMenu3.setToolTipText("EQUIPO");
-        jMenu3.setOpaque(true);
-        jMenu3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jMenu3MouseClicked(evt);
-            }
-        });
-        jMenu3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenu3ActionPerformed(evt);
-            }
-        });
-
         jMenu1.setBackground(new java.awt.Color(69, 90, 100));
         jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-web-help-32.png"))); // NOI18N
         jMenu1.setToolTipText("AYUDA");
@@ -698,8 +683,22 @@ public class Vista extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem7);
 
-        jMenu3.add(jMenu1);
+        jMenuBar1.add(jMenu1);
 
+        jMenu3.setBackground(new java.awt.Color(69, 90, 100));
+        jMenu3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/icons8-conference-32.png"))); // NOI18N
+        jMenu3.setToolTipText("EQUIPO");
+        jMenu3.setOpaque(true);
+        jMenu3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu3MouseClicked(evt);
+            }
+        });
+        jMenu3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu3ActionPerformed(evt);
+            }
+        });
         jMenuBar1.add(jMenu3);
 
         jMenu5.setBackground(new java.awt.Color(69, 90, 100));
@@ -900,7 +899,7 @@ public class Vista extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu6MouseClicked
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        JTextArea msg = new JTextArea(
+        JOptionPane.showMessageDialog(null,
                 "PALABRA              |     DESCRIPCIÓN"
                 + "\n"
                 + "Inicio_App             --INICIA CODIGO        "
@@ -911,99 +910,57 @@ public class Vista extends javax.swing.JFrame {
                 + "\n"
                 + "Mientras                --CICLO REPETITIVO"
                 + "\n"
-                + "Gira_izq"
+                + "Gira_izq                  Gira_der"
                 + "\n"
-                + "Gira_der"
+                + "Avanza                     Retroceder"
                 + "\n"
-                + "Avanza"
+                + "Alto                           Advertencia"
                 + "\n"
-                + "Retroceder"
+                + "VerificarBateria      Aviso"
                 + "\n"
-                + "Alto"
+                + "Imprime                  Durante"
                 + "\n"
-                + "Advertencia"
+                + "Repite                      Ingresa"
                 + "\n"
-                + "VerificarBateria"
+                + "Text                           Inc"
                 + "\n"
-                + "Aviso"
+                + "Dec                           Publica"
                 + "\n"
-                + "Imprime"
+                + "Vibrar                        Ir"
                 + "\n"
-                + "Durante"
+                + "Funcion                    Repite"
                 + "\n"
-                + "Repite"
+                + "saltoLinea                Igual"
                 + "\n"
-                + "Ingresa"
+                + "Menor                        Mayor"
                 + "\n"
-                + "Text"
+                + "Mas                            Resta"
                 + "\n"
-                + "Inc"
+                + "Multiplicacion           Division"
                 + "\n"
-                + "Dec"
+                + "Potencia                    PuntoComa"
                 + "\n"
-                + "Publica"
+                + "llaveApertura            llaveCierre"
                 + "\n"
-                + "Vibrar"
+                + "ParentesisApertura  ParentesisCierre"
                 + "\n"
-                + "Ir"
+                + "Identificador              Numero"
                 + "\n"
-                + "Funcion"
-                + "\n"
-                + "Repite"
-                + "\n"
-                + "saltoLinea"
-                + "\n"
-                + "Igual"
-                + "\n"
-                + "Menor"
-                + "\n"
-                + "Mayor"
-                + "\n"
-                + "Mas"
-                + "\n"
-                + "Resta"
-                + "\n"
-                + "Multiplicacion"
-                + "\n"
-                + "Division"
-                + "\n"
-                + "Potencia"
-                + "\n"
-                + "PuntoComa"
-                + "\n"
-                + "llaveApertura"
-                + "\n"
-                + "llaveCierre"
-                + "\n"
-                + "ParentesisApertura"
-                + "\n"
-                + "ParentesisCierre"
-                + "\n"
-                + "Identificador"
-                + "\n"
-                + "Numero"
-                + "\n"
-                + "ERROR");
-        msg.setLineWrap(true);
-        msg.setWrapStyleWord(true);
-        msg.setSize(450, 550);
-        msg.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(msg);
-        scrollPane.setSize(455, 555);
-
-        JOptionPane.showMessageDialog(null, scrollPane);
+                + "ERROR"
+        ); 
+        // TODO add your handling code here:
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
         JOptionPane.showMessageDialog(null,
-                "PALABRA              |     DESCRIPCIÓN"
+                "PALABRA                         |     DESCRIPCIÓN"
                 + "\n"
-                + "Ent                          |   --DECLARA UNA VARIABLE DE TIPO ENTERO"
+                + "Ent                           |--DECLARA UNA VARIABLE DE TIPO ENTERO"
                 + "\n"
-                + "Real                       |   --DECLARA UNA VARIABLE DE TIPO REAL"
+                + "Real                          |--DECLARA UNA VARIABLE DE TIPO REAL"
                 + "\n"
-                + "RealExt                   |  --DECLARA UNA VARIABLE DE TIPO REAL EXTENDIDA"
+                + "RealExt                       |--DECLARA UNA VARIABLE DE TIPO REAL EXTENDIDA"
                 + "\n"
                 + "Bool                          |--DECLARA UNA VARIABLE DE TIPO BOOLEANA"
                 + "\n"
@@ -1015,7 +972,7 @@ public class Vista extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-        JTextArea msg = new JTextArea(
+       JOptionPane.showMessageDialog(null,
                 "Tipo Identificador <- valor ;"
                 + "\n"
                 + "\n"
@@ -1048,18 +1005,11 @@ public class Vista extends javax.swing.JFrame {
                 + "CARACTERES" + "\n"
                 + "Car x;" + "\n"
                 + "Car x <- 'X';"
-        );
-        msg.setLineWrap(true);
-        msg.setWrapStyleWord(true);
-        msg.setSize(250, 350);
-        msg.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(msg);
-
-        JOptionPane.showMessageDialog(null, scrollPane);        // TODO add your handling code here:
+        );       // TODO add your handling code here:       // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
-        JTextArea msg = new JTextArea(
+        JOptionPane.showMessageDialog(null,
                 "Inicio_App ejemplo{\n                                      "
                 + "Tarea(ent a=0,ent b=2, ent c=3){\n                         "
                 + "Imprime('Las Variables son '+a+b+c);\n                                                           "
@@ -1067,6 +1017,7 @@ public class Vista extends javax.swing.JFrame {
                 + "}//Inicip_App\n                                                                                  "
                 + "\n"
                 + "________________________________________________"
+                + "\n"
                 + "Inicio_App ejemplo2{\n"
                 + " Repite(i=0;i<10;i++;){\n"
                 + "Y_si(i==6){\n"
@@ -1084,14 +1035,7 @@ public class Vista extends javax.swing.JFrame {
                 + "}\n"
                 + "}"
                 + "\n"
-        );
-        msg.setLineWrap(true);
-        msg.setWrapStyleWord(true);
-        msg.setSize(250, 350);
-        msg.setEnabled(false);
-        JScrollPane scrollPane = new JScrollPane(msg);
-
-        JOptionPane.showMessageDialog(null, scrollPane);        // TODO add your handling code here:
+       );          // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     private void jMenu3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu3ActionPerformed
@@ -1099,7 +1043,8 @@ public class Vista extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu3ActionPerformed
 
     private void jMenu3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu3MouseClicked
-
+        Info in = new Info();
+        in.setVisible(true);
     }//GEN-LAST:event_jMenu3MouseClicked
 
     private void jMenu4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu4ActionPerformed
