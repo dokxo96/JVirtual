@@ -11,6 +11,9 @@ public enum Tokens {
     Igual,
     Suma,
     Resta,
+    Identificador_error,
+    caracter,
+    numero_error,
     Multiplicacion,
     Division,        
     Parentesis_a,
@@ -33,7 +36,7 @@ public enum Tokens {
     operadorBooleano,
     operadorIncrementoDecremento,
     operadorLogico,
-    Car,
+  
     operadorRelacional,
     Tarea,
     Y_si,

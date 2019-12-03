@@ -3,8 +3,13 @@ import static codigo.Tokens.*;
 %%
 %class Lexer
 %type Tokens
-L=[a-zA-Z_]+
-D=[0-9]+
+L=[a-zA-Z_]
+D=[0-9]
+numero_error=({D}){32,32}
+alf_tot=[A-Za-z0-9]
+caracter_especial=[,:#|!\"@]
+caracter=[\"][\w ]*[\"]
+Identificador_error=[0-9]([a-zA-Z])+ | {caracter_especial}({alf_tot})*
 espacio=[ ,\t,\r]+
 %{
     public String lexeme;
@@ -50,7 +55,6 @@ espacio=[ ,\t,\r]+
 (Mientras)   {lexeme=yytext(); return Mientras;}
 (Imprime)    {lexeme=yytext(); return Imprime;}
 (Bool)       {lexeme=yytext(); return Bool;}
-(Car)        {lexeme=yytext(); return Car;}
 (Gira_izq)   {lexeme=yytext(); return Gira_izq;}
 (Gira_der)   {lexeme=yytext(); return Gira_der;}
 (Avanza)     {lexeme=yytext(); return Avanza;}
@@ -68,7 +72,11 @@ espacio=[ ,\t,\r]+
 
 (">"|"<"|"=="|"!="|">="|"<=") {lexeme = yytext(); return operadorRelacional ;}
 
-
 {L}({L}|{D})* {lexeme=yytext(); return Identificador;}
-("(-"{D}+")")|{D}{0,15} {lexeme=yytext(); return Numero;}
+("(-"{D}+")")|{D} {lexeme=yytext(); return Numero;}
+{caracter} {lexeme=yytext(); return caracter;}
+//Errores
+{numero_error}    {lexeme=yytext(); return numero_error;}
+{Identificador_error}      {lexeme=yytext(); return Identificador_error;}
+
  . {lexeme=yytext(); return ERROR;}

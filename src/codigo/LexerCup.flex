@@ -8,7 +8,13 @@ import java_cup.runtime.Symbol;
 %line
 %char
 L=[a-zA-Z_]+
-D=[0-9]+
+D=[0-9]
+numero_error=({D}){32,32}
+alf_tot=[A-Za-z0-9]
+caracter=[\"][\w ]*[\"]
+caracter_especial=[,:#|!\"@]
+Identificador_error=[0-9]([a-zA-Z])+ | {caracter_especial}({alf_tot})* 
+
 espacio=[ ,\t,\r, \n]+
 %{
     private Symbol symbol (int type, Object value){
@@ -56,7 +62,7 @@ espacio=[ ,\t,\r, \n]+
 (Mientras)   {return new Symbol (sym.Mientras, yychar, yyline, yytext());}
 (Imprime)    {return new Symbol (sym.Imprime, yychar, yyline, yytext());}
 (Bool)       {return new Symbol (sym.Bool, yychar, yyline, yytext());}
-(Car)        {return new Symbol (sym.Car, yychar, yyline, yytext());}
+
 
 (Gira_izq)   {return new Symbol (sym.Gira_izq, yychar, yyline, yytext());}
 (Gira_der)   {return new Symbol (sym.Gira_der, yychar, yyline, yytext());}
@@ -77,5 +83,11 @@ espacio=[ ,\t,\r, \n]+
 
 
 {L}({L}|{D})*      {return new Symbol (sym.Identificador, yychar, yyline, yytext());}
-("(-"{D}+")")|{D}{0,15} {return new Symbol (sym.Numero, yychar, yyline, yytext());}
+("(-"{D}+")")|{D}+ {return new Symbol (sym.Numero, yychar, yyline, yytext());}
+{caracter} {return new Symbol (sym.caracter, yychar, yyline, yytext());}
+
+//Errores
+{Identificador_error}      {return new Symbol(sym.Identificador_error, yyline,yychar, yytext());}
+{numero_error}    {return new Symbol(sym.numero_error, yyline,yychar, yytext());}
+
  .                 {return new Symbol (sym.ERROR, yychar, yyline, yytext());}

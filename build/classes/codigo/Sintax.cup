@@ -24,7 +24,10 @@ terminal String
     operadorRelacional              ,
     Imprime                         ,
     Aviso                           ,
-    Advertencia                   
+    Advertencia                     ,
+    caracter                        ,
+    Identificador_error
+    
 ;
 
 
@@ -51,7 +54,7 @@ terminal
     punto                         , 
     Real                          , 
     Bool                          ,             
-    Car                           ,  
+      
     Tarea                         , 
     Y_si                          , 
     Mientras                      ,   
@@ -118,6 +121,7 @@ INICIO ::=
 
 
 SENTENCIA ::= 
+    
     SENTENCIA DECLARACION 
     |
     DECLARACION 
@@ -135,8 +139,6 @@ SENTENCIA ::=
     MIENTRAS
     |
     SENTENCIA IMPRIME
-    |
-    IMPRIME
     |
     SENTENCIA SENTENCIA_GIRA_IZQ 
     |
@@ -180,7 +182,8 @@ DECLARACION ::=
     Text Identificador:id asignacion Comillas Comillas P_coma   
     {:Generador.gc(Generador.DECLARACION,"String", null, id);:}
     |
-    Text Identificador:id asignacion Comillas Identificador:text Comillas P_coma   
+    //la palara caracter ya incluye las comillas ej= "efef"
+    Text Identificador:id asignacion caracter:text  P_coma   
     {:Generador.gc(Generador.ASIGNACION,"String",id,text);:}
     |
 
@@ -209,8 +212,8 @@ DECLARACION ::=
     Text Identificador asignacion Comillas Identificador Comillas 
     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba P_coma despuÃ©s de las comillas "); :}
     |
-
-
+    Ent Identificador asignacion caracter  P_coma  
+    |
     Ent Identificador:id P_coma
     {:Generador.gc(Generador.DECLARACION,"int",null,id);:}
     |
@@ -255,7 +258,8 @@ Ent P_coma
     Ent Identificador operadorIncrementoDecremento
     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba P_coma despuÃ©s de operadorIncrementoDecremento "); :}
     |
-
+    Real Identificador asignacion caracter  P_coma  
+    |
     Real Identificador:id asignacion Numero:Numero1 punto Numero:Numero2 P_coma 
     {:Generador.gc(Generador.ASIGNACION,"float",Numero1+"."+Numero2,id);:}
     |
@@ -303,7 +307,9 @@ Ent P_coma
     Real Numero punto P_coma
      {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba Identificador despuÃ©s de Real y asignaciÃ³n despuÃ©s del Identificador y un Numero antes de P_coma"); :}
     |
-//
+//  
+    Bool Identificador asignacion caracter  P_coma  
+    |
     Bool Identificador:id P_coma
     {:Generador.gc(Generador.DECLARACION,"boolean",null,id);:}
     |
@@ -331,50 +337,24 @@ Ent P_coma
     |
     Bool Identificador asignacion 
     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta operadorBooleano y P_coma despuÃ©s de asginacion"); :}
-    |
-//Car
-    Car Identificador:id P_coma
-    {:Generador.gc(Generador.DECLARACION,"char",null,id);:}
-    |
-    Car Identificador:id asignacion Comillas Identificador:caracter Comillas P_coma
-    {:Generador.gc(Generador.ASIGNACION,"char",caracter,id);:}
-    |
-    Car Identificador:id asignacion Comillas Comillas P_coma
-    {:Generador.gc(Generador.DECLARACION,"char",null,id);:}
-     |
-//Erroes Car
-    Car P_coma
-    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta Identificador antes de P_coma"); :}
-    |
-    Car Identificador
-    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta P_coma antes del Identificador"); :}
-    |
-    Car Identificador asignacion Comillas Identificador Comillas 
-    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta P_coma antes de las Ãºltimas Comillas"); :}
-    |
-    Car Identificador asignacion Comillas Identificador P_coma
-    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Faltan Comillas despuÃ©s del segundo Identificador"); :}
-    |
-    Car Identificador asignacion Identificador Comillas P_coma
-    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Faltan Comillas antes del segundo Identificador"); :}
-    |
-    Car Identificador Comillas Identificador Comillas P_coma
-    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta asignaciÃ³n antes de las primeras Comillas"); :}
-    |
-    Car asignacion Comillas Identificador Comillas P_coma
-    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta Identificador antes de asignacion"); :}
-    |
-    Identificador:id asignacion Comillas Identificador:caracter Comillas P_coma
-    {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta palabra Car antes de Identificador"); :}
+    
 ;
 
 
 
 IF ::=
+    
     Y_si Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a Llave_c 
     |
+    Y_si Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a IMPRIME Llave_c 
+    |
+    Y_si Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c 
+    |
+    Y_si Parentesis_a  Parentesis_c Llave_a SENTENCIA Llave_c 
+    |
+    
 //Errores IF
-
+    
     Y_si SENTENCIA_BOOLEANA Parentesis_c Llave_a Llave_c
     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta Parentesis_a antes de SENTENCIA_BOOLEANA"); :}
     |
@@ -396,7 +376,12 @@ IF ::=
     
 MIENTRAS ::=
 	Mientras:mientras Parentesis_a  Parentesis_c Llave_a SENTENCIA Llave_c 
-         |
+      
+        |
+        Mientras:mientras Parentesis_a Numero Parentesis_c Llave_a SENTENCIA Llave_c 
+        |
+        Mientras:mientras Parentesis_a  Parentesis_c Llave_a IMPRIME Llave_c 
+        |
 //Errores Mientras 
     Mientras SENTENCIA_BOOLEANA Parentesis_c Llave_a Llave_c
     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Falta Parentesis_a antes de SENTENCIA_BOOLEANA"); :}
@@ -414,7 +399,14 @@ MIENTRAS ::=
 
 
 TAREA::=
-    Tarea Identificador Parentesis_a Parentesis_c Llave_a SENTENCIA Llave_c
+    Tarea Identificador Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a SENTENCIA Llave_c
+    |
+     Tarea Identificador Parentesis_a  Parentesis_c Llave_a  Llave_c
+     |
+     Tarea Identificador Parentesis_a SENTENCIA_BOOLEANA Parentesis_c Llave_a  Llave_c
+     |
+     Tarea Identificador Parentesis_a  Parentesis_c Llave_a SENTENCIA Llave_c
+    
 |
 //Errores Tarea
      Tarea Parentesis_a Parentesis_c Llave_a SENTENCIA Llave_c

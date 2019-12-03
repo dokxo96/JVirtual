@@ -160,8 +160,6 @@ public class Vista extends javax.swing.JFrame {
         return index;
     }
 
-   
-
     private void analizarLexico() throws IOException {
 
         int contLinea = 1;
@@ -184,7 +182,7 @@ public class Vista extends javax.swing.JFrame {
             String operadorMat = "Operador matematico/relacional";
             String agrupacion = "Operador de agrupacion";
             
-            System.out.print("\n Aqui anda valiendo \n\n\n\n"+"  lexer:: "+lexer.lexeme.toString()+"  token:"+token.toString());
+            
             this.tablaS.add(new Object[]{lexer.lexeme.toString(),token.toString()});          
             
             switch (token) {
@@ -317,7 +315,7 @@ public class Vista extends javax.swing.JFrame {
                     modelo.addRow(filaOpLogico);
                     break;
 
-                case Car:
+                case caracter:
                     Object filaCar[] = {contLinea, lexer.lexeme, "cadenas"};
                     modelo.addRow(filaCar);
                     break;
@@ -353,11 +351,25 @@ public class Vista extends javax.swing.JFrame {
                    Object filaError [] = {contLinea, lexer.lexeme, "Caracter no definido"};
                     modelo.addRow(filaError);
                     console.setForeground(Color.red);
-                    listModel.addElement("Error_Type::Lexico:: no se reconoce el caracter  '"+lexer.lexeme+ "'  en la linea -> "+contLinea);
+                    listModel.addElement("Error_Type::Lexico::Linea -> "+contLinea+"Amigo,no se reconoce el caracter  '"+lexer.lexeme);
                     console.setModel(listModel);
                     f=false;
                     break;
-
+              case numero_error:
+                  console.setForeground(Color.red);
+                    modelo.addRow(new Object[]{lexer.lexeme,"numero_error"});
+                     listModel.addElement("Error_Type::Lexico:: Linea: " + contLinea + "Amigo,la declaración del número: \""+lexer.lexeme+"\" sobrepasa el tamaño permitido. \n      menor de 32 digitos.\n");
+                    console.setModel(listModel);
+                    f=false;
+                   
+                     break;
+              case Identificador_error:
+                  console.setForeground(Color.red);
+                    modelo.addRow(new Object[]{lexer.lexeme,"ide_error"});
+                    listModel.addElement("Error de Lexico. Linea: " + contLinea + ". Amigo,declaraste mal el identificador: \""+lexer.lexeme+"\" debe iniciar con letras o guion_bajo.\n");
+                    console.setModel(listModel);
+                    f=false;
+                    break;
                 default:
                     resultado += "< " + lexer.lexeme + " >\n";
                     break;
@@ -865,7 +877,8 @@ public class Vista extends javax.swing.JFrame {
         try {
             analizarLexico();
             s.parse();
-            if(f){showMessageDialog(null,f);
+            if(f){
+                    showMessageDialog(null,f);
             console.setForeground(Color.white);
             listModel.addElement("Analisis léxico y Sintactico Correcto!");
             console.setModel(listModel);
@@ -879,7 +892,7 @@ public class Vista extends javax.swing.JFrame {
             Logger.getLogger(Vista.class.getName()).log(Level.SEVERE, null, ex);
             Symbol sym = s.getS();
             console.setForeground(Color.red);
-            listModel.addElement("Error_Type::Sintaxis::  Linea->" + (sym.right+1  ) + ", Columna-> " + (sym.left+1 ) + ", Error antes de::  \"" + sym.value + "\"");
+            listModel.addElement("Error_Type::Semantico::Linea-> " + (sym.right+1  ) + ", Columna-> " + (sym.left+1 ) + ", inconpatibilidad de tipos o no declarado: en  \"" + sym.value + "\"");
             console.setModel(listModel);
         }
     }//GEN-LAST:event_btnCompilarActionPerformed
@@ -1135,7 +1148,7 @@ public class Vista extends javax.swing.JFrame {
             
             if(token.equals("Inicio_App")){
                 evalInit = true; //Cambiamos la bandera para que pueda leer las variables declaradas en el programa
-                System.out.println("token inicio_App");
+                
             } else
             if(token.equals("Tarea")){
                 evalFun = true; //Cambiamos la bandera para que pueda leer el cuerpo de una funcion
@@ -1438,11 +1451,10 @@ public class Vista extends javax.swing.JFrame {
                 System.out.println("Entrando a evaluacion de FUNCION");
                 switch (token) {
                     case "Tarea":
+                        System.out.print(token);
                         tipo = token;
                         break;
-                    case "Y_si":
-                        tipo = token;
-                        break;
+                    
                     case "Parentesis_a":
                         param = true;
                         break;
@@ -1479,6 +1491,9 @@ public class Vista extends javax.swing.JFrame {
                    
                     case "Mientras":
                         evalCic = true;
+                        break;
+                    case "Y_si":
+                        evalDes= true;
                         break;
                     
                }
