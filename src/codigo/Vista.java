@@ -892,7 +892,7 @@ public class Vista extends javax.swing.JFrame {
             Logger.getLogger(Vista.class.getName()).log(Level.SEVERE, null, ex);
             Symbol sym = s.getS();
             console.setForeground(Color.red);
-            listModel.addElement("Error_Type::Semantico::Linea-> " + (sym.right+1  ) + ", Columna-> " + (sym.left+1 ) + ", inconpatibilidad de tipos o no declarado: en  \"" + sym.value + "\"");
+            listModel.addElement("Error_Type::Sintactico::Linea-> " + (sym.right+1  ) + ", Columna-> " + (sym.left+1 ) + ", inconpatibilidad de tipos o no declarado: en  \"" + sym.value + "\"");
             console.setModel(listModel);
         }
     }//GEN-LAST:event_btnCompilarActionPerformed

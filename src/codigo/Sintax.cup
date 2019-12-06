@@ -54,7 +54,7 @@ terminal
     punto                         , 
     Real                          , 
     Bool                          ,             
-      
+    numero_error,
     Tarea                         , 
     Y_si                          , 
     Mientras                      ,   
@@ -211,8 +211,7 @@ DECLARACION ::=
     |
     Text Identificador asignacion Comillas Identificador Comillas 
     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba P_coma despuÃ©s de las comillas "); :}
-    |
-    Ent Identificador asignacion caracter  P_coma  
+    
     |
     Ent Identificador:id P_coma
     {:Generador.gc(Generador.DECLARACION,"int",null,id);:}
@@ -258,8 +257,7 @@ Ent P_coma
     Ent Identificador operadorIncrementoDecremento
     {:Vista.setError("Error Sintactico : en la linea "+(start_valright+1)+", fila "+(start_valleft+1)+" Se esperaba P_coma despuÃ©s de operadorIncrementoDecremento "); :}
     |
-    Real Identificador asignacion caracter  P_coma  
-    |
+   
     Real Identificador:id asignacion Numero:Numero1 punto Numero:Numero2 P_coma 
     {:Generador.gc(Generador.ASIGNACION,"float",Numero1+"."+Numero2,id);:}
     |
@@ -466,7 +464,7 @@ IMPRIME ::=
     Imprime:Reservada Parentesis_a Comillas Comillas Parentesis_c P_coma 
     {:Generador.mensaje(Generador.Imprime,Reservada,"");:}
     |
-    Imprime:Reservada Parentesis_a Comillas Identificador:texto Comillas Parentesis_c P_coma
+    Imprime:Reservada Parentesis_a Comillas caracter:texto Comillas Parentesis_c P_coma
     {:Generador.mensaje(Generador.Imprime,Reservada,texto);:}
 //Errores Imprime
     |

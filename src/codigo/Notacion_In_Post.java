@@ -5,10 +5,16 @@
  */
 package codigo;
 
+import arbolgrafico.Gui;
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Stack;
 import java.util.StringTokenizer;
+import javax.swing.JInternalFrame;
+import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
@@ -23,6 +29,9 @@ public class Notacion_In_Post extends javax.swing.JFrame {
      */
     public Notacion_In_Post() {
         initComponents();
+        
+       
+       
         
     }
 
@@ -249,7 +258,7 @@ public class Notacion_In_Post extends javax.swing.JFrame {
                             .addComponent(txtres))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(39, Short.MAX_VALUE))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -274,7 +283,7 @@ public class Notacion_In_Post extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1))
-                .addGap(0, 26, Short.MAX_VALUE))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -287,10 +296,7 @@ public class Notacion_In_Post extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -305,13 +311,17 @@ public class Notacion_In_Post extends javax.swing.JFrame {
     }//GEN-LAST:event_txtinKeyPressed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    if(!txtin.getText().equals("")){evaluar();}
+    if(!txtin.getText().equals("")){
+        evaluar();
+        
+        new Gui(txtin.getText()).setVisible(true);
+    }
     else {
-        showMessageDialog(null,"escribe una expreción en expresion infija");
+        showMessageDialog(null,"escribe una expresión de forma infija o natural");
         
     }      // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
-  
+   
     
     /**
      * Metodo que evalua la exprecion posfija y devuelve el valor real de la evaluacion
@@ -501,7 +511,7 @@ public class Notacion_In_Post extends javax.swing.JFrame {
             }
             else if(caracter=='+' || caracter =='-' || caracter=='*' || caracter=='/' || caracter=='^'){
                 String salida = generarError(infijo,c);
-                salida+="La exprecion nu puede terminar con operador";
+                salida+="La expresion no puede terminar con operador";
                 areaTexto.setText(salida);
                 return true;
             }
@@ -525,7 +535,7 @@ public class Notacion_In_Post extends javax.swing.JFrame {
             }
             else if(caracter=='+' || caracter =='-' || caracter=='*' || caracter=='/' || caracter=='^'){
                 String salida = generarError(infijo,c);
-                salida+="La exprecion nu puede empesar con operador";
+                salida+="La exprecion no puede empezar con operador";
                 areaTexto.setText(salida);
                 return true;
             }
@@ -687,8 +697,7 @@ public class Notacion_In_Post extends javax.swing.JFrame {
             return;
         }
         
-        final String acreditado="/Evaluador/imagenes/ok24.png";
-        final String noAcreditado="/Evaluador/imagenes/danger24.png";
+       
         
         //Validamos que los parentesis esten correctamente anidados
         if(validarParentesis(infija)){
@@ -830,9 +839,6 @@ public class Notacion_In_Post extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel parentesis;
-    private javax.swing.JPanel parentesis3;
-    private javax.swing.JPanel parentesis4;
-    private javax.swing.JPanel parentesis5;
     private javax.swing.JTextField txtin;
     private javax.swing.JTextField txtpost;
     private javax.swing.JTextField txtres;
